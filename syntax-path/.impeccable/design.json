@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-03T04:39:38.828Z",
+  "title": "Design System: 句法小径",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "暖纸",
+        "tonalRamp": [
+          "oklch(15.00% 0.0124 91.52)",
+          "oklch(26.43% 0.0124 91.52)",
+          "oklch(37.86% 0.0124 91.52)",
+          "oklch(49.29% 0.0124 91.52)",
+          "oklch(60.71% 0.0124 91.52)",
+          "oklch(72.14% 0.0124 91.52)",
+          "oklch(83.57% 0.0124 91.52)",
+          "oklch(95.00% 0.0124 91.52)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "浅纸面",
+        "tonalRamp": [
+          "oklch(15.00% 0.0082 91.48)",
+          "oklch(26.43% 0.0082 91.48)",
+          "oklch(37.86% 0.0082 91.48)",
+          "oklch(49.29% 0.0082 91.48)",
+          "oklch(60.71% 0.0082 91.48)",
+          "oklch(72.14% 0.0082 91.48)",
+          "oklch(83.57% 0.0082 91.48)",
+          "oklch(95.00% 0.0082 91.48)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "深墨",
+        "tonalRamp": [
+          "oklch(15.00% 0.0264 168.75)",
+          "oklch(26.43% 0.0264 168.75)",
+          "oklch(37.86% 0.0264 168.75)",
+          "oklch(49.29% 0.0264 168.75)",
+          "oklch(60.71% 0.0264 168.75)",
+          "oklch(72.14% 0.0264 168.75)",
+          "oklch(83.57% 0.0264 168.75)",
+          "oklch(95.00% 0.0264 168.75)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "灰绿辅助文字",
+        "tonalRamp": [
+          "oklch(15.00% 0.0203 158.58)",
+          "oklch(26.43% 0.0203 158.58)",
+          "oklch(37.86% 0.0203 158.58)",
+          "oklch(49.29% 0.0203 158.58)",
+          "oklch(60.71% 0.0203 158.58)",
+          "oklch(72.14% 0.0203 158.58)",
+          "oklch(83.57% 0.0203 158.58)",
+          "oklch(95.00% 0.0203 158.58)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "纸面分隔",
+        "tonalRamp": [
+          "oklch(15.00% 0.0192 116.62)",
+          "oklch(26.43% 0.0192 116.62)",
+          "oklch(37.86% 0.0192 116.62)",
+          "oklch(49.29% 0.0192 116.62)",
+          "oklch(60.71% 0.0192 116.62)",
+          "oklch(72.14% 0.0192 116.62)",
+          "oklch(83.57% 0.0192 116.62)",
+          "oklch(95.00% 0.0192 116.62)"
+        ]
+      },
+      "green": {
+        "role": "primary",
+        "displayName": "苔绿关系",
+        "tonalRamp": [
+          "oklch(15.00% 0.0535 151.83)",
+          "oklch(26.43% 0.0535 151.83)",
+          "oklch(37.86% 0.0535 151.83)",
+          "oklch(49.29% 0.0535 151.83)",
+          "oklch(60.71% 0.0535 151.83)",
+          "oklch(72.14% 0.0535 151.83)",
+          "oklch(83.57% 0.0535 151.83)",
+          "oklch(95.00% 0.0535 151.83)"
+        ]
+      },
+      "green-light": {
+        "role": "primary",
+        "displayName": "浅绿关联范围",
+        "tonalRamp": [
+          "oklch(15.00% 0.0235 122.74)",
+          "oklch(26.43% 0.0235 122.74)",
+          "oklch(37.86% 0.0235 122.74)",
+          "oklch(49.29% 0.0235 122.74)",
+          "oklch(60.71% 0.0235 122.74)",
+          "oklch(72.14% 0.0235 122.74)",
+          "oklch(83.57% 0.0235 122.74)",
+          "oklch(95.00% 0.0235 122.74)"
+        ]
+      },
+      "orange": {
+        "role": "secondary",
+        "displayName": "暖橙轨迹",
+        "tonalRamp": [
+          "oklch(15.00% 0.1543 37.96)",
+          "oklch(26.43% 0.1543 37.96)",
+          "oklch(37.86% 0.1543 37.96)",
+          "oklch(49.29% 0.1543 37.96)",
+          "oklch(60.71% 0.1543 37.96)",
+          "oklch(72.14% 0.1543 37.96)",
+          "oklch(83.57% 0.1543 37.96)",
+          "oklch(95.00% 0.1543 37.96)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "开场标题",
+        "purpose": "CJK serif 本机回退，无外部字体。"
+      },
+      "label": {
+        "displayName": "辅助标签",
+        "purpose": "HTML 辅助文字；SVG 副标签随 viewBox 缩放，手机可能小于 12px。"
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "bead-duration",
+        "value": "650ms",
+        "purpose": "小珠行走；prefers-reduced-motion 时直接定位。"
+      },
+      {
+        "name": "bead-easing",
+        "value": "1 - Math.pow(1-t, 3)",
+        "purpose": "app.js 中的 easeOutCubic。"
+      },
+      {
+        "name": "door-transition",
+        "value": "transform 550ms cubic-bezier(.16,1,.3,1)",
+        "purpose": "门叶样式过渡，减少动态效果时关闭。"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-min",
+        "value": "1600px"
+      },
+      {
+        "name": "compact-max",
+        "value": "1100px"
+      },
+      {
+        "name": "stacked-workspace-max",
+        "value": "800px"
+      },
+      {
+        "name": "vertical-diagram-max",
+        "value": "600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "向前走",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "行走主按钮，动画中暂时禁用。",
+      "html": "<button class=\"ds-control ds-primary\">向前走 <span aria-hidden=\"true\">→</span></button>",
+      "css": ".ds-control{font:13px/1.7 var(--sans,\"Microsoft YaHei\",\"PingFang SC\",sans-serif);cursor:pointer;color:var(--ink,#293b34)}.ds-control:disabled{cursor:default;opacity:.38}.ds-control:focus-visible{outline:3px solid var(--orange,#bd4c27);outline-offset:4px}.ds-primary{display:flex;align-items:center;justify-content:space-between;gap:40px;border:0;background:var(--ink,#293b34);color:var(--surface,#fbf9f3);min-height:48px;padding:10px 17px;font-size:14px}.ds-primary:not(:disabled):hover{color:#fff;background:#405446}"
+    },
+    {
+      "name": "选中结构",
+      "kind": "button",
+      "refersTo": "model-selected",
+      "description": "苔绿选中结构状态。",
+      "html": "<button class=\"ds-control ds-model\" aria-pressed=\"true\"><span>A</span> 关联两个人</button>",
+      "css": ".ds-control{font:13px/1.7 var(--sans,\"Microsoft YaHei\",\"PingFang SC\",sans-serif);cursor:pointer;color:var(--ink,#293b34)}.ds-control:disabled{cursor:default;opacity:.38}.ds-control:focus-visible{outline:3px solid var(--orange,#bd4c27);outline-offset:4px}.ds-model{display:flex;align-items:center;gap:10px;padding:9px 16px;border:1px solid transparent;min-height:44px;background:var(--green,#496951);color:#fff}.ds-model span{font:18px Georgia,serif}.ds-model:hover{color:#fff;background:#36513e}"
+    },
+    {
+      "name": "未选中结构",
+      "kind": "button",
+      "refersTo": "model-unselected",
+      "description": "细线勾勒待切换的结构。",
+      "html": "<button class=\"ds-control ds-model\" aria-pressed=\"false\"><span>B</span> 只修饰老师</button>",
+      "css": ".ds-control{font:13px/1.7 var(--sans,\"Microsoft YaHei\",\"PingFang SC\",sans-serif);cursor:pointer;color:var(--ink,#293b34)}.ds-control:disabled{cursor:default;opacity:.38}.ds-control:focus-visible{outline:3px solid var(--orange,#bd4c27);outline-offset:4px}.ds-model{display:flex;align-items:center;gap:10px;padding:9px 16px;border:1px solid var(--line,#d5d8ca);min-height:44px;background:none}.ds-model span{font:18px Georgia,serif}.ds-model:hover{color:var(--orange,#bd4c27)}"
+    },
+    {
+      "name": "观察切换",
+      "kind": "nav",
+      "description": "按钮组切换所记录的结构。",
+      "html": "<div class=\"ds-tabs\" role=\"group\" aria-label=\"选择记录的结构\"><button class=\"ds-control\" aria-pressed=\"true\">结构 A 的观察</button><button class=\"ds-control\" aria-pressed=\"false\">结构 B 的观察</button></div>",
+      "css": ".ds-control{font:13px/1.7 var(--sans,\"Microsoft YaHei\",\"PingFang SC\",sans-serif);cursor:pointer;color:var(--ink,#293b34)}.ds-control:disabled{cursor:default;opacity:.38}.ds-control:focus-visible{outline:3px solid var(--orange,#bd4c27);outline-offset:4px}.ds-tabs{display:flex;gap:24px;border-bottom:1px solid var(--line,#d5d8ca)}.ds-tabs button{padding:9px 0;min-height:44px;font-size:12px;border:0;border-bottom:2px solid transparent;background:none}.ds-tabs button[aria-pressed=true]{border-color:var(--green,#496951);color:var(--green,#496951)}.ds-tabs button:hover{color:var(--orange,#bd4c27)}"
+    },
+    {
+      "name": "观察记录",
+      "kind": "input",
+      "refersTo": "note-field",
+      "description": "纵向可伸缩的纸面记录框。",
+      "html": "<textarea class=\"ds-control ds-note\" aria-label=\"记录观察\" rows=\"3\" placeholder=\"哪里停顿、回看，或走得不太明白？\"></textarea>",
+      "css": ".ds-control{font:13px/1.7 var(--sans,\"Microsoft YaHei\",\"PingFang SC\",sans-serif);cursor:pointer;color:var(--ink,#293b34)}.ds-control:disabled{cursor:default;opacity:.38}.ds-control:focus-visible{outline:3px solid var(--orange,#bd4c27);outline-offset:4px}.ds-note{resize:vertical;min-height:105px;width:100%;background:var(--surface,#fbf9f3);border:1px solid #acb6a4;padding:12px 14px;font-size:13px;line-height:1.8;border-radius:0;caret-color:var(--orange,#bd4c27);cursor:text}.ds-note::placeholder{color:var(--muted,#59665e);opacity:1}"
+    },
+    {
+      "name": "读法感受",
+      "kind": "input",
+      "description": "记录当前读法的主观感受。",
+      "html": "<select class=\"ds-control ds-select\" aria-label=\"这次读法，你觉得\"><option>还没决定</option><option>自然</option><option>需要上下文</option><option>难以接受</option></select>",
+      "css": ".ds-control{font:13px/1.7 var(--sans,\"Microsoft YaHei\",\"PingFang SC\",sans-serif);cursor:pointer;color:var(--ink,#293b34)}.ds-control:disabled{cursor:default;opacity:.38}.ds-control:focus-visible{outline:3px solid var(--orange,#bd4c27);outline-offset:4px}.ds-select{background:transparent;border:1px solid #acb6a4;min-height:40px;padding:6px 30px 6px 10px;font-size:12px;max-width:100%}"
+    },
+    {
+      "name": "工作台纸面",
+      "kind": "card",
+      "refersTo": "workbench",
+      "description": "连续纸面和内部分隔线，无投影。",
+      "html": "<section class=\"ds-bench\"><div class=\"ds-caption\">共用一间门厅</div><p class=\"ds-reading\">我看见了［学生的［老师和朋友］］</p></section>",
+      "css": ".ds-bench{background:var(--surface,#fbf9f3);border:1px solid var(--line,#d5d8ca);color:var(--ink,#293b34)}.ds-caption{padding:22px 26px;font:12px/1.7 var(--sans,\"Microsoft YaHei\",\"PingFang SC\",sans-serif);color:var(--muted,#59665e)}.ds-reading{margin:0;padding:14px 26px;border-top:1px solid var(--line,#d5d8ca);font:16px/1.7 var(--serif,\"Noto Serif CJK SC\",\"Source Han Serif SC\",\"Songti SC\",\"SimSun\",serif)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "暖纸色建筑工作台",
+    "overview": "暖纸色建筑工作台以主廊、侧室、折痕与门槛呈现句法关系。苔绿标记关联范围，橙色小珠与轨迹标记行走；薄边框与纸面明暗维持安静、可读的实验气质。\n\n本文记录当前 HTML/CSS/JavaScript 的实现选择，不代表新增的用户偏好承诺。字体依赖本机 CJK 字体回退，页面没有远程字体或运行依赖。",
+    "keyCharacteristics": [
+      "纸面层次与建筑折面",
+      "绿色关系范围、橙色位置和轨迹",
+      "桌面横廊、手机纵廊"
+    ],
+    "rules": [],
+    "dos": [
+      "Do 保持关系范围、当前位置与走过轨迹的语义配色。",
+      "Do 同时保留 SVG 图形、文字位置说明与原句分组读法。",
+      "Do 在减少动态效果设置下直接更新小珠位置，并关闭门叶过渡。"
+    ],
+    "donts": [
+      "Don't 将系统字体回退描述为已内嵌字体。",
+      "Don't 声称 SVG 缩放后的所有文字均达到 12px。",
+      "Don't 将候选分组的视觉展示描述为句法分析或学习效果的验证。"
+    ]
+  }
+}

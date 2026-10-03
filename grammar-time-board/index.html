@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f4f1e8">
+  <title>昨天今天明天 · 语法时间棋盘</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="engine.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#composer">跳到造句区</a>
+<div class="app-shell">
+  <header class="masthead">
+    <div class="identity"><h1>昨天<span>今天</span>明天<span class="title-dot">。</span></h1><p>说出一句话，让世界换一种可能。</p></div>
+    <nav aria-label="游戏工具"><button id="rules-toggle" class="text-button" aria-expanded="false" aria-controls="rules">怎么玩</button><a href="print.html" target="_blank" rel="noopener">纸笔版 <span aria-hidden="true">↗</span></a><button id="new-game" class="outline-button">开新一局</button></nav>
+  </header>
+  <section id="rules" class="rules-panel" aria-label="游戏规则" hidden>
+    <div><h2>世界听你的，但时间有自己的脾气。</h2><p>2–4 人共用这一张棋盘，顺时针轮流造句。选好句式和动作，读给同桌听，再让它生效。</p><p><b>自己回合结束时，桥好、门开、钥匙在自己手里，三项同时成立就获胜。</b>最多 8 轮，无人达成则平局。</p></div>
+    <div class="rules-columns"><div><h3>一句话怎么生效</h3><ul><li><b>过去：</b>付 2 信用，立即行动并加封签。</li><li><b>现在：</b>付 1 信用，立即行动。</li><li><b>正在：</b>免费，下回合尝试完成。目标物件中途变过状态就取消。</li><li><b>未来：</b>免费，下回合必须尝试兑现。成功 +1 信用，失败 −1。</li><li><b>如果：</b>免费，下回合检查一次条件，真则尝试行动，不奖罚。</li></ul></div><div><h3>桌边的小约定</h3><ul><li>开门、藏钥匙，需要生效时自己持有钥匙。拿钥匙可从任何人手中拿走。</li><li>改变有封签的物件额外付 1 信用。封签在主人下回合开始时到期。</li><li>每人一张待办。到期结果已成立算完成；否则检查前提与费用。</li><li>休息恢复 1 信用，初始 2，上限 3。第 8 轮不额外结算未来句子。</li><li>大家确认一句话的意思，效果按所选句式和动作结算。措辞可以自由改写。</li></ul></div></div>
+    <p class="rules-note">这些时间效果是游戏规则。语言学事实背景与来源见 <a href="README.md" target="_blank" rel="noopener">项目说明</a>，详细边界见 <a href="RULES.md" target="_blank" rel="noopener">完整规则</a>。</p>
+  </section>
+  <section class="players-bar" aria-label="玩家与信用"><div class="round-counter"><span id="round-label">第 1 轮</span><div id="round-marks" aria-hidden="true"></div><small>共 8 轮</small></div><div id="players" class="players"></div></section>
+  <div id="announcement" class="announcement" role="status" aria-live="polite"></div>
+  <main class="game-grid">
+    <section class="world-section" aria-labelledby="world-title">
+      <div class="section-heading"><h2 id="world-title">此刻的世界</h2><span id="goal-summary" class="muted">三个目标，同时成立</span></div>
+      <div class="world" id="world">
+        <article class="world-object" data-object="bridge"><div class="object-heading"><h3>桥</h3><span class="goal-check" id="bridge-check"></span></div><div class="object-drawing" id="bridge-drawing" aria-hidden="true"></div><p class="object-state" id="bridge-state"></p><p class="seal-label" id="bridge-seal"></p></article>
+        <article class="world-object" data-object="door"><div class="object-heading"><h3>门</h3><span class="goal-check" id="door-check"></span></div><div class="object-drawing" id="door-drawing" aria-hidden="true"></div><p class="object-state" id="door-state"></p><p class="seal-label" id="door-seal"></p></article>
+        <article class="world-object" data-object="key"><div class="object-heading"><h3>钥匙</h3><span class="goal-check" id="key-check"></span></div><div class="object-drawing" id="key-drawing" aria-hidden="true"></div><p class="object-state" id="key-state"></p><p class="seal-label" id="key-seal"></p></article>
+      </div>
+      <p class="world-caption">过去可以改写，未来可以承诺。获胜，只看现在。</p>
+    </section>
+    <section id="composer" class="composer" aria-labelledby="turn-heading" tabindex="-1">
+      <div class="turn-heading"><span class="player-stamp" id="turn-stamp">A</span><div><h2 id="turn-heading">轮到玩家 A 说一句</h2><p id="turn-subtitle">选一种句式，再决定改变什么。</p></div></div>
+      <div id="move-form">
+        <fieldset><legend>用什么句式</legend><div id="mode-options" class="mode-options"></div><p id="mode-hint" class="field-hint"></p></fieldset>
+        <fieldset><legend>做什么动作</legend><div id="action-options" class="action-options"></div></fieldset>
+        <div id="condition-fields" class="condition-fields" hidden><label for="condition-select">如果下回合开始时</label><select id="condition-select"></select><label class="check-label"><input id="condition-not" type="checkbox"> 上述条件不成立</label></div>
+        <div class="sentence-block"><label for="sentence">把这句话读给同桌听</label><textarea id="sentence" rows="2" maxlength="240" spellcheck="false"></textarea><div class="sentence-footer"><small>可自由改述，效果以所选操作为准。</small><button id="restore-sentence" class="text-button">恢复示例</button></div></div>
+        <div class="move-summary" id="move-summary" aria-live="polite"></div>
+        <p id="form-error" role="alert" hidden></p>
+        <button id="commit" class="primary-button">让这句话生效 <span aria-hidden="true">→</span></button>
+        <button id="rest" class="rest-button">先想一想，休息恢复信用</button>
+        <details id="house-proposal" class="house-proposal" hidden><summary>提议一条「以后都……」</summary><label for="house-kind">选择新桌规</label><select id="house-kind"><option value="cap">信用上限设为 4</option><option value="reward">兑现承诺领取 2 信用</option><option value="rest">休息领取 2 信用</option></select><p>占用本次说话机会。其他人全部同意后，下轮生效；未通过按休息处理。</p><button id="propose" class="outline-button">请大家表决</button></details>
+      </div>
+      <div id="turn-result" class="turn-result" hidden></div>
+    </section>
+    <section class="time-section" aria-labelledby="time-title"><div class="section-heading"><h2 id="time-title">句子留在时间里</h2><span class="muted">到本人下回合开始时结算</span></div><div class="time-tracks">
+      <article class="time-track past"><h3>过去<span>已经</span></h3><div id="past-track"></div></article>
+      <article class="time-track present"><h3>现在<span>正在</span></h3><div id="progress-track"></div></article>
+      <article class="time-track future"><h3>未来<span>将会</span></h3><div id="future-track"></div></article>
+    </div><div class="condition-track"><h3>如果<span>就有另一种可能</span></h3><div id="condition-track"></div></div><div id="house-status" class="house-status" hidden></div></section>
+    <section class="journal-section"><details id="journal-details"><summary><span>这一局，我们说过的话</span><small id="journal-count">还没有人开口</small></summary><ol id="journal" class="journal"></ol></details></section>
+  </main>
+  <footer class="page-footer"><span>昨天今天明天 · 语法时间棋盘</span><span id="save-status">进度保存在当前浏览器</span></footer>
+</div>
+<dialog id="setup-dialog" aria-labelledby="setup-title"><form id="setup-form"><div class="dialog-heading"><h2 id="setup-title">围坐下来，开一局。</h2><button id="cancel-setup" class="text-button" type="button" aria-label="关闭新游戏设置">关闭</button></div><p>新的一局从坏桥、关门和一把藏起来的钥匙开始。当前进度会被替换。</p><label for="player-count">几个人一起玩</label><select id="player-count"><option value="2">2 人</option><option value="3">3 人</option><option value="4">4 人</option></select><div id="player-names" class="name-fields"></div><label for="first-player">谁先说第一句</label><select id="first-player"></select><label class="check-label setup-experiment"><input id="enable-house" type="checkbox"> 加入「以后都……」共同立规实验</label><p class="muted">第一局可以先不勾选，熟悉时间句式后再尝试。</p><button type="submit" class="primary-button">开始新的一局 <span aria-hidden="true">→</span></button></form></dialog>
+<noscript>这个棋盘需要启用 JavaScript。也可以打开 <a href="print.html">纸笔试玩包</a>。</noscript>
+</body>
+</html>

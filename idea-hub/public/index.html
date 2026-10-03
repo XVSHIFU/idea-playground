@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f6f8"><title>小创意游乐场</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#collection">跳到作品</a>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="./" aria-label="小创意游乐场首页"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M5 8h13v24H5zM22 8h13v24H22z" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M18 8 8 13v24l10-5M22 8l10 5v24l-10-5" fill="currentColor"/></svg><span>小创意<br>游乐场<span class="brand-en">IDEA PLAYGROUND</span></span></a>
+      <p class="nav-title">找点什么玩</p>
+      <nav id="categories" aria-label="作品分类">
+        <button class="category active" data-category="全部" aria-pressed="true"><span>全部作品</span><span class="count">—</span></button>
+      </nav>
+      <div class="sidebar-note"><span class="small-dot"></span><p>让想法变成<br>可以玩的东西。</p></div>
+    </aside>
+    <main>
+      <header class="topbar"><span>好奇心的自由活动时间</span><label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="search" type="search" placeholder="找一个小创意" aria-label="搜索作品" autocomplete="off"></label></header>
+      <section class="intro" aria-labelledby="intro-title"><div><h1 id="intro-title">今天，玩点<span>不一样的。</span></h1><p>养一只链接里的生物，走进会遗忘的城，<br class="desktop-break">或者，去另一个世界待一会儿。</p></div><a id="random" class="random" href="#collection"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3M17 14l4 4-4 4M3 18h3c2 0 3-2 4-4m4-4c1-2 2-4 4-4h3M17 2l4 4-4 4"/></svg>帮我挑一个</a></section>
+      <section class="spotlight" aria-labelledby="spotlight-title">
+        <div class="spotlight-copy"><h2 id="spotlight-title">把一只生命，<br>装进一条链接。</h2><p>有的害羞，有的亲近。<br>移动指针，认识你的第一只链接生物。</p><a class="spotlight-link" href="./open/link-creatures" target="_blank" rel="noopener">去认识它<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
+        <a class="spotlight-image" href="./open/link-creatures" target="_blank" rel="noopener" aria-label="进入链接生物"><img src="./previews/link-creatures.png" alt="链接生物的实际游玩画面" fetchpriority="high"><span class="image-caption">链接生物 · 每条链接，都是一颗种子</span></a>
+      </section>
+      <section id="collection" aria-labelledby="collection-title"><div class="collection-heading"><h2 id="collection-title">随便逛逛<span id="result-count"></span></h2><span class="open-note">作品在新标签页打开</span></div><p id="status" role="status">正在打开作品目录…</p><div id="projects" class="projects"></div><div id="empty" class="empty" hidden><h3>还没有找到这个小创意。</h3><p>换个词试试，或者回到全部作品。</p><button id="clear" class="clear-button">查看全部作品</button></div><button id="retry" class="clear-button" hidden>重新加载</button></section>
+      <footer><span>小创意游乐场</span><span>不必有目的，玩一会儿就好。</span><a href="#intro-title">回到上面</a></footer>
+    </main>
+  </div>
+  <noscript>请启用 JavaScript 查看作品目录。你也可以直接<a href="./open/link-creatures">进入链接生物</a>。</noscript>
+</body>
+</html>

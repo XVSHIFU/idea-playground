@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#eee6c9">
+  <title>越抢越变形的拍卖会</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css">
+  <script src="engine.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="index.html" aria-label="越抢越变形的拍卖会首页"><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M8 32V22a14 14 0 0 1 28 0v10M8 32h28M22 9v24"/></svg><span>越抢越变形的<br><strong>拍卖会</strong></span></a>
+    <p class="intro">你付出的每一块，<br>都在改变你想要的东西。</p>
+    <nav aria-label="拍卖会操作"><a href="rules.html" target="_blank" rel="noopener">桌边规则</a><button id="new-game" class="text-button">另开一轮</button></nav>
+  </header>
+  <main>
+    <section id="setup" class="setup" hidden aria-labelledby="setup-heading">
+      <h2 id="setup-heading">三个人，带着三个愿望入座。</h2>
+      <p>愿望只是起点。中途改变主意，完全成立。</p>
+      <form id="setup-form"><div id="setup-fields" class="setup-fields"></div>
+        <label class="first-label">谁先出价 <select id="first"><option value="0">第一位</option><option value="1">第二位</option><option value="2">第三位</option></select></label>
+        <div class="setup-actions"><button type="submit" class="primary">开始新一轮</button><button id="cancel-setup" type="button">回到当前作品</button><span>开始后会替换本机当前进度，先保存想留下的作品。</span></div>
+      </form>
+    </section>
+    <div class="workbench">
+      <section class="table" aria-labelledby="work-title">
+        <div class="table-heading"><h1 id="work-title">还没决定长成什么</h1><span id="piece-count">0 块出价</span></div>
+        <div class="stage-wrap">
+          <svg id="stage" viewBox="0 0 800 570" tabindex="0" role="img" aria-label="公共黏土作品。选部件后点击台面放置，方向键移动，回车预放，亦可自由画。">
+            <defs><filter id="clay-shadow" x="-30%" y="-50%" width="160%" height="220%"><feDropShadow dx="1" dy="6" stdDeviation="5" flood-color="#514325" flood-opacity=".18"/></filter></defs>
+            <ellipse cx="400" cy="454" rx="166" ry="17" fill="#807044" opacity=".09"/>
+            <g id="base-clay"><ellipse cx="400" cy="402" rx="111" ry="39" fill="#b9a484"/><ellipse cx="400" cy="394" rx="108" ry="36" fill="#d2bea0"/><path d="M312 383 Q397 347 487 383" fill="none" stroke="#e4d4b8" stroke-width="5" stroke-linecap="round"/></g>
+            <g id="pieces"></g><g id="draft"></g>
+            <g id="cursor" hidden><path d="M-10 0h20M0-10v20" stroke="#31473d" stroke-width="2"/></g>
+          </svg>
+          <p id="stage-caption" class="stage-caption">一块底泥。十五次改变它的机会。</p>
+        </div>
+        <div class="table-footer"><span id="leader">还没有人出价</span><span>只添新泥，留下所有痕迹。</span></div>
+      </section>
+      <aside class="toolbox" aria-label="本轮操作">
+        <div id="play-controls">
+          <div class="turn-heading"><span id="turn-dot" class="player-dot"></span><h2 id="turn-heading" tabindex="-1">轮到甲</h2></div>
+          <p id="turn-hint" class="muted">拿出一块泥，改变眼前的作品。</p>
+          <form id="wish-form"><label for="wish">此刻，我想要</label><div class="wish-row"><input id="wish" maxlength="60" autocomplete="off"><button type="submit" class="text-button">改主意</button></div></form>
+          <fieldset class="shape-picker"><legend>把一块泥捏成</legend><div class="shapes">
+            <button type="button" data-shape="arch" aria-pressed="true"><svg viewBox="0 0 64 48" aria-hidden="true"><path d="M12 38C12 1 52 1 52 38"/></svg>一道拱</button>
+            <button type="button" data-shape="rod" aria-pressed="false"><svg viewBox="0 0 64 48" aria-hidden="true"><path d="M32 9v30"/></svg>一根柱</button>
+            <button type="button" data-shape="loop" aria-pressed="false"><svg viewBox="0 0 64 48" aria-hidden="true"><circle cx="32" cy="24" r="16"/></svg>一个圈</button>
+            <button type="button" data-shape="curve" aria-pressed="false"><svg viewBox="0 0 64 48" aria-hidden="true"><path d="M9 32C23-9 41 56 55 16"/></svg>一段弯</button>
+          </div><button type="button" id="freehand" data-shape="free" aria-pressed="false">自己画一块</button></fieldset>
+          <label class="rotation-label" for="rotation">转个方向 <output id="rotation-value">0°</output></label><input id="rotation" type="range" min="-180" max="180" value="0" step="15">
+          <p id="placement-hint" class="placement-hint">点台面放上去，再调整方向。要碰到已有的泥。</p>
+          <div class="draft-actions"><button id="clear-draft" class="text-button" disabled>重捏这一块</button><span id="draft-status">尚未放置</span></div>
+          <button id="bid" class="primary" disabled>接上它，出价</button>
+          <button id="exit" class="exit-button">我退出，留下已经付出的</button>
+          <div id="exit-confirm" hidden class="exit-confirm"><p>退出后，这一轮不能回来。你接上的泥会留在作品上。</p><button id="confirm-exit">确定退出</button><button id="cancel-exit" class="text-button">再想想</button></div>
+        </div>
+        <section id="result" hidden aria-labelledby="result-heading"><p class="result-stamp">落槌</p><h2 id="result-heading"></h2><p id="result-copy"></p><label for="art-title">给这个共同做出的东西取个名字</label><input id="art-title" maxlength="40" placeholder="例如：谁也没想到的篮子"><button id="download" class="primary">保存作品图</button><p class="muted">图里留下三个人的颜色。名字由你们一起决定。</p><button id="again">再围坐一轮</button></section>
+        <p id="notice" class="notice" role="status" aria-live="polite"></p>
+      </aside>
+    </div>
+    <section id="players" class="players" aria-label="三位参与者的材料与愿望"></section>
+    <section class="history-section" aria-labelledby="history-heading"><div class="history-top"><h2 id="history-heading">它是这样变过来的</h2><span id="history-count">还没有出价</span></div><label for="timeline" class="sr-only">回看作品的每一步</label><input type="range" id="timeline" min="0" max="0" value="0" disabled><div class="timeline-labels"><span>一块底泥</span><button id="return-now" class="text-button" hidden>回到现在</button><span>现在</span></div><ol id="history"></ol></section>
+    <footer class="page-footer"><span>三人同屏 · 每人五块泥 · 愿望随时可以变</span><span id="storage-status">进度保存在当前浏览器</span></footer>
+  </main>
+</body>
+</html>

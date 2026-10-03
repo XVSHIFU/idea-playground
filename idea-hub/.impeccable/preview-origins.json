@@ -1,0 +1,44 @@
+[
+  {
+    "file": "link-creatures.png",
+    "origin": "http://127.0.0.1:4178/index.html#v=1&id=75b9166d64&h=108&s=65&l=5&r=59&c=52&m=8&g=0&e=0",
+    "captured": "2026-10-03T03:38:55.352Z",
+    "description": "Actual local project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "cache-city.png",
+    "origin": "http://127.0.0.1:4187/index.html",
+    "captured": "2026-10-03T03:38:56.342Z",
+    "description": "Actual local project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "background-gods.png",
+    "origin": "http://127.0.0.1:4177/index.html",
+    "captured": "2026-10-03T03:38:57.329Z",
+    "description": "Actual local project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "mirror-7.png",
+    "origin": "http://127.0.0.1:4192/index.html",
+    "captured": "2026-10-03T03:38:58.284Z",
+    "description": "Actual local project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "protocol-zoo.png",
+    "origin": "http://127.0.0.1:4173/index.html",
+    "captured": "2026-10-03T03:38:59.262Z",
+    "description": "Actual local project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "grammar-time-board.png",
+    "origin": "http://127.0.0.1:4191/index.html",
+    "captured": "2026-10-03T03:39:00.269Z",
+    "description": "Actual local project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "clay-auction.png",
+    "origin": "http://127.0.0.1:4193/index.html",
+    "captured": "2026-10-03T04:28:16.929Z",
+    "description": "Actual local gameplay after three bids made through the UI in an isolated browser context; no user profile or existing save data."
+  }
+]

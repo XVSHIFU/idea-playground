@@ -1,0 +1,17 @@
+{
+  "name": "protocol-zoo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A local, deterministic communication experiment with MOTH/0",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/engine.test.cjs",
+    "test:browser": "node tests/browser.cjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}

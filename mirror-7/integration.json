@@ -1,0 +1,28 @@
+{
+  "id": "mirror-7",
+  "name": "错误地球档案馆",
+  "category": "叙事漫游",
+  "description": "五份来自另一种日常的网页档案。顺着线索，发现它们共同指向的世界。",
+  "hint": "从一份旧教程开始读起",
+  "label": "阅读 · 虚构档案",
+  "color": "#e5eaf5",
+  "directory": "../mirror-7",
+  "port": 4192,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "assets/archive.css"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [
+    "assets",
+    "archive",
+    "forum",
+    "manual",
+    "security"
+  ],
+  "identity": "MIRROR",
+  "enabled": true
+}

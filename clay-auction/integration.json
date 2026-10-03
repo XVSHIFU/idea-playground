@@ -1,0 +1,28 @@
+{
+  "id": "clay-auction",
+  "name": "越抢越变形的拍卖会",
+  "category": "一起玩",
+  "description": "每次出价，都把一块泥接到作品上。你想带走的东西，正在被所有人改变。",
+  "hint": "三人同屏，先选一块泥接到底泥上",
+  "label": "共同塑形 · 3 人",
+  "color": "#eee6c9",
+  "directory": "../clay-auction",
+  "port": 4193,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "app.js",
+    "engine.js",
+    "style.css"
+  ],
+  "files": [
+    "index.html",
+    "app.js",
+    "engine.js",
+    "style.css",
+    "rules.html",
+    "favicon.svg"
+  ],
+  "identity": "越抢越变形的拍卖会",
+  "enabled": true
+}

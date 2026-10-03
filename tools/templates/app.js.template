@@ -1,0 +1,5 @@
+// Keep assets relative and storage keys scoped to this project.
+const button = document.querySelector('#try-it');
+button.addEventListener('click', () => {
+  document.querySelector('#result').textContent = '入口已经接通，可以开始实现你的创意了。';
+});

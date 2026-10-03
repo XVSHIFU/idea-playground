@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-01T12:10:01.986Z",
+        "reason": "Agent review: the reported workspace is a structural two-panel frame. Child headers, log, composer and notes provide 18–24px inset, confirmed in desktop/mobile screenshots. Flush panel edges are intentional and no text touches the outer frame."
+      }
+    ]
+  }
+}

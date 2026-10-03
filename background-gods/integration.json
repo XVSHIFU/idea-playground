@@ -1,0 +1,27 @@
+{
+  "id": "background-gods",
+  "name": "后台诸神",
+  "category": "数字生命",
+  "description": "你看着它，它积攒微光。切换一个标签页，让生命在暗时间里做梦。",
+  "hint": "适合在桌面浏览器打开多个标签页",
+  "label": "观察 · 多标签页",
+  "color": "#e3eae8",
+  "directory": "../background-gods",
+  "port": 4177,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "app.js",
+    "engine.js",
+    "style.css"
+  ],
+  "files": [
+    "index.html",
+    "app.js",
+    "engine.js",
+    "style.css",
+    "favicon.svg"
+  ],
+  "identity": "后台诸神",
+  "enabled": true
+}

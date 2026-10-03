@@ -1,0 +1,7 @@
+{
+  "folders": [{ "name": "小创意游乐场", "path": "." }],
+  "settings": {
+    "files.exclude": { "**/.runtime": true, ".local-backups": true },
+    "search.exclude": { "**/node_modules": true, "dist": true, "**/test-results": true, "**/.impeccable/review": true }
+  }
+}

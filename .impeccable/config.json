@@ -1,0 +1,62 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "grammar-time-board/print.html"
+        ],
+        "createdAt": "2026-10-03T03:11:01.145Z",
+        "reason": "Agent review: detector reports 0.15x but Chromium computed body leading is 1.55x and rule text is 1.65x. The intentional 1.25x applies only to single-line headings and compact cut-out labels in an A4 print artifact; all three rendered PDF pages were visually checked without clipping."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "mirror-7/index.html"
+        ],
+        "createdAt": "2026-10-03T03:14:58.424Z",
+        "reason": "Agent reviewed source and desktop/mobile renders: 3px double horizontal archive directory rule, not a card side-tab; child-project exception was not loaded by root hook."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "mirror-7/archive/1997-tutorial.html"
+        ],
+        "createdAt": "2026-10-03T03:14:58.490Z",
+        "reason": "Agent reviewed source and desktop/mobile renders: double horizontal 1997 personal-site masthead separator, not a card side-tab."
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "mirror-7/archive/1997-tutorial.html"
+        ],
+        "createdAt": "2026-10-03T03:14:58.538Z",
+        "reason": "Agent retained the intentional paper-colored 1997 personal tutorial as one historical source within a differently colored archive; prior child exception needs root-relative scope."
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "grammar-time-board/index.html"
+        ],
+        "createdAt": "2026-10-03T03:39:33.336Z",
+        "reason": "Agent: this is the playable extension of the existing paper-board artifact print.html; the paper field deliberately preserves that established tabletop reading context, with ink-green state and red active markings. Desktop and mobile captures reviewed."
+      },
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "grammar-time-board/styles.css"
+        ],
+        "createdAt": "2026-10-03T03:39:33.390Z",
+        "reason": "Agent: detector flags composer border-top:3px, but Chromium computed all four composer border radii as 0px. It is a square paper panel with a top rule, not an accent border on a rounded card."
+      }
+    ]
+  }
+}

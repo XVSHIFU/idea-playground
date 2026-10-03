@@ -1,0 +1,27 @@
+{
+  "buildPath": "code",
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-01T12:14:40.334Z",
+        "reason": "Agent verified computed layout: atlas desktop right border has 36px inset; mobile right border is removed and bottom border has 20px inset. Detector combines mutually exclusive breakpoint declarations."
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-01T12:14:43.996Z",
+        "reason": "Agent-selected domain-appropriate atlas paper: the playable city map and literary sheet deliberately share paper #ece9df with green ink and rust anchor annotations, documented in DESIGN.md and surface.md; not claimed as user-confirmed."
+      }
+    ]
+  }
+}

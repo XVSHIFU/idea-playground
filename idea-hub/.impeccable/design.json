@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-03T11:50:07.2446032+08:00",
+  "title": "Design System: 小创意游乐场",
+  "extensions": {
+    "shadows": [
+      {
+        "name": "spotlight-image",
+        "value": "0 12px 30px #13254420",
+        "purpose": "推荐作品截图"
+      },
+      {
+        "name": "project-image",
+        "value": "0 4px 12px #24304b12",
+        "purpose": "目录作品截图"
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.16,1,.3,1)",
+        "purpose": "图片悬停；减少动态效果时停用"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "360px"
+      },
+      {
+        "name": "mobile",
+        "value": "700px"
+      },
+      {
+        "name": "compact",
+        "value": "1100px"
+      },
+      {
+        "name": "wide",
+        "value": "1600px"
+      }
+    ]
+  },
+  "components": [],
+  "narrative": {
+    "northStar": "私人作品启动台",
+    "overview": "浅灰工作界面与蓝色选择状态，真实作品画面负责辨认。",
+    "keyCharacteristics": [
+      "原生中文 UI 字体",
+      "侧栏分类与手机横向导航",
+      "真实截图",
+      "新标签页进入"
+    ],
+    "dos": [
+      "使用明确焦点状态",
+      "功能文字不小于 11px",
+      "保留作品原有画面"
+    ],
+    "donts": [
+      "不将接入实现细节作为正常游玩文案"
+    ]
+  }
+}

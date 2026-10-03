@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ece9df"><title>缓存之城 · 一座会遗忘自己的小城</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><a class="wordmark" href="./">缓存之城<span>一座会遗忘自己的小城</span></a><div class="header-actions"><span id="save-state">本地自动存档</span><button id="help-toggle" aria-expanded="false" aria-controls="help">游玩说明</button><button id="restart">重新开始</button></div></header>
+<div id="help" hidden><p>点击地图上相连的地点，或使用“接下来去”按钮移动。每走一步，其他地点就更模糊一些；停下来阅读不会推进时间。回访让当前版本暂时稳定，并不会恢复过去。</p><p>你最多可以在两个地点留下锚言。文字会保留，周围世界会重新解释它。锚点满时，可以选择替换。去钟楼看看，再带着你的发现回到白房间。</p></div>
+<main>
+<section class="atlas" aria-label="城市地图"><div class="atlas-top"><h1>有些地方，<br>记得你来过。</h1><p>你保存了一句话。<br>城市记住了另一种意思。</p></div><div class="map-wrap"><svg id="map" viewBox="0 0 640 450" role="group" aria-label="可探索的城市，点击相邻地点移动"></svg></div><div class="map-footer"><span><i class="dot current-dot"></i>你在这里</span><span><i class="dot anchor-dot"></i>留有锚言</span><span id="steps">行走 0 步</span></div><p class="map-note">这张地图记录变化，不保证永远正确。</p></section>
+<section class="reading" aria-label="当前地点"><div class="location-meta"><span id="condition"></span><span id="place-count"></span></div><article id="scene" aria-live="polite"><h2 id="place-name"></h2><p id="story"></p><p id="trace"></p><blockquote id="saved-quote" hidden></blockquote></article><div id="mission"></div><div class="anchor-action"><button id="write-anchor" class="primary">在这里留下锚言</button><span id="anchor-count"></span></div><div id="anchor-editor" hidden><h3>留住哪一句？</h3><p>字面会被保存，含义仍会漂移。</p><div id="choices"></div><div id="replacement" hidden><p>两个锚点已满。选择放下哪一句：</p><div id="replace-choices"></div></div><button id="cancel-anchor" class="text-button">暂时不留</button></div><nav class="exits" aria-label="接下来去"><h3>接下来去</h3><div id="exits"></div></nav></section>
+<section class="notebook"><div class="anchor-list"><h3>你留下的文字 <span id="slot-count">0 / 2</span></h3><div id="anchors"></div></div><div class="history"><h3>城市的旁注</h3><ol id="journal"></ol></div></section>
+</main><footer><span>缓存之城 · 互动短篇原型</span><span>阅读的时候，城市会等你。</span></footer><div id="announcement" class="sr-only" role="status"></div>
+<dialog id="reset-dialog"><h2>重新走进这座城？</h2><p>当前行程与锚言会被清除。</p><div><button id="cancel-reset">继续这段旅程</button><button id="confirm-reset" class="primary">重新开始</button></div></dialog>
+<script type="module" src="app.js"></script></body></html>

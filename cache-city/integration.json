@@ -1,0 +1,28 @@
+{
+  "id": "cache-city",
+  "name": "缓存之城",
+  "category": "叙事漫游",
+  "description": "走进一座会遗忘的城。回访一个地方，或留下一句话，把它留住。",
+  "hint": "从白房间出发",
+  "label": "漫游 · 记忆",
+  "color": "#e8ecdf",
+  "directory": "../cache-city",
+  "port": 4187,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "app.js",
+    "engine.js",
+    "style.css"
+  ],
+  "files": [
+    "index.html",
+    "app.js",
+    "engine.js",
+    "style.css",
+    "assets/story-serif.ttf",
+    "assets/OFL.txt"
+  ],
+  "identity": "缓存之城",
+  "enabled": true
+}

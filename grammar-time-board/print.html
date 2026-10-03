@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>昨天今天明天 · 纸笔试玩包</title>
+<style>
+@page{size:A4 portrait;margin:12mm}
+*{box-sizing:border-box}body{margin:0;background:#e9e7e1;color:#222;font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;font-size:10pt;line-height:1.55}main{margin:auto}.page{width:186mm;height:272mm;padding:0;position:relative;background:white;margin:8mm auto;break-after:page}.page:last-child{break-after:auto}header{border-top:2.5mm solid #222;padding-top:4mm;margin-bottom:5mm;display:flex;align-items:end;justify-content:space-between}h1{font-size:27pt;letter-spacing:1mm;margin:0;line-height:1.25;font-family:"SimSun",serif}h2{font-size:13pt;margin:0 0 2mm}h3{font-size:11pt;margin:0 0 1mm}p{margin:0 0 2mm}.meta{font-size:9pt;color:#555;line-height:1.6}.lead{font-size:11pt;border-bottom:1px solid #aaa;padding-bottom:3mm;margin-bottom:4mm}.label{font-size:8pt;letter-spacing:.4mm;color:#555}.grid{display:grid;gap:3mm}.three{grid-template-columns:repeat(3,1fr)}.two{grid-template-columns:repeat(2,1fr)}.four{grid-template-columns:repeat(4,1fr)}.box{border:1px solid #777;padding:3mm}.world{margin-bottom:4mm}.world .box{height:31mm}.world strong{display:block;font-size:15pt;margin-bottom:2mm}.track{height:66mm;border:1px solid #555;padding:3mm}.track h2{font-size:19pt;font-family:"SimSun",serif;border-bottom:1px solid #aaa;padding-bottom:2mm}.track p{font-size:9pt}.write{height:9mm;border-bottom:1px dotted #aaa}.conditional{margin:4mm 0;height:32mm}.conditional .slots{display:grid;grid-template-columns:1fr 1fr;gap:0 4mm;font-size:8pt}.conditional .slots span{height:6mm;border-bottom:1px dotted #aaa}.track .write{height:7mm}.players .box{height:31mm}.players b{font-size:17pt}.players small{font-size:8pt}.rulespace{margin-top:4mm;height:21mm}.rounds{display:flex;align-items:center;gap:3mm;margin-top:4mm}.rounds span{display:inline-flex;width:7mm;height:7mm;border:1px solid #777;align-items:center;justify-content:center}.foot{position:absolute;bottom:0;left:0;right:0;border-top:1px solid #888;padding-top:2mm;display:flex;justify-content:space-between;font-size:8pt;color:#555}.cut{border:1px dashed #777;padding:3mm}.mode{height:30mm;padding:2.5mm}.mode h2{line-height:1.25;margin-bottom:1mm}.mode p{line-height:1.4;margin-bottom:1mm}.mode h2{font-size:14pt}.mode .cost{float:right;font-size:9pt;font-weight:normal}.mode p{font-size:9pt}.sample{font-family:"SimSun",serif;font-size:11pt!important}.actions{margin-top:4mm}.action{height:17mm;padding:2mm 3mm}.action h3{font-size:12pt}.action p{font-size:8.5pt}.tokens{margin-top:4mm;gap:2mm}.token{text-align:center;height:11.5mm;padding:1mm;font-size:11pt;line-height:1.25}.token small{display:block;font-size:7.5pt}.section-label{margin:4mm 0 2mm;font-size:9pt;color:#555}.quick{column-count:2;column-gap:7mm;font-size:9.1pt;line-height:1.65}.quick section{break-inside:avoid;margin-bottom:4mm}.quick h2{border-bottom:1px solid #aaa;padding-bottom:1mm;font-size:12pt}.quick ul,.quick ol{padding-left:5mm;margin:0}.quick li{margin-bottom:1mm}.quick .note{border-left:2px solid #444;padding-left:3mm}.banner{background:#eee;padding:3mm;margin-bottom:4mm;font-size:10pt}.screen{max-width:186mm;margin:20px auto;font-size:14px}.screen button{font:inherit;padding:8px 16px;cursor:pointer}.screen a{color:inherit}table{border-collapse:collapse;width:100%;font-size:8.5pt}td{padding:1.4mm 1mm;border-bottom:1px solid #ccc;vertical-align:top}td:first-child{white-space:nowrap;font-weight:bold}
+@media print{body{background:white}.page{margin:0;box-shadow:none}.screen{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media screen{.page{padding:0;box-shadow:0 2px 12px #0001}main{overflow:auto}}
+</style>
+</head>
+<body>
+<div class="screen"><button onclick="window.print()">打印 3 页试玩包</button> <a href="RULES.md">完整规则源文件</a><p>使用 A4 纵向，缩放 100%，关闭浏览器页眉页脚。第 1 页平放，第 2 页沿虚线裁切，第 3 页放在桌边。也可照着手画。</p></div>
+<main>
+<section class="page" aria-label="棋盘">
+<header><div><div class="label">语法时间棋盘 / 纸笔原型 v0.1</div><h1>昨天今天明天</h1></div><div class="meta">2–4 人<br>01 / 棋盘</div></header>
+<p class="lead">在自己的回合结束时，让 <b>桥好、门开、钥匙在我手里</b> 同时成立。</p>
+<h2>世界现状 <span class="meta">放状态标记，只有这里的事实算数。</span></h2>
+<div class="grid three world">
+<div class="box"><strong>桥</strong>□ 坏　□ 好<br><span class="meta">初始：坏</span></div>
+<div class="box"><strong>门</strong>□ 关　□ 开<br><span class="meta">初始：关</span></div>
+<div class="box"><strong>钥匙</strong>花盆 / A / B / C / D<br><span class="meta">初始：花盆</span></div>
+</div>
+<div class="grid three">
+<div class="track"><h2>过去</h2><p>“我昨天已经……”<br>付 2 信用，立即生效并加封签。</p><p class="meta">记录谁给哪个物件加了封签。</p><div class="write"></div><div class="write"></div><div class="write"></div><div class="write"></div></div>
+<div class="track"><h2>现在</h2><p>“我现在……”：付 1，立即生效。<br>“我正在……”：免费，放待办。</p><p class="meta">记录进行待办；目标变过就划掉。</p><div class="write"></div><div class="write"></div><div class="write"></div><div class="write"></div></div>
+<div class="track"><h2>未来</h2><p>“我下回合会……”<br>免费，放承诺待办。</p><p class="meta">兑现 +1 信用；失败 −1 信用。</p><div class="write"></div><div class="write"></div><div class="write"></div><div class="write"></div></div>
+</div>
+<div class="box conditional"><h2>如果……就…… <span class="meta">条件待办区</span></h2><p class="meta">写玩家、一个条件、一个动作。到本人下回合开始时检查一次；不连锁。</p><div class="slots"><span>A</span><span>B</span><span>C</span><span>D</span></div></div>
+<div class="grid four players">
+<div class="box"><b>A</b>　信用<br>□ 0 □ 1 □ 2 □ 3<br><small>钥匙停放处：○</small></div>
+<div class="box"><b>B</b>　信用<br>□ 0 □ 1 □ 2 □ 3<br><small>钥匙停放处：○</small></div>
+<div class="box"><b>C</b>　信用<br>□ 0 □ 1 □ 2 □ 3<br><small>钥匙停放处：○</small></div>
+<div class="box"><b>D</b>　信用<br>□ 0 □ 1 □ 2 □ 3<br><small>钥匙停放处：○</small></div>
+</div>
+<div class="box rulespace"><h3>以后都…… <span class="meta">可选桌规，首局留空</span></h3><div class="write"></div></div>
+<div class="rounds"><b>轮次</b><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><small>每人一次 = 一轮</small></div>
+<div class="foot"><span>开始：去掉自己的封签 → 结算待办 → 说一句 → 检查胜利</span><span>01 / 03</span></div>
+</section>
+<section class="page" aria-label="裁切卡片">
+<header><div><div class="label">昨天今天明天</div><h1>一句话的六种重量</h1></div><div class="meta">沿虚线裁切<br>02 / 卡片</div></header>
+<p class="lead">模式卡与动作卡公开放在桌上，反复使用，不抽取、不弃置。</p>
+<div class="grid two">
+<div class="cut mode"><h2>过去 <span class="cost">2 信用</span></h2><p class="sample">“我昨天已经把桥修好了。”</p><p>立即改变现状，放自己的封签。<br>自己的下回合开始时去掉封签。</p></div>
+<div class="cut mode"><h2>现在立即 <span class="cost">1 信用</span></h2><p class="sample">“我现在把桥修好。”</p><p>立即改变现状。<br>没有自动保护，别人可以再改变它。</p></div>
+<div class="cut mode"><h2>现在进行 <span class="cost">免费放待办</span></h2><p class="sample">“我正在修桥。”</p><p>本人下回合开始时尝试完成。<br>目标物件中途变过状态，待办取消。</p></div>
+<div class="cut mode"><h2>未来承诺 <span class="cost">免费放待办</span></h2><p class="sample">“我下回合会把桥修好。”</p><p>本人下回合开始时必须尝试兑现。<br>成功 +1 信用；失败 −1 信用。</p></div>
+<div class="cut mode"><h2>条件 <span class="cost">免费放待办</span></h2><p class="sample">“如果桥坏着，我就把桥修好。”</p><p>本人下回合开始时检查一次条件。<br>真则尝试动作，假则移除，不奖不罚。</p></div>
+<div class="cut mode"><h2>休息 <span class="cost">领取 1 信用</span></h2><p class="sample">“我先想一想。”</p><p>本次不改变物件。<br>基础信用上限 3，下限 0。</p></div>
+</div>
+<p class="section-label">六种动作 / 过去、现在、未来、条件都使用同一动作表</p>
+<div class="grid two actions">
+<div class="cut action"><h3>修桥</h3><p>桥 → 好　·　无需前提</p></div><div class="cut action"><h3>拆桥</h3><p>桥 → 坏　·　无需前提</p></div>
+<div class="cut action"><h3>开门</h3><p>门 → 开　·　生效时自己须持有钥匙</p></div><div class="cut action"><h3>关门</h3><p>门 → 关　·　无需前提</p></div>
+<div class="cut action"><h3>拿钥匙</h3><p>钥匙 → 自己　·　可从其他人手中拿走</p></div><div class="cut action"><h3>藏钥匙</h3><p>钥匙 → 花盆　·　生效时自己须持有钥匙</p></div>
+</div>
+<p class="section-label">状态与封签 / 桥、门用两张标签替换；多余标签放棋盘旁</p>
+<div class="grid four tokens">
+<div class="cut token">桥好</div><div class="cut token">桥坏</div><div class="cut token">门开</div><div class="cut token">门关</div>
+<div class="cut token">钥匙<small>只有这一把</small></div><div class="cut token">A 封签<small>改变物件额外付 1</small></div><div class="cut token">B 封签<small>改变物件额外付 1</small></div><div class="cut token">C 封签<small>改变物件额外付 1</small></div>
+<div class="cut token">D 封签<small>改变物件额外付 1</small></div><div class="cut token">轮次<small>放到轮次格上</small></div><div class="cut token">先手<small>下一局换人</small></div><div class="cut token">花盆<small>钥匙初始位置</small></div>
+</div>
+<div class="foot"><span>待办生效时仍需核对动作前提，并支付目标物件的封签费用。</span><span>02 / 03</span></div>
+</section>
+<section class="page" aria-label="桌边规则">
+<header><div><div class="label">昨天今天明天 / v0.1</div><h1>把话说清，让它成真</h1></div><div class="meta">放在桌边<br>03 / 规则速查</div></header>
+<div class="banner"><b>胜利：</b>自己回合结束时，桥好、门开、钥匙在自己手里。<br><b>开局：</b>桥坏、门关、钥匙在花盆；每人 2 信用，上限 3；任选先手。</div>
+<div class="quick">
+<section><h2>01 每回合</h2><ol><li>移除自己放的封签。</li><li>结算自己的待办并移除。</li><li>说一句，选一个模式和一个动作；也可休息。</li><li>只检查当前玩家是否获胜。</li></ol><p>每人行动一次为一轮，最多 8 轮。第 8 轮结束无人获胜则平局，不额外结算待办。</p></section>
+<section><h2>02 立即与延迟</h2><p>过去付 2 信用，立即执行并加封签；现在立即付 1 信用，立即执行。不能赊账。</p><p>进行、承诺、条件免费放待办，每人最多一张，在自己下回合开始时到期。结算后仍可正常说一句。所有待办生效时，基础费用为 0，但须满足动作前提、支付封签费用。</p><p>进行：目标物件中途改变过状态就取消，即使后来变回去。其他物件改变不打断它。</p><p>承诺：到期必须尝试执行，不能主动撤回。完成 +1 信用，失败 −1 信用；不足 1 时降到 0。</p><p>条件：只在到期时检查一次；真则尝试动作，假则移除。无论成败都不奖罚。</p></section>
+<section><h2>03 封签</h2><p>改变带封签的物件，额外付 1 信用，再移除旧封签；对所有人包括主人都有效。过去动作再放新封签。</p><p>只把封签加上或拿掉，不算物件改变。开门改变的是门，钥匙有封签不增加开门费用。</p></section>
+<section><h2>04 做不到和已经做到</h2><p>立即动作若不改变现状、付不起费用或前提不成立，改选合法动作或休息。</p><p>待办到期时若目标已成立，视为完成，不重复付费；承诺照常领奖。否则核对前提与费用，不满足就失败并移除，只有承诺另扣 1 信用。</p></section>
+<section><h2>05 这句话算什么</h2><p>下家复述玩家的模式、目标和动作，玩家确认后结算。可自由措辞，不按语法术语评分。</p><p>有歧义可改述一次，直接指向模式卡和动作卡；20 秒仍说不清，就按休息处理。明确对应合法操作的句子不能被投票否决。</p><p>“我从来没说过”不能删除记录；“没关门”不自动等于“开门”。一句只做一个动作；后生效的合法动作覆盖现状，已付费用不退。</p></section>
+<section><h2>06 条件的边界</h2><p>条件只选一个状态：桥好或坏、门开或关、钥匙在花盆或某玩家手里；可用其否定。后半句只用一个动作。</p><p>不判断别人的想法、下一句话或胜负；不嵌套、不连锁，不在别人的回合触发。“明天”统一指自己下回合。</p></section>
+<section><h2>07 以后都 可选实验</h2><p>首局不启用。用“说一句”的机会提案：以后信用上限为 4，或兑现奖励为 2，或休息领取 2。</p><p>其他人全部同意才写入规则轨，下轮生效，每局最多一条；未通过按休息处理。不追溯，不改胜负与轮数。</p></section>
+<section><h2>08 换一句话试试</h2><p class="note">甲“正在修桥”，乙修好桥、丙再拆坏：甲的进行已取消。<br>若甲说的是“下回合会修桥”，承诺仍在，到期照常尝试。</p><p>玩法中的费用、封签和句式效果都是自创规则。时间轨不是中文语法分类，“如果”也不是一种时态。事实背景与来源见工作区 README。</p></section>
+</div>
+<div class="foot"><span>需要：三张纸、笔、剪刀、每人三枚硬币或豆子；不需要电脑参与游戏。</span><span>03 / 03</span></div>
+</section>
+</main>
+</body>
+</html>

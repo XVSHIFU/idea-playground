@@ -1,0 +1,27 @@
+{
+  "id": "link-creatures",
+  "name": "链接生物",
+  "category": "数字生命",
+  "description": "一条链接，一只独一无二的生物。陪伴它，再看看它的下一代。",
+  "hint": "移动指针，和它打个招呼",
+  "label": "陪伴 · 繁殖",
+  "color": "#eee8f5",
+  "directory": "../link-creatures",
+  "port": 4178,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "app.js",
+    "genes.js",
+    "style.css"
+  ],
+  "files": [
+    "index.html",
+    "app.js",
+    "genes.js",
+    "style.css",
+    "favicon.svg"
+  ],
+  "identity": "种子页",
+  "enabled": true
+}

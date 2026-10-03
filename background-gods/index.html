@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eeeee6"><meta name="description" content="切换标签页，分配你的目光。一个关于注意力、暗时间与微小生命的浏览器玩具。">
+  <title>后台诸神</title><link rel="icon" href="favicon.svg"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="masthead">
+      <a class="brand" href="./" aria-label="后台诸神首页"><img src="favicon.svg" alt="" width="34" height="34"><span>后台诸神<small>GODS IN THE BACKGROUND</small></span></a>
+      <p class="header-note">目光所及，万物生长。</p>
+      <button class="text-button" id="help-toggle" aria-expanded="false" aria-controls="guide">如何相处 <span aria-hidden="true">↗</span></button>
+    </header>
+    <section id="guide" class="guide" hidden>
+      <h2>把标签页，当成一片栖息地。</h2>
+      <ol><li><strong>看着它</strong>停留会积累微光，让根须生长。</li><li><strong>离开一会儿</strong>切去另一个标签页。十二秒后，它会有自己的梦。</li><li><strong>让它们相遇</strong>「创生」打开新的存在；「分叉」带走一部分记忆。</li><li><strong>轻轻关上</strong>关闭标签页时，留下的微光可能被仍在这里的生命接住。</li></ol>
+      <p>当两个生命都拥有 24 点微光，并各自在暗处待过 12 秒，一道门会出现。也可以什么都不追求，只陪它们一会儿。</p>
+      <p class="fine">请在同一个浏览器、同一网址下打开多个标签页。刷新会延续生命；浏览器自带的“复制标签页”会尝试分叉。突然断电或强制关闭可能只留下失联的痕迹。</p>
+    </section>
+    <div id="notice" class="notice" role="status" hidden></div>
+    <main>
+      <section class="habitat" aria-label="当前生命">
+        <div class="specimen-head"><div><span class="label">此刻，你正在看着</span><h1 id="being-name">初生</h1></div><span id="being-status" class="status"><i></i> 正在醒来</span></div>
+        <div class="field"><canvas id="organism" aria-label="随微光和梦境变化的生命形态" role="img"></canvas><div class="field-annotation left">每一次注视<br>都留下形状</div><div class="field-annotation right" id="lineage">初代生命<br>尚未分叉</div><div class="crosshair c1"></div><div class="crosshair c2"></div><div id="gate" class="gate" hidden><span>门开了</span><p>原来光与黑暗，缺一不可。</p></div></div>
+        <div class="voice"><span class="voice-mark" aria-hidden="true">“</span><p id="quote" aria-live="polite">好暗。原来是你来了。</p><span class="voice-caption">来自这个小小的存在</span></div>
+        <dl class="vitals"><div><dt>积攒的微光</dt><dd><span id="energy">0</span><small>光点</small></dd></div><div><dt>被看见的时间</dt><dd><span id="light">0</span><small id="light-unit">秒</small></dd></div><div><dt>独自做过的梦</dt><dd><span id="dreams">0</span><small>场</small></dd></div></dl>
+      </section>
+      <aside class="journal" aria-label="生命记录">
+        <div class="journal-title"><h2>暗处的来信</h2><span id="memory-count">01</span></div>
+        <p class="journal-intro">你不在的时候，<br>世界也没有停下来。</p>
+        <ol id="memories" class="memories"></ol>
+        <div class="journal-bottom"><span class="tiny-orbit" aria-hidden="true"></span><p id="suggestion">试着打开第二个标签页。<br>让另一个生命，在暗处醒来。</p></div>
+      </aside>
+    </main>
+    <section class="ecosystem" aria-labelledby="ecology-title"><div class="ecology-heading"><h2 id="ecology-title">同一片宇宙 <span id="living-count">1 个存在</span></h2><span class="ecology-hint">标签页是它们的栖息地</span></div><div class="ecology-body"><div id="beings" class="beings"></div><div class="actions"><button id="fork" class="button secondary"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17V9M10 10 5 5M10 10l5-5M3 3h4v4M13 3h4v4"/></svg>从我分叉</button><button id="create" class="button primary"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v14M3 10h14"/></svg>创生一个</button></div></div></section>
+    <footer><span>不必拥有整个宇宙。看一会儿，就好。</span><span id="connection">正在寻找彼此</span></footer>
+  </div>
+  <noscript><p class="notice">这个小宇宙需要 JavaScript 才能醒来，请在浏览器中启用它。</p></noscript>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

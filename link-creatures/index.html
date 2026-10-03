@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3e9">
+  <meta name="description" content="每一个链接，都是一颗生命的种子。观察、陪伴、繁殖与分享你的链接生物。">
+  <title>链接生物 · 种子页</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="genes.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="#" id="home" aria-label="回到当前生物"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 27V14M16 20C5 21 4 12 5 7c8-1 13 4 11 13ZM16 15C15 5 22 3 28 4c0 8-5 12-12 11Z"/></svg>链接生物<span class="brand-en">LINK CREATURES</span></a>
+    <nav aria-label="主导航"><a href="#habitat" class="nav-active">观察室</a><a href="#lineage">我的谱系 <span id="nav-count">0</span></a><button class="text-button" id="about-toggle" aria-expanded="false" aria-controls="about">这是什么？</button></nav>
+  </header>
+  <aside id="about" hidden class="about"><p>一个链接，就是一只生物。链接里的六段基因决定它的模样和性格；你的屏幕、时间与陪伴，让它长出自己的习惯。</p><p>繁殖会让少量基因变异，杂交让两个个体留下共同的后代。复制子代链接，把一颗生命的种子交给另一个人。</p></aside>
+  <main>
+    <section class="intro"><div><h1>生命，从一个链接开始。</h1><p>小小的基因，慢慢长成独一无二的相遇。</p></div><div class="live-label"><span></span> 观察室已就绪 <small>每次打开，都是一次生长</small></div></section>
+    <div class="observation-layout" id="habitat">
+      <section class="habitat" aria-label="生物栖息地">
+        <div class="habitat-top"><span class="habitat-label"><span class="status-dot"></span> 活体观察</span><span id="specimen-id" class="mono"></span></div>
+        <div class="environment-top"><span id="env-time"></span><span id="env-space"></span></div>
+        <div class="creature-space" id="creature-space"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div><span class="field-label field-label-one">生长中的小宇宙</span><span class="field-label field-label-two">靠近一点，认识它。</span><button id="creature" class="creature" aria-label="轻触生物，与它互动"><svg id="organism" viewBox="0 0 400 360" aria-hidden="true"></svg></button><div class="ground-shadow"></div><div class="response" id="response" role="status">它正在慢慢认识这个世界。</div></div>
+        <div class="habitat-bottom"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 3 11 9-6 1-3 6Z"/></svg><span id="interaction-hint">移动指针，看看它的反应</span></span><button id="new-seed" class="text-button">遇见另一只 <span aria-hidden="true">↗</span></button></div>
+      </section>
+      <aside class="specimen">
+        <div class="specimen-heading"><span id="generation">第 0 代 · 初生种子</span><button id="rename" class="icon-button" aria-label="给生物命名" title="给生物命名"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 4 5 5M4 20l5-1L21 7l-5-5L4 14Z"/></svg></button></div>
+        <h2 id="creature-name"></h2><form id="rename-form" hidden><label for="name-input">它的新名字</label><div class="input-row"><input id="name-input" maxlength="24" required autocomplete="off"><button class="small-button">保存</button></div></form>
+        <div class="traits" id="traits"></div><p class="personality" id="personality"></p>
+        <div class="gene-heading"><h3>它的基因</h3><span>GENOTYPE</span></div><dl class="gene-list" id="gene-list"></dl>
+        <div class="actions"><button id="reproduce" class="primary-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V10M12 16C4 17 3 9 4 6c6 0 9 4 8 10ZM12 10c0-6 4-8 9-7 0 6-4 9-9 7Z"/></svg>繁殖一颗种子<span aria-hidden="true">↗</span></button><button id="cross-toggle" class="secondary-button" aria-expanded="false" aria-controls="cross-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c10 0 6 14 16 14M4 19c10 0 6-14 16-14m-4-3 4 3-4 3m0 8 4 3-4 3"/></svg>让两个链接相遇</button></div>
+        <p class="action-note">新生的种子，会继承一点它，也继承一点你。</p>
+      </aside>
+    </div>
+    <section id="seed-result" class="seed-result" hidden aria-labelledby="seed-title"><div><h2 id="seed-title">一颗新种子诞生了。</h2><p id="mutation-note"></p></div><div class="result-actions"><button id="copy-seed" class="primary-button">复制子代链接</button><button id="visit-seed" class="secondary-button">去看看它 <span aria-hidden="true">↗</span></button></div><label for="seed-url">子代链接</label><input id="seed-url" readonly aria-label="子代链接"></section>
+    <section id="cross-panel" class="cross-panel" hidden aria-labelledby="cross-heading"><div><h2 id="cross-heading">让两段生命，续写一个故事。</h2><p>第一位亲代已填入当前生物。再带来一个种子链接。</p></div><form id="cross-form"><label for="parent-a">亲代 A<input id="parent-a" required placeholder="粘贴第一个种子链接" spellcheck="false"></label><label for="parent-b">亲代 B<input id="parent-b" required placeholder="粘贴另一个种子链接" spellcheck="false"></label><p id="cross-error" role="alert"></p><button class="primary-button">孵化混合后代</button></form></section>
+    <section class="environment" aria-labelledby="environment-title"><div class="environment-title"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="6"/><path d="M16 1v5m0 20v5M1 16h5m20 0h5M5 5l4 4m14 14 4 4M5 27l4-4M23 9l4-4"/></svg><div><h2 id="environment-title">同一基因，不同生长。</h2><p>环境留下痕迹，生命仍是它自己。</p></div></div><dl><div><dt>此刻光照</dt><dd id="light-value"></dd></div><div><dt>栖息空间</dt><dd id="space-value"></dd></div><div><dt>交流方式</dt><dd id="input-value"></dd></div><div><dt>环境语言</dt><dd id="language-value"></dd></div></dl><details><summary>换一个环境，观察它</summary><div class="simulation"><label>光照<select id="light-mode"><option value="auto">跟随本地时间</option><option value="day">模拟白天</option><option value="night">模拟深夜</option></select></label><label>空间<select id="space-mode"><option value="auto">跟随窗口大小</option><option value="narrow">模拟窄屏</option><option value="wide">模拟宽屏</option></select></label><p id="environment-description"></p></div></details></section>
+    <section class="lineage-section" id="lineage"><div class="section-heading"><div><h2>相遇的痕迹<span id="lineage-count"></span></h2><p>你见过的生命，都在这里留下一枚种子。</p></div><span class="local-note">仅保存在这台设备</span></div><div id="lineage-list" class="lineage-list"></div></section>
+  </main>
+  <footer><a class="footer-brand" href="#habitat">链接生物 / 种子页</a><span>把一个链接，种进另一个世界。</span><span class="mono">GROW · MUTATE · CONNECT</span></footer>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <noscript>请启用 JavaScript 来孵化你的链接生物。</noscript>
+</body>
+</html>

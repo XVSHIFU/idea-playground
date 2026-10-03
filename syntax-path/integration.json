@@ -1,0 +1,24 @@
+{
+  "id": "syntax-path",
+  "name": "句法小径",
+  "category": "互动实验",
+  "description": "把一句话折成可走建筑，用手指探索修饰、分组与回望。",
+  "hint": "先走完主廊，再试着把同一间侧室接到另一个位置。",
+  "label": "语言 · 空间",
+  "color": "#e5eaf5",
+  "directory": "../syntax-path",
+  "port": 4300,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "app.js",
+    "styles.css"
+  ],
+  "files": [
+    "index.html",
+    "app.js",
+    "styles.css"
+  ],
+  "identity": "句法小径",
+  "enabled": false
+}

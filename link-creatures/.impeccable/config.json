@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-02T01:34:12.832Z",
+        "reason": "Agent design decision: DESIGN.md records the observation handbook palette, paper #f5f3e9 with botanical green; desktop and mobile visual review accepted this deliberate palette. Not user-confirmed."
+      }
+    ]
+  }
+}

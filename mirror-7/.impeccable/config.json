@@ -1,0 +1,53 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-03T03:08:46.974Z",
+        "reason": "Agent reviewed screenshots: double horizontal directory rule, not card side accent; recovered archive brief."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "archive/1997-tutorial.html"
+        ],
+        "createdAt": "2026-10-03T03:08:47.043Z",
+        "reason": "Agent reviewed screenshots: historical personal-site masthead double rule, not card side accent."
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "archive/1997-tutorial.html"
+        ],
+        "createdAt": "2026-10-03T03:08:47.097Z",
+        "reason": "Agent retained intentional 1997 personal tutorial paper palette; source-specific, not global default."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "manual/desktop-buffer.html"
+        ],
+        "createdAt": "2026-10-03T03:08:47.149Z",
+        "reason": "Agent reviewed screenshots: horizontal software manual masthead rule, not card side accent."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "security/incident-2041.html"
+        ],
+        "createdAt": "2026-10-03T03:08:47.214Z",
+        "reason": "Agent reviewed screenshots: horizontal incident bulletin masthead rule, not card side accent."
+      }
+    ]
+  }
+}

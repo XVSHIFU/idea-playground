@@ -1,0 +1,34 @@
+{
+  "id": "grammar-time-board",
+  "name": "昨天今天明天",
+  "category": "一起玩",
+  "description": "同一个动作，换一种说法。和朋友围坐，用句子改变棋盘上的世界。",
+  "hint": "2–4 人一起玩，也可打印纸笔版",
+  "label": "桌游 · 2–4 人",
+  "color": "#f1e8db",
+  "directory": "../grammar-time-board",
+  "port": 4191,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "app.js",
+    "engine.js",
+    "styles.css"
+  ],
+  "fallback": "print.html",
+  "fallbackLabel": "打开纸笔版",
+  "files": [
+    "index.html",
+    "app.js",
+    "engine.js",
+    "styles.css",
+    "print.html",
+    "README.md",
+    "RULES.md"
+  ],
+  "publicDirectories": [
+    "output/pdf"
+  ],
+  "identity": "昨天",
+  "enabled": true
+}

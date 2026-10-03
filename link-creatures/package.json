@@ -1,0 +1,10 @@
+{
+  "name": "link-creatures",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A URL is a genome. A link is a living seed.",
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "node --test tests/genes.test.cjs"
+  }
+}

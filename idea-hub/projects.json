@@ -1,0 +1,224 @@
+[
+  {
+    "id": "link-creatures",
+    "name": "链接生物",
+    "category": "数字生命",
+    "description": "一条链接，一只独一无二的生物。陪伴它，再看看它的下一代。",
+    "hint": "移动指针，和它打个招呼",
+    "label": "陪伴 · 繁殖",
+    "color": "#eee8f5",
+    "directory": "../link-creatures",
+    "port": 4178,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "app.js",
+      "genes.js",
+      "style.css"
+    ],
+    "files": [
+      "index.html",
+      "app.js",
+      "genes.js",
+      "style.css",
+      "favicon.svg"
+    ],
+    "identity": "种子页",
+    "enabled": true
+  },
+  {
+    "id": "cache-city",
+    "name": "缓存之城",
+    "category": "叙事漫游",
+    "description": "走进一座会遗忘的城。回访一个地方，或留下一句话，把它留住。",
+    "hint": "从白房间出发",
+    "label": "漫游 · 记忆",
+    "color": "#e8ecdf",
+    "directory": "../cache-city",
+    "port": 4187,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "app.js",
+      "engine.js",
+      "style.css"
+    ],
+    "files": [
+      "index.html",
+      "app.js",
+      "engine.js",
+      "style.css",
+      "assets/story-serif.ttf",
+      "assets/OFL.txt"
+    ],
+    "identity": "缓存之城",
+    "enabled": true
+  },
+  {
+    "id": "background-gods",
+    "name": "后台诸神",
+    "category": "数字生命",
+    "description": "你看着它，它积攒微光。切换一个标签页，让生命在暗时间里做梦。",
+    "hint": "适合在桌面浏览器打开多个标签页",
+    "label": "观察 · 多标签页",
+    "color": "#e3eae8",
+    "directory": "../background-gods",
+    "port": 4177,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "app.js",
+      "engine.js",
+      "style.css"
+    ],
+    "files": [
+      "index.html",
+      "app.js",
+      "engine.js",
+      "style.css",
+      "favicon.svg"
+    ],
+    "identity": "后台诸神",
+    "enabled": true
+  },
+  {
+    "id": "mirror-7",
+    "name": "错误地球档案馆",
+    "category": "叙事漫游",
+    "description": "五份来自另一种日常的网页档案。顺着线索，发现它们共同指向的世界。",
+    "hint": "从一份旧教程开始读起",
+    "label": "阅读 · 虚构档案",
+    "color": "#e5eaf5",
+    "directory": "../mirror-7",
+    "port": 4192,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "assets/archive.css"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [
+      "assets",
+      "archive",
+      "forum",
+      "manual",
+      "security"
+    ],
+    "identity": "MIRROR",
+    "enabled": true
+  },
+  {
+    "id": "protocol-zoo",
+    "name": "协议动物园",
+    "category": "互动实验",
+    "description": "发送一串信号，等待回应。重复与打断之间，一个通信习惯逐渐形成。",
+    "hint": "试着依次发送 11、22、11、22",
+    "label": "信号 · 模式学习",
+    "color": "#e5eadd",
+    "directory": "../protocol-zoo",
+    "port": 4173,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "app.js",
+      "engine.js",
+      "style.css"
+    ],
+    "files": [
+      "index.html",
+      "app.js",
+      "engine.js",
+      "style.css"
+    ],
+    "identity": "MOTH",
+    "enabled": true
+  },
+  {
+    "id": "grammar-time-board",
+    "name": "昨天今天明天",
+    "category": "一起玩",
+    "description": "同一个动作，换一种说法。和朋友围坐，用句子改变棋盘上的世界。",
+    "hint": "2–4 人一起玩，也可打印纸笔版",
+    "label": "桌游 · 2–4 人",
+    "color": "#f1e8db",
+    "directory": "../grammar-time-board",
+    "port": 4191,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "app.js",
+      "engine.js",
+      "styles.css"
+    ],
+    "fallback": "print.html",
+    "fallbackLabel": "打开纸笔版",
+    "files": [
+      "index.html",
+      "app.js",
+      "engine.js",
+      "styles.css",
+      "print.html",
+      "README.md",
+      "RULES.md"
+    ],
+    "publicDirectories": [
+      "output/pdf"
+    ],
+    "identity": "昨天",
+    "enabled": true
+  },
+  {
+    "id": "clay-auction",
+    "name": "越抢越变形的拍卖会",
+    "category": "一起玩",
+    "description": "每次出价，都把一块泥接到作品上。你想带走的东西，正在被所有人改变。",
+    "hint": "三人同屏，先选一块泥接到底泥上",
+    "label": "共同塑形 · 3 人",
+    "color": "#eee6c9",
+    "directory": "../clay-auction",
+    "port": 4193,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "app.js",
+      "engine.js",
+      "style.css"
+    ],
+    "files": [
+      "index.html",
+      "app.js",
+      "engine.js",
+      "style.css",
+      "rules.html",
+      "favicon.svg"
+    ],
+    "identity": "越抢越变形的拍卖会",
+    "enabled": true
+  },
+  {
+    "id": "syntax-path",
+    "name": "句法小径",
+    "category": "互动实验",
+    "description": "把一句话折成可走建筑，用手指探索修饰、分组与回望。",
+    "hint": "先走完主廊，再试着把同一间侧室接到另一个位置。",
+    "label": "语言 · 空间",
+    "color": "#e5eaf5",
+    "directory": "../syntax-path",
+    "port": 4300,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "app.js",
+      "styles.css"
+    ],
+    "files": [
+      "index.html",
+      "app.js",
+      "styles.css"
+    ],
+    "identity": "句法小径",
+    "enabled": false
+  }
+]

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1e8">
+  <meta name="description" content="把一句话折成可走建筑。沿着主廊，进入侧室，再换一种读法。">
+  <title>句法小径 · 把一句话走一遍</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="index.html" aria-label="句法小径首页"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 24V9l12-5v15l12-5v14L16 24zM16 4l12 5v5M4 9l12 5"/></svg>句法小径</a>
+    <span class="masthead-note">纸、语言，以及一次回望</span>
+    <a href="#guide" class="text-link">怎么玩 <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="opening" aria-labelledby="page-title">
+      <h1 id="page-title">把一句话，<br>走一遍。</h1>
+      <div class="opening-copy"><p>主句是一条廊，修饰语是一间侧室。<br>换一处连接，同一句话就有了另一种走法。</p><p class="quiet">先读句子，再从入口出发。</p></div>
+    </section>
+
+    <section class="workbench" aria-label="句法建筑互动实验">
+      <div class="sentence-bar"><span class="small-label">今天的小径</span><p class="sentence">我看见了<span class="modifier">学生的</span><span id="sentence-scope">老师和朋友</span>。</p></div>
+      <div class="bench-toolbar">
+        <div class="model-picker" role="group" aria-label="选择句子分组">
+          <button type="button" class="model-button" data-model="A" aria-pressed="true"><span>A</span> 一起修饰</button>
+          <button type="button" class="model-button" data-model="B" aria-pressed="false"><span>B</span> 只修饰老师</button>
+        </div>
+        <div class="view-options"><label><input id="fold" type="checkbox" checked> 折起纸面</label><label><input id="hide-labels" type="checkbox"> 隐去词语</label></div>
+      </div>
+      <div class="workspace-grid">
+        <div class="scene-wrap">
+          <div class="scene-caption"><span id="scene-name">共用一间门厅</span><span id="model-tag">结构 A</span></div>
+          <svg id="scene" viewBox="0 0 1000 540" role="img" aria-labelledby="scene-title scene-description"></svg>
+          <div class="scene-key"><span><i class="key-dot"></i> 你的位置</span><span><i class="key-line"></i> 已走过</span><span><i class="key-fold"></i> 侧室的接点</span></div>
+        </div>
+        <aside class="walk-panel" aria-label="行走控制">
+          <div class="walk-topline"><span>此刻停在</span><span id="step-count">1 / 9</span></div>
+          <div class="walk-copy" aria-live="polite" aria-atomic="true"><h2 id="place-title">入口庭院</h2><p id="place-description">你站在“我”的位置。沿着主廊，去看看这句话通向哪里。</p></div>
+          <div class="step-progress" id="step-progress" aria-hidden="true"></div>
+          <button type="button" id="next" class="primary-button">向前走 <span aria-hidden="true">→</span></button>
+          <div class="walk-secondary"><button type="button" id="previous" disabled>退一步</button><button type="button" id="restart">回到入口</button></div>
+          <p class="keyboard-hint">也可以用键盘 ← → 行走</p>
+          <div class="connection-note"><span class="small-label">这一次的连接</span><p id="connection-description">“学生的”接在共用门厅，同时关联老师与朋友。</p></div>
+        </aside>
+      </div>
+      <div class="reading-strip"><span class="small-label">把关系读出来</span><p id="bracket-reading">我看见了［学生的［老师和朋友］］</p><button type="button" id="compare">换一种走法 <span aria-hidden="true">↗</span></button></div>
+    </section>
+
+    <section class="below-bench">
+      <details id="guide" class="guide" open>
+        <summary>在小径里做什么 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg></summary>
+        <ol><li><strong>向前，直到一扇门。</strong><p>橙色小珠是你。遇见修饰语，先离开主廊，走进侧室。</p></li><li><strong>返回，再继续。</strong><p>侧室只有一个出入口。从哪里进入，就回到哪里。</p></li><li><strong>重接，读出差别。</strong><p>切换 A / B，观察“学生的”接在什么位置；留意你是否接受这两种读法。</p></li></ol>
+        <p class="guide-footnote">走的是关系顺序，不是逐字顺序。两种分组是供试读的候选；若只接受一种，也是一条值得留下的观察。</p>
+      </details>
+      <section class="notebook" aria-labelledby="notes-title">
+        <div class="notes-heading"><h2 id="notes-title">留下一次回望</h2><span id="save-status" role="status">笔记只留在此浏览器</span></div>
+        <div class="note-tabs" role="group" aria-label="选择记录的结构"><button type="button" data-note="A" aria-pressed="true">结构 A 的观察</button><button type="button" data-note="B" aria-pressed="false">结构 B 的观察</button></div>
+        <label for="naturalness">这次读法，你觉得</label>
+        <select id="naturalness"><option value="">还没决定</option><option value="自然">自然</option><option value="需要上下文">需要上下文</option><option value="难以接受">难以接受</option></select>
+        <label for="note">哪里停顿、回看，或走得不太明白？</label>
+        <textarea id="note" rows="3" maxlength="6000" placeholder="比如：走到门厅时，我才发现两个房间可以属于同一个人。"></textarea>
+        <div class="note-actions"><span id="walked-status">走完小径后，再读一次原句。</span><button type="button" id="export">导出两份观察 <span aria-hidden="true">↓</span></button></div>
+      </section>
+    </section>
+  </main>
+  <footer><span>句法小径</span><p>一种关于语言与空间的小实验。建筑是比喻，你的读法可以不同。</p><button type="button" id="print">打印这一页</button></footer>
+  <noscript><p class="noscript">请启用 JavaScript 来移动小珠和切换结构；纸面实验可阅读同目录的 PLAYTEST.md。</p></noscript>
+</body>
+</html>

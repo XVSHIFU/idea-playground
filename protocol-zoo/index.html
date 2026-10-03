@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#eeeee5">
+  <title>协议动物园 — MOTH/0</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="engine.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="masthead"><a class="brand" href="index.html">协议动物园<span>PROTOCOL ZOO</span></a><span class="edition">一个关于重复与意外的通信实验</span><button id="help-toggle" class="text-button" aria-expanded="false" aria-controls="help">如何开始 <span aria-hidden="true">?</span></button></header>
+  <main>
+    <section class="intro" aria-labelledby="title"><div><h1 id="title">另一端，<br>有什么在听。</h1><p>先发送一个字节。然后，看看重复会留下什么。</p></div><div class="specimen"><span class="connection"><i id="status-light"></i><span id="status">连接中</span></span><h2>MOTH<span>/0</span></h2><p>本地模拟 · 单一观察对象</p></div></section>
+    <section id="help" class="help" hidden><h2>从一次重复开始</h2><p>点击下方字节，或输入 1–8 个十六进制字节。试着交替发送 <code>11</code> 和 <code>22</code> 几次，然后停一会儿。也可以突然换一种输入，观察之后的不同。</p><p>暂停会冻结通信计时；休息会断开连接并保留习惯；重新开始会清空本次通信和笔记。刷新页面也会开启全新会话。这里没有需要解锁的唯一答案。</p></section>
+    <div class="workspace">
+      <section class="terminal" aria-labelledby="log-title">
+        <div class="panel-header"><h2 id="log-title">通信记录 <span id="packet-count">0 个字节包</span></h2><button id="export" class="text-button">导出记录 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10m-4-4 4 4 4-4M4 13v4h12v-4"/></svg></button></div>
+        <div class="log-columns" aria-hidden="true"><span>经过时间</span><span>方向</span><span>字节 / 事件</span></div>
+        <div id="log" role="log" aria-label="通信记录" aria-live="polite" aria-relevant="additions" tabindex="0"><div id="empty"><div class="signal-mark" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div><p>线路已接通。</p><span>发送第一个字节，让观察开始。</span></div></div>
+        <button id="latest" class="latest" hidden>查看最新记录</button>
+        <form id="send-form" class="composer"><div class="composer-label"><label for="bytes">发送字节</label><span>HEX · 01–08 BYTES</span></div><div class="input-row"><input id="bytes" type="text" placeholder="例如 11 或 A0 FF" maxlength="23" autocomplete="off" spellcheck="false" aria-describedby="input-error"><button id="send" class="primary" type="submit">发送 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5"/></svg></button></div><p id="input-error" role="alert"></p><div class="presets"><span>快捷输入</span><button type="button" data-byte="11">11</button><button type="button" data-byte="22">22</button><button type="button" data-byte="33">33</button><button type="button" data-byte="00">00</button><button type="button" data-byte="FF">FF</button></div></form>
+      </section>
+      <aside class="notebook"><div class="panel-header"><h2>观察手记</h2><span class="pencil" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m4 13 9-9 3 3-9 9-4 1 1-4Zm7-7 3 3"/></svg></span></div><p class="note-intro">不必急着解释它。<br>先记下，你看见了什么。</p><label for="notes" class="sr-only">你的观察笔记</label><textarea id="notes" placeholder="它似乎会……&#10;&#10;当我改变输入时……" maxlength="10000"></textarea><div class="note-footer"><span id="note-count">0 字</span><span>仅保留在本次会话</span></div><details class="prompt"><summary>不知道试什么？</summary><p>重复、等待、打断，再恢复旧模式。比较休息前后的第一条信号。</p></details></aside>
+    </div>
+    <footer class="session-bar"><div class="session-controls"><button id="pause">暂停</button><button id="rest">让它休息</button><button id="reset" class="text-button">重新开始</button></div><p id="session-hint" role="status">你可以发送，也可以等待。</p><span class="session-id">MOTH/0 · SESSION <span id="session-number">001</span></span></footer>
+    <p class="colophon">没有预设的对话。只有你们留下的模式。<span>协议动物园 / 本地实验 001</span></p>
+  </main>
+  <dialog id="reset-dialog"><form method="dialog"><h2>重新开始这次观察？</h2><p>通信记录、已形成的习惯和观察手记都会清空。你可以先导出记录。</p><div><button value="cancel">保留这次观察</button><button value="reset" class="primary">清空并重新开始</button></div></form></dialog>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "id": "protocol-zoo",
+  "name": "协议动物园",
+  "category": "互动实验",
+  "description": "发送一串信号，等待回应。重复与打断之间，一个通信习惯逐渐形成。",
+  "hint": "试着依次发送 11、22、11、22",
+  "label": "信号 · 模式学习",
+  "color": "#e5eadd",
+  "directory": "../protocol-zoo",
+  "port": 4173,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "app.js",
+    "engine.js",
+    "style.css"
+  ],
+  "files": [
+    "index.html",
+    "app.js",
+    "engine.js",
+    "style.css"
+  ],
+  "identity": "MOTH",
+  "enabled": true
+}

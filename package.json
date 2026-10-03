@@ -1,0 +1,18 @@
+{
+  "name": "idea-playground",
+  "version": "1.0.0",
+  "private": true,
+  "description": "小创意游乐场：独立网页实验的本地主入口与 GitHub Pages 发布工具",
+  "scripts": {
+    "start": "node idea-hub/server.mjs",
+    "check": "node tools/catalog.mjs",
+    "build": "node tools/build.mjs",
+    "preview": "node tools/preview.mjs",
+    "test": "node --test tools/tests/*.test.mjs idea-hub/tests/*.test.mjs",
+    "verify:pages": "node tools/verify-pages.cjs",
+    "project:new": "node tools/project.mjs new",
+    "project:add": "node tools/project.mjs add"
+  },
+  "engines": { "node": ">=22" },
+  "devDependencies": { "@playwright/test": "1.63.0" }
+}

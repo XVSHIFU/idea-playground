@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-03T03:13:27.148295+00:00",
+  "title": "Design System: MIRROR 7",
+  "extensions": {
+    "shadows": [],
+    "motion": [
+      {
+        "name": "outgoing-page",
+        "value": "100ms",
+        "purpose": "Root view transition only under prefers-reduced-motion: no-preference."
+      },
+      {
+        "name": "incoming-page",
+        "value": "140ms",
+        "purpose": "Root view transition only under prefers-reduced-motion: no-preference."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact",
+        "value": "700px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Mirror navigation",
+      "kind": "nav",
+      "refersTo": "mirror-navigation",
+      "description": "Persistent return link and recovered source path.",
+      "html": "<nav class=\"ds-mirror\"><a href=\"#index\">← MIRROR 7 / 索引</a><span>manual / desktop-buffer</span></nav>",
+      "css": ".ds-mirror{display:flex;gap:18px;justify-content:space-between;align-items:center;padding:10px 28px;border-bottom:1px solid var(--line,#b8c7d0);font:12px/1.5 Consolas,\"Courier New\",monospace;background:#edf1f4;color:#354d64}.ds-mirror a{color:#274967;text-underline-offset:4px}.ds-mirror span{overflow-wrap:anywhere;text-align:right}.ds-mirror a:hover{text-decoration-thickness:2px}.ds-mirror a:visited{color:#645a80}.ds-mirror a:focus-visible{outline:2px solid currentColor;outline-offset:5px}@media(max-width:700px){.ds-mirror{padding:10px 16px}}"
+    },
+    {
+      "name": "Directory record",
+      "kind": "custom",
+      "refersTo": "directory-record",
+      "description": "Date, linked title and provenance in a ruled catalog row.",
+      "html": "<div class=\"ds-record\"><time>1997.06.12</time><div><a href=\"#record\">把网页上的一段话寄给朋友</a><p>燕子的电脑角 · 入门教程 / text-camera</p></div></div>",
+      "css": ".ds-record{border-top:1px solid var(--line,#b8c7d0);padding:18px 0 19px;display:grid;grid-template-columns:90px minmax(0,1fr);gap:16px;color:var(--ink,#183d67);font-family:Georgia,\"Times New Roman\",\"Songti SC\",SimSun,serif;line-height:1.8}.ds-record time{font:13px/1.8 Consolas,\"Courier New\",monospace;padding-top:4px}.ds-record a{font-size:19px;color:var(--accent,#224f91);text-underline-offset:4px}.ds-record p{font-size:12px;margin:6px 0 0;color:var(--muted,#566778);font-family:Consolas,\"Courier New\",monospace;overflow-wrap:anywhere}.ds-record a:hover{text-decoration-thickness:2px}.ds-record a:visited{color:#645a80}.ds-record a:focus-visible{outline:2px solid currentColor;outline-offset:5px}@media(max-width:700px){.ds-record{grid-template-columns:76px minmax(0,1fr);gap:10px}.ds-record a{font-size:17px}.ds-record time{font-size:12px}}"
+    },
+    {
+      "name": "Document note",
+      "kind": "custom",
+      "refersTo": "document-note",
+      "description": "Source-colored inset note.",
+      "html": "<div class=\"ds-note\"><strong>没有扫描器怎么办？</strong><br>先打印，再照着纸输入。</div>",
+      "css": ".ds-note{border:1px solid var(--line,#c7c7ad);padding:17px 21px;font:14px/1.8 Georgia,\"Times New Roman\",\"Songti SC\",SimSun,serif;margin:26px 0;color:var(--ink,#26291e);background:var(--paper,#fbf9ed)}"
+    },
+    {
+      "name": "Forum post",
+      "kind": "custom",
+      "refersTo": "forum-post",
+      "description": "Old forum author rail and preserved message.",
+      "html": "<article class=\"ds-post\"><div class=\"ds-poster\"><strong>stackframe</strong><span>会员 · 214 帖</span></div><div class=\"ds-post-body\"><div class=\"ds-post-date\">2003-11-08 09:14 · #1</div><p>重点不是快，是取走的时候，第二个程序还没启动。</p></div></article>",
+      "css": ".ds-post{display:grid;grid-template-columns:135px minmax(0,1fr);border:1px solid #b1bfce;margin-top:12px;background:#fff;color:#253446;font:14px/1.8 Tahoma,\"Microsoft YaHei\",sans-serif}.ds-poster{padding:18px 14px;background:#dce5ee;font-size:12px;overflow-wrap:anywhere}.ds-poster strong{display:block;font-size:14px;margin-bottom:8px}.ds-post-body{padding:17px 22px;min-width:0}.ds-post-body p{margin:0}.ds-post-date{font-size:12px;color:#586776;padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid #dce3ea}@media(max-width:700px){.ds-post{grid-template-columns:1fr}.ds-poster{padding:9px 14px;display:flex;gap:15px;align-items:center}.ds-poster strong{margin:0}.ds-post-body{padding:16px}}"
+    },
+    {
+      "name": "Manual paper slip",
+      "kind": "custom",
+      "refersTo": "paper-slip",
+      "description": "Static source preview in the software manual illustration.",
+      "html": "<div class=\"ds-slip\">周四下午三点，带上校样。<small>来源：便笺本 / 未命名 2<br>等待接收窗口　14:32</small></div>",
+      "css": ".ds-slip{background:#fffef2;border:1px solid #b1b9a1;padding:13px 17px;max-width:300px;margin:auto;color:#283e39;font:14px/1.8 \"Microsoft YaHei\",sans-serif}.ds-slip small{display:block;color:#67715d;margin-top:7px;font-size:.8rem}"
+    },
+    {
+      "name": "Revision disclosure",
+      "kind": "custom",
+      "refersTo": "bulletin-disclosure",
+      "description": "Native expandable bulletin revision note.",
+      "html": "<details class=\"ds-disclosure\"><summary>2041-09-08 修订说明</summary><p>密码学检查没有失效，失效的是业务系统对检查范围的理解。</p></details>",
+      "css": ".ds-disclosure{border-top:1px solid var(--line,#bec6ce);border-bottom:1px solid var(--line,#bec6ce);padding:15px 0;margin:25px 0;color:var(--ink,#202a36);font:15px/1.8 \"Microsoft YaHei\",sans-serif}.ds-disclosure summary{cursor:pointer;font-size:14px}.ds-disclosure summary:focus-visible{outline:2px solid currentColor;outline-offset:5px}.ds-disclosure p{margin:15px 0 1.3em;font-size:14px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Recovered source pages",
+    "overview": "The archive index is cool, spare and typographic. Each recovered document keeps a distinct source identity: a cream personal website, a blue forum, a green software manual, a neutral security bulletin and a quiet contemporary discussion page. Typography and document structure carry the atmosphere; all imagery is made from HTML and CSS.",
+    "keyCharacteristics": [
+      "Large serif archive masthead with compact monospaced catalog metadata.",
+      "Five source palettes and local font stacks, connected by a thin mirror navigation strip.",
+      "Flat, square document surfaces, visible rules and native text links."
+    ],
+    "rules": [],
+    "dos": [
+      "**Do** preserve each source's palette, typography and document structure.",
+      "**Do** use local fonts, native links and semantic document elements.",
+      "**Do** preserve the thin return-to-index strip across recovered pages."
+    ],
+    "donts": [
+      "**Don't** introduce remote assets, downloaded fonts or raster decoration.",
+      "**Don't** add task bars, progress indicators or a reveal interface.",
+      "**Don't** turn the paper-slip illustration into an interactive application mockup."
+    ]
+  }
+}

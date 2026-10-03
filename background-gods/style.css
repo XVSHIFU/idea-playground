@@ -1,0 +1,148 @@
+
+:root{--paper:#eeeee6;--ink:#293e33;--muted:#5c695d;--line:#cbd1c4;--green:#365d46;--accent:#c9744b;--serif:"Noto Serif CJK SC","Songti SC","SimSun",serif;--sans:"Microsoft YaHei","PingFang SC",sans-serif}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.65 var(--sans)}
+button,a{-webkit-tap-highlight-color:transparent}
+button{font:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
+::selection{background:#c6d6ba;color:#203b2c}
+body{scrollbar-color:#9caa97 var(--paper)}
+[hidden]{display:none!important}
+.app{max-width:1552px;padding:0 64px;margin:auto}
+.masthead{height:114px;display:flex;align-items:center;gap:32px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:13px;font:23px/1.3 var(--serif);letter-spacing:.08em}
+.brand small{display:block;font:11px/1.5 var(--sans);letter-spacing:.16em;margin-top:5px}
+.header-note{margin:auto;color:var(--muted);font:15px var(--serif);letter-spacing:.16em}
+.text-button{background:none;border:0;padding:12px 0;color:var(--ink)}
+.text-button span{margin-left:11px}
+.text-button:hover{color:var(--accent)}
+main{display:grid;grid-template-columns:minmax(0,1fr) 300px}
+.habitat{padding:34px 45px 0 0;min-width:0}
+.specimen-head{display:flex;justify-content:space-between;align-items:center}
+.label{font-size:11px;color:var(--muted);letter-spacing:.13em}
+h1{font:42px/1.3 var(--serif);margin:7px 0 0;letter-spacing:.08em}
+h1 small{font:12px var(--sans);margin-left:15px;letter-spacing:.08em;color:var(--muted)}
+.status{display:flex;gap:11px;align-items:center;font-size:11px;color:var(--green)}
+.status i{width:5px;height:5px;border-radius:50%;background:var(--green)}
+.field{height:342px;position:relative}
+canvas{display:block;width:100%;height:100%}
+.field-annotation{position:absolute;top:47%;font-size:11px;color:var(--muted);line-height:2;letter-spacing:.12em;pointer-events:none}
+.left{left:0}
+.right{right:0;text-align:right}
+.crosshair{position:absolute;width:11px;height:11px;border-top:1px solid #abb8a4;border-left:1px solid #abb8a4}
+.c1{left:18%;top:16%}
+.c2{right:18%;bottom:15%;transform:rotate(180deg)}
+.voice{text-align:center;min-height:114px}
+.voice-mark{font:30px/1 var(--serif);color:#8b9d87}
+.voice p{font:18px/1.8 var(--serif);margin:0 0 11px}
+.voice-caption{font-size:11px;color:var(--muted);letter-spacing:.1em}
+.vitals{display:grid;grid-template-columns:repeat(3,1fr);margin:0;padding:25px 0 28px;border-top:1px solid var(--line)}
+.vitals>div+div{border-left:1px solid var(--line);padding-left:30px}
+.vitals dt{font-size:11px;color:var(--muted);letter-spacing:.05em}
+.vitals dd{margin:5px 0 0;display:flex;gap:11px;align-items:baseline;font:29px/1.3 Georgia,serif;font-variant-numeric:tabular-nums}
+.vitals small{font:11px var(--sans);color:var(--muted)}
+.journal{border-left:1px solid var(--line);padding:39px 0 25px 31px;display:flex;flex-direction:column;min-width:0}
+.journal-title{display:flex;justify-content:space-between;align-items:center}
+.journal h2,.ecosystem h2{font:16px var(--serif);margin:0;letter-spacing:.06em}
+.journal-title>span{font:11px Georgia,serif;color:var(--muted)}
+.journal-intro{font:21px/1.9 var(--serif);margin:24px 0 28px}
+.memories{list-style:none;margin:0;padding:0;max-height:270px;overflow:auto;scrollbar-width:thin}
+.memories li{position:relative;padding:0 0 24px 18px;border-left:1px solid var(--line);margin-left:3px}
+.memories li:before{content:"";position:absolute;left:-3px;top:6px;width:5px;height:5px;background:#8b9d87;border-radius:50%}
+.memories li:first-child:before{background:var(--accent)}
+.memories time{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.memories p{margin:7px 0 0;font-size:12px;line-height:1.9}
+.journal-bottom{margin-top:auto;padding-top:27px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--line)}
+.journal-bottom p{font-size:11px;color:var(--muted);line-height:1.9;margin:0}
+.tiny-orbit{height:23px;width:23px;border:1px solid #8c9e88;border-radius:50%;flex-shrink:0;position:relative}
+.tiny-orbit:after{content:"";position:absolute;inset:5px;border:1px solid #8c9e88;border-radius:50%}
+.ecosystem{border-top:1px solid var(--line);padding:24px 0}
+.ecology-heading{display:flex;justify-content:space-between;gap:15px;align-items:center}
+.ecosystem h2 span{font:11px var(--sans);color:var(--muted);margin-left:14px;letter-spacing:0}
+.ecology-hint{font-size:11px;color:var(--muted)}
+.ecology-body{display:flex;align-items:center;justify-content:space-between;gap:25px;margin-top:21px}
+.beings{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;min-height:49px}
+.being{display:flex;align-items:center;gap:11px}
+.being-orb{width:31px;height:31px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;position:relative;opacity:.65}
+.being-orb:before{content:"";width:12px;height:12px;border:1px solid currentColor;border-radius:40% 60% 45% 55%;transform:rotate(32deg)}
+.being.self .being-orb{opacity:1}
+.being.self .being-orb:after{content:"";position:absolute;bottom:-6px;width:3px;height:3px;border-radius:50%;background:var(--green)}
+.being b{font:14px var(--serif)}
+.being small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.being.departed{opacity:.55}
+.actions{display:flex;gap:11px;flex-shrink:0}
+.button{border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;gap:11px;padding:12px 19px;background:transparent;color:var(--ink);border-radius:3px;font-size:12px;transition:background .2s,border-color .2s}
+.button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.3}
+.button.primary{background:var(--green);border-color:var(--green);color:#f7f8ef}
+.button.primary:hover{background:#264832}
+.button.secondary:hover{background:#e0e5d8;border-color:#98a78f}
+.button:disabled{opacity:.45;cursor:not-allowed}
+footer{border-top:1px solid var(--line);display:flex;justify-content:space-between;padding:19px 0 24px;font-size:11px;color:var(--muted);gap:20px}
+#connection{display:flex;align-items:center;gap:7px}
+#connection:before{content:"";width:4px;height:4px;background:#688862;border-radius:50%}
+.guide{border-bottom:1px solid var(--line);padding:28px 0 23px;max-width:100%}
+.guide h2{font:24px var(--serif);margin:0 0 25px}
+.guide ol{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;padding-left:19px;color:var(--muted);font-size:12px}
+.guide strong{display:block;color:var(--ink);font-weight:500;margin-bottom:11px}
+.guide p{max-width:85ch;font-size:12px}
+.guide .fine{font-size:11px;color:var(--muted)}
+.notice{padding:12px 16px;border:1px solid var(--accent);margin:20px 0;font-size:12px}
+.gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.gate span{font:30px var(--serif);letter-spacing:.3em;background:var(--paper);padding:8px 15px}
+.gate p{font:13px var(--serif);background:var(--paper);padding:5px 12px}
+.error-main{padding:60px 0}
+.error-main p{max-width:60ch}
+
+@media(min-width:1500px){.field{height:405px}
+.journal{padding-left:40px}
+main{grid-template-columns:minmax(0,1fr) 340px}
+.habitat{padding-right:60px}
+.memories{max-height:330px}
+}
+
+@media(max-width:1050px){.app{padding:0 32px}
+main{grid-template-columns:minmax(0,1fr) 250px}
+.habitat{padding-right:28px}
+.journal{padding-left:24px}
+.field{height:320px}
+.field-annotation{font-size:11px}
+.header-note{font-size:12px}
+.vitals>div+div{padding-left:16px}
+.button{padding:11px 14px}
+}
+
+@media(max-width:760px){.app{padding:0 22px}
+.masthead{height:87px;justify-content:space-between;gap:16px}
+.brand{font-size:21px}
+.brand small{font-size:11px}
+.header-note{display:none}
+main{display:block}
+.habitat{padding:26px 0 0}
+.specimen-head h1{font-size:36px}
+.field{height:320px}
+.field-annotation{font-size:11px}
+.voice p{font-size:16px}
+.journal{border-left:0;border-top:1px solid var(--line);padding:24px 0}
+.journal-intro{font-size:17px;line-height:1.65;margin:18px 0}
+.journal-intro br{display:none}
+.memories{max-height:210px}
+.journal-bottom{padding-top:16px;margin-top:7px}
+.journal-bottom br{display:none}
+.ecosystem{padding-top:23px}
+.ecology-body{flex-direction:column;align-items:stretch}
+.actions{display:grid;grid-template-columns:1fr 1fr}
+.ecology-hint{display:none}
+.guide ol{grid-template-columns:1fr 1fr;gap:20px}
+.guide h2{font-size:21px}
+footer{font-size:11px;flex-wrap:wrap;gap:11px}
+.vitals{padding:23px 0}
+.vitals dd{font-size:27px}
+.vitals>div+div{padding-left:15px}
+.status{font-size:11px}
+.text-button{font-size:12px}
+}
+
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}
+}
