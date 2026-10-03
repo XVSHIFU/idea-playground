@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f3f0">
+  <meta name="description" content="为厨艺算一份可以听的味觉记谱。先按谱听一遍，再选你猜的味道，然后揭晓这段烹饪留在舌头上的那一份。">
+  <title>味道的音符 · 一份可以听的味觉记谱</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" type="module"></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="./index.html">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 20c3-6 6-9 9-9s5 3 5 6 2 4 4 4 4-2 8-7"/><path d="M3 25h26"/></svg>
+      味道的音符
+    </a>
+    <span class="masthead-note">一份可以听的味觉记谱</span>
+  </header>
+
+  <main>
+    <section class="opening" aria-labelledby="page-title">
+      <h1 id="page-title">先听一遍，<br>再决定它尝起来是什么。</h1>
+      <div class="opening-copy">
+        <p>每一步烹饪都被写成一条随时间变化的曲线，再被奏成声音。你听到的是这道菜的过程，你尝到的是它留在舌头上的那一份。</p>
+        <p class="quiet">选一道菜，按谱听一遍；在揭晓之前，先猜你尝到了什么。</p>
+      </div>
+    </section>
+
+    <section class="workbench" aria-label="味觉记谱工作台">
+      <div class="dish-bar">
+        <span class="small-label">今天的记谱</span>
+        <div class="dish-nav" role="group" aria-label="换一道菜">
+          <button type="button" class="nav-arrow" id="dish-prev" aria-label="上一道菜"><span aria-hidden="true">←</span></button>
+          <div class="dish-heading">
+            <h2 id="dish-name">蒜蓉炒青菜</h2>
+            <p id="dish-line"></p>
+          </div>
+          <button type="button" class="nav-arrow" id="dish-next" aria-label="下一道菜"><span aria-hidden="true">→</span></button>
+        </div>
+        <dl class="dish-facts">
+          <dt>灶上时间</dt><dd id="fact-minutes">—</dd>
+          <dt>听起来</dt><dd id="fact-sound">—</dd>
+        </dl>
+      </div>
+
+      <div class="bench-toolbar">
+        <div class="technique-picker" role="group" aria-label="换一种做法">
+          <span class="small-label">做法</span>
+          <div class="technique-buttons" id="technique-buttons"></div>
+        </div>
+        <p class="technique-note" id="technique-note"></p>
+      </div>
+
+      <div class="bench-grid">
+        <div class="plot-wrap">
+          <div class="plot-caption">
+            <span id="plot-range">0 分</span>
+            <span class="plot-legend" aria-hidden="true"><i class="key-a"></i>听着在发生<i class="key-b"></i>尝到时留下</span>
+            <span id="plot-end">— 分</span>
+          </div>
+          <canvas id="plot" role="img" aria-labelledby="plot-title" aria-describedby="plot-description"></canvas>
+          <h3 class="visually-hidden" id="plot-title">味觉记谱曲线</h3>
+          <p class="visually-hidden" id="plot-description">八条曲线分别表示咸、酸、糖与焦化、油脂、鲜、稠化、香气、麻在整段烹饪里的强度变化。播放时曲线被描绘，揭晓时曲线被填满，代表累积后留在舌头上的一份。</p>
+        </div>
+
+        <aside class="steps-panel" aria-label="这一锅的步骤">
+          <div class="steps-topline"><span>锅里正在发生</span><span id="step-counter" aria-hidden="true"></span></div>
+          <ol class="steps" id="steps"></ol>
+          <p class="listen-status" id="listen-status" role="status">听觉只记时间顺序，舌头只记最后的总量。</p>
+        </aside>
+      </div>
+
+      <div class="bench-controls">
+        <button type="button" class="primary-button" id="play" aria-pressed="false">
+          <span id="play-label">听一听这道菜</span><span aria-hidden="true">▶</span>
+        </button>
+        <button type="button" id="stop" disabled>停下</button>
+        <label class="speed" for="speed">速度
+          <input type="range" id="speed" min="0.5" max="2" step="0.25" value="1">
+          <span id="speed-value">1×</span>
+        </label>
+        <span class="control-hint" id="control-hint">空格也可以听</span>
+      </div>
+
+      <div class="bench-verdict">
+        <div class="guess" role="group" aria-label="先猜你尝到了什么">
+          <span class="small-label">在揭晓之前，猜一下</span>
+          <div class="guess-options" id="guess-options"></div>
+        </div>
+        <div class="verdict-actions">
+          <button type="button" id="reveal">揭晓尝到的味道</button>
+          <button type="button" id="hidden" disabled>把味觉藏起来</button>
+        </div>
+      </div>
+
+      <div class="reading" aria-live="polite">
+        <div class="taste-bars">
+          <h3>留在舌头上的这一份</h3>
+          <ul id="taste-bars"></ul>
+        </div>
+        <div class="reading-copy">
+          <p id="audio-line"></p>
+          <p id="taste-line"></p>
+          <p id="gap-line"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="below-bench">
+      <details class="guide" open>
+        <summary>这份记谱是怎么算的 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg></summary>
+        <ol>
+          <li><strong>先把每一步写成曲线。</strong><p>咸是一碰就走，酸是刺一下就跑，油脂起音慢、尾巴长，焦化的第二层比第一层晚出现。八种味道各自有自己涨落的方式。</p></li>
+          <li><strong>再把曲线奏成声音。</strong><p>每种味道对应一种声音行为，不是配一段音效。曲线高、变化快的地方，声音就密、就亮；缓慢的地方是持续的低音。</p></li>
+          <li><strong>换一种做法，重算一遍。</strong><p>爆炒缩短时间、压掉油脂的厚度；慢炖拉长时间、把层次叠起来；白灼几乎不留油。同一道菜因此有了完全不同的两段音乐。</p></li>
+          <li><strong>再算一遍"舌头拿到的"。</strong><p>整段烹饪累积的总量就是留在舌头上的那一份。它和声音不是同一件事，两者的差就是这份记谱想给你看的东西。</p></li>
+        </ol>
+        <p class="guide-footnote">这些曲线是我为这个作品选的记谱方式，不是测量仪器，也不是食品科学结论。真实的感官现象（例如焦化的苦味会晚一些才被尝到）与我的记谱选择在这个文件里分开记录，你可以推翻其中任何一条。</p>
+      </details>
+
+      <details class="guide">
+        <summary>八种味道各自变成什么声音 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg></summary>
+        <table class="palette">
+          <caption class="visually-hidden">味道与声音的对应</caption>
+          <thead><tr><th scope="col">味道</th><th scope="col">声音上怎么处理</th><th scope="col">为什么可以这么听</th></tr></thead>
+          <tbody id="palette-body"></tbody>
+        </table>
+        <p class="guide-footnote" id="palette-gap"></p>
+      </details>
+
+      <details class="guide">
+        <summary>停下来之后可以做的事 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg></summary>
+        <ol>
+          <li><strong>把同一道菜换成两种做法。</strong><p>先听爆炒，再听慢炖，记下听觉上最先变的是什么：速度、亮度，还是层次的数量。</p></li>
+          <li><strong>用真实的声音做一版。</strong><p>录下自己下锅、翻动、收汁的声音，剪成一段，和记谱并排听。记谱是抽象的，锅里的声音是具体的。</p></li>
+          <li><strong>写你自己的对应表。</strong><p>把"麻"留成了空位：它更像震颤而不是味道，暂时没有合适的对应。换掉任何一行，曲线就会跟着变，这时你改的是这套记谱本身。</p></li>
+        </ol>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    <span>味道的音符</span>
+    <p>一种关于烹饪与听觉的小实验。声音是记谱，不是这段烹饪的实录。</p>
+  </footer>
+
+  <noscript><p class="noscript">这份记谱需要用 JavaScript 播放声音。关闭脚本时页面只剩文字说明。</p></noscript>
+</body>
+</html>

@@ -220,5 +220,35 @@
     ],
     "identity": "句法小径",
     "enabled": false
+  },
+  {
+    "id": "taste-score",
+    "name": "味道的音符",
+    "category": "互动实验",
+    "description": "把一次烹饪算成可以听的味觉记谱：先听一遍，再猜你尝到了什么。",
+    "hint": "先听蒜蓉炒青菜，再把同一道菜换成慢炖听一遍",
+    "label": "烹饪 · 听觉",
+    "color": "#e8ebe4",
+    "directory": "../taste-score",
+    "port": 4301,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "style.css",
+      "app.js",
+      "engine.js",
+      "audio.js",
+      "recipes.js"
+    ],
+    "files": [
+      "index.html",
+      "style.css",
+      "app.js",
+      "engine.js",
+      "audio.js",
+      "recipes.js"
+    ],
+    "identity": "味道的音符",
+    "enabled": true
   }
 ]
