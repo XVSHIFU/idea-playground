@@ -1,0 +1,21 @@
+{
+  "id": "roundland",
+  "name": "圆野 Roundland",
+  "category": "互动实验",
+  "description": "走进一座没有方块的微缩岛屿，捏一座山、挖一湾湖，再种下一片小树林。",
+  "hint": "先用 WASD 走走，再按 E 试着捏一座小山",
+  "label": "沙盒 · 地形塑造",
+  "color": "#c6e9e4",
+  "directory": "../roundland",
+  "port": 4302,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "identity": "圆野 Roundland",
+  "enabled": true,
+  "publicDirectories": []
+}

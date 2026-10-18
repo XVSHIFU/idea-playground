@@ -22,6 +22,7 @@ idea-playground/
   protocol-zoo/            协议动物园
   grammar-time-board/     昨天今天明天
   clay-auction/            越抢越变形的拍卖会
+  roundland/               圆野，微缩岛屿沙盒
   syntax-path/             句法小径，已登记为隐藏草稿
   panel-adapt-check/       原有检查工具，不作为作品发布
   tools/                  构建、接入初始化与验证工具
