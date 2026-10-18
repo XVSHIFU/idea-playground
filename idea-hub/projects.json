@@ -353,5 +353,51 @@
     "identity": "归途灯火",
     "enabled": true,
     "publicDirectories": []
+  },
+  {
+    "id": "gravity-enchant",
+    "name": "重力附魔",
+    "category": "空间解谜",
+    "description": "给神庙房间附上重力魔咒，让所有箱子朝你选的方向塌落，靠连锁把石箱推上符印。",
+    "hint": "先按一次方向键，看箱子怎么滑；魔咒次数有限，随时可以倒带。",
+    "label": "Three.js · 重力塌落",
+    "color": "#BFE3CF",
+    "directory": "../gravity-enchant",
+    "port": 4306,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "shared.js"
+    ],
+    "files": [
+      "index.html",
+      "shared.js"
+    ],
+    "identity": "重力附魔",
+    "enabled": true,
+    "publicDirectories": []
+  },
+  {
+    "id": "splash-arc",
+    "name": "投掷力学",
+    "category": "互动实验",
+    "description": "把喷溅药水掷向岛屿，染出冰面、蜂蜜与弹床，再让信使借着地形物理送到终点。",
+    "hint": "按住地面蓄力，松开掷出第一瓶冰霜药水，然后让信使出发。",
+    "label": "Three.js · 抛物线染色",
+    "color": "#F7C948",
+    "directory": "../splash-arc",
+    "port": 4307,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "shared.js"
+    ],
+    "files": [
+      "index.html",
+      "shared.js"
+    ],
+    "identity": "投掷力学",
+    "enabled": true,
+    "publicDirectories": []
   }
 ]

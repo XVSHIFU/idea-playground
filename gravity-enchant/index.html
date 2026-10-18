@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>重力附魔 · Gravity Enchanting</title>
+<style>
+  :root{
+    --ink:#1E2422;
+    --paper:#FBF7EE;
+    --accent:#E8833A;
+    --mint:#BFE3CF;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);}
+  body{background:linear-gradient(180deg,#E8F2EC 0%,#F6F1E7 100%);}
+  #app{position:fixed;inset:0;}
+  canvas{display:block;touch-action:none;}
+
+  .panel{position:absolute;background:var(--paper);border:3px solid var(--ink);
+    border-radius:10px;box-shadow:5px 5px 0 var(--ink);padding:10px 12px;z-index:10;}
+  #panelTL{top:14px;left:14px;max-width:min(320px,72vw);}
+  #panelTL h1{font-size:15px;margin:0 0 6px 0;letter-spacing:1px;}
+  #panelTL .sub{font-size:12px;opacity:.75;margin-bottom:8px;}
+  .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+  button{font:inherit;font-size:13px;background:#fff;color:var(--ink);
+    border:2.5px solid var(--ink);border-radius:8px;padding:5px 10px;cursor:pointer;
+    box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s,background .15s;}
+  button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink);}
+  button.on{background:var(--accent);color:#fff;}
+  button:disabled{opacity:.4;cursor:default;}
+
+  #panelTR{top:14px;right:14px;font-size:13px;text-align:right;}
+  #panelTR .big{font-size:18px;font-weight:700;}
+
+  #toolbar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+    display:flex;gap:8px;align-items:center;z-index:10;
+    background:var(--paper);border:3px solid var(--ink);border-radius:12px;
+    box-shadow:5px 5px 0 var(--ink);padding:10px 12px;}
+  .dirbtn{width:52px;height:52px;font-size:22px;line-height:1;padding:0;position:relative;}
+  .dirbtn small{position:absolute;bottom:2px;right:5px;font-size:9px;opacity:.55;}
+  .dirbtn:hover{background:#FFF1E4;}
+  #undoBtn{height:52px;font-size:15px;}
+  #flames{display:flex;gap:3px;align-items:center;padding:0 4px;font-size:16px;}
+  #flames span{transition:opacity .3s,filter .3s;}
+  #flames span.off{opacity:.18;filter:grayscale(1);}
+
+  #overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    background:rgba(30,36,34,.28);z-index:20;}
+  #overlay .card{background:var(--paper);border:3px solid var(--ink);border-radius:12px;
+    box-shadow:6px 6px 0 var(--ink);padding:26px 34px;text-align:center;max-width:86vw;}
+  #overlay h2{margin:0 0 8px 0;font-size:22px;}
+  #overlay p{margin:6px 0 14px 0;font-size:13px;opacity:.8;white-space:pre-line;}
+  #helpBox{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    background:rgba(30,36,34,.28);z-index:21;}
+  #helpBox .card{background:var(--paper);border:3px solid var(--ink);border-radius:12px;
+    box-shadow:6px 6px 0 var(--ink);padding:22px 26px;max-width:min(480px,88vw);font-size:13px;line-height:1.8;}
+  #helpBox h3{margin:0 0 8px 0;}
+  #failTint{position:fixed;inset:0;background:#8A8F8C;opacity:0;pointer-events:none;z-index:5;}
+
+  #collapseToggle{display:none;}
+  @media (max-width:720px){
+    .dirbtn{width:64px;height:64px;font-size:26px;}
+    #undoBtn{height:64px;}
+    #panelTL{padding:8px 10px;}
+    #panelTL.collapsed .row,#panelTL.collapsed .sub{display:none;}
+    #collapseToggle{display:inline-block;}
+  }
+  #fallback{display:none;position:fixed;inset:0;align-items:center;justify-content:center;
+    background:#F6F1E7;z-index:99;text-align:center;padding:24px;font-size:15px;line-height:1.8;}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app"></div>
+<div id="failTint"></div>
+
+<div class="panel" id="panelTL">
+  <h1>重力附魔 <span style="font-weight:400;font-size:12px;">Gravity Enchanting</span>
+    <button id="collapseToggle" style="float:right;padding:2px 8px;">☰</button></h1>
+  <div class="sub" id="levelName">—</div>
+  <div class="row">
+    <button id="prevBtn" title="上一关">◀</button>
+    <button id="nextBtn" title="下一关">▶</button>
+    <button id="seedBtn" title="随机密室：换种子 (R)">🎲</button>
+    <button id="spinBtn" class="on" title="自转">⟳</button>
+    <button id="outlineBtn" class="on" title="描边">✎</button>
+    <button id="soundBtn" class="on" title="音效">♪</button>
+    <button id="helpBtn" title="帮助">?</button>
+  </div>
+</div>
+
+<div class="panel" id="panelTR">
+  <div>符印</div>
+  <div class="big" id="sealCount">0/0</div>
+  <div id="bestLine" style="font-size:11px;opacity:.7;"></div>
+</div>
+
+<div id="toolbar">
+  <button class="dirbtn" data-dir="up">↑<small>W</small></button>
+  <button class="dirbtn" data-dir="left">←<small>A</small></button>
+  <button class="dirbtn" data-dir="down">↓<small>S</small></button>
+  <button class="dirbtn" data-dir="right">→<small>D</small></button>
+  <button id="undoBtn" title="倒带 (Z)">⏪ 倒带</button>
+  <div id="flames" title="剩余魔咒"></div>
+</div>
+
+<div id="overlay"><div class="card">
+  <h2 id="ovTitle"></h2><p id="ovText"></p>
+  <button id="ovBtn1"></button> <button id="ovBtn2"></button>
+</div></div>
+
+<div id="helpBox"><div class="card">
+  <h3>怎么玩</h3>
+  按 <b>WASD / 方向键 / 底部箭头</b> 选择重力方向：所有箱子向该方向<b>塌落</b>，直到撞墙或相撞。<br>
+  🟫 木箱：普通。⬜ 石箱：重，可撞碎<b>裂纹墙</b>。<br>
+  ◉ 压力机关：被箱子压住会鸣响。✦ 符印：全部同时被箱子压住即胜利。<br>
+  <b>Z</b> 倒带（不返还魔咒）｜<b>空格</b> 重置本关｜<b>R</b> 随机密室换种子｜<b>Esc</b> 关闭。<br>
+  魔咒次数有限——先思考，再附魔。附魔台的火苗会随剩余魔咒变矮、变灰。
+  <div style="text-align:right;margin-top:10px;"><button id="helpClose">知道了</button></div>
+</div></div>
+
+<div id="fallback"><div>😢 你的浏览器无法启动 WebGL。<br>请更换现代浏览器后重试。</div></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { PRNG, makePerlin, makeToonGradient, addOutline, addInstancedOutline,
+         Spring, clamp, lerp, smoothstep } from './shared.js';
+
+/* ================= 调色板 · 浅色薄荷清晨 ================= */
+const P = {
+  terrain:'#BFE3CF', soil:'#C9B8A3', wall:'#EDE6D6', wallTop:'#F6F1E7',
+  wood:'#D9A066', stone:'#9AA7B0', accent:'#E8833A', outline:'#1E2422',
+  tile:'#EFE8D8', tileAlt:'#E7DECA', crack:'#D8CDB4',
+  leaf:'#8FCB9B', mush:'#E8A09A', pillar:'#E2D9C4',
+  flameOff:'#8A8F8C'
+};
+
+/* ================= WebGL 检测 ================= */
+const appEl = document.getElementById('app');
+let renderer;
+try{
+  renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  if(!renderer.getContext()) throw new Error('no ctx');
+}catch(e){
+  document.getElementById('fallback').style.display='flex';
+  throw e;
+}
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFShadowMap;
+appEl.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0xF6F1E7, 30, 80);
+
+/* ================= 相机 / 控制器 ================= */
+const camera = new THREE.OrthographicCamera(-1,1,1,-1,0.1,200);
+const ISO_DIR = new THREE.Vector3(1,1,1).normalize();
+let viewSize = 10;
+function placeCamera(){
+  camera.position.copy(ISO_DIR).multiplyScalar(40);
+  camera.lookAt(0,0,0);
+  updateFrustum();
+}
+function updateFrustum(){
+  const asp = innerWidth/innerHeight;
+  camera.left=-viewSize*asp/2; camera.right=viewSize*asp/2;
+  camera.top=viewSize/2; camera.bottom=-viewSize/2;
+  camera.updateProjectionMatrix();
+}
+placeCamera();
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enablePan = false;
+controls.minPolarAngle = THREE.MathUtils.degToRad(35);
+controls.maxPolarAngle = THREE.MathUtils.degToRad(70);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.rotateSpeed = 0.6;
+controls.target.set(0,0,0);
+
+/* ================= 灯光 ================= */
+const sun = new THREE.DirectionalLight(0xFFF4E0, 1.6);
+sun.position.set(8,14,5);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048,2048);
+sun.shadow.camera.left=-14; sun.shadow.camera.right=14;
+sun.shadow.camera.top=14; sun.shadow.camera.bottom=-14;
+sun.shadow.camera.far=60; sun.shadow.bias=-0.0005;
+scene.add(sun);
+scene.add(new THREE.AmbientLight(0xDFF0E6, 0.9));
+const hemi = new THREE.HemisphereLight(0xEAF6EE, 0xC9B8A3, 0.5);
+scene.add(hemi);
+
+const gradientMap = makeToonGradient(3);
+function toon(color){ return new THREE.MeshToonMaterial({color, gradientMap}); }
+const OUTLINE = parseInt(P.outline.slice(1),16);
+
+/* ================= 圆润倒角 Box ================= */
+const rrCache = new Map();
+function roundedBox(w,h,d,r=0.08){
+  const key = `${w}|${h}|${d}|${r}`;
+  if(rrCache.has(key)) return rrCache.get(key);
+  const shape = new THREE.Shape();
+  const x=-w/2, y=-h/2;
+  shape.moveTo(x+r,y);
+  shape.lineTo(x+w-r,y); shape.quadraticCurveTo(x+w,y,x+w,y+r);
+  shape.lineTo(x+w,y+h-r); shape.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  shape.lineTo(x+r,y+h); shape.quadraticCurveTo(x,y+h,x,y+h-r);
+  shape.lineTo(x,y+r); shape.quadraticCurveTo(x,y,x+r,y);
+  const g = new THREE.ExtrudeGeometry(shape,{depth:d-2*r,bevelEnabled:true,
+    bevelThickness:r,bevelSize:r,bevelSegments:2,curveSegments:4});
+  g.translate(0,0,-(d-2*r)/2);
+  g.rotateX(Math.PI/2); // w→x, h→z, d→y（旋转后高度沿 y）
+  rrCache.set(key,g);
+  return g;
+}
+
+/* ================= 手工关卡 =================
+   坐标: x 列(0..w-1) 左→右, y 行(0..h-1) 上→下
+   .地板 #墙 C裂纹墙 W木箱 S石箱 P机关 *符印 */
+/* 8 手工关（均经 BFS 求解器验证可解，见 verify_levels.mjs）
+   坐标: x 列(0..w-1) 左→右, y 行(0..h-1) 上→下
+   .地板 #墙 C裂纹墙 W木箱 S石箱 P机关 *符印 */
+const LEVELS = [
+{ name:'第一课 · 轻推', budget:3, map:[
+  '########','#......#','#.W....#','#......#','#......#','#......#','#.*....#','########']},
+{ name:'第二课 · 转个弯', budget:3, map:[
+  '########','#...*..#','#.W..#.#','#......#','#......#','#......#','#......#','########']},
+{ name:'双印', budget:4, map:[
+  '#########','#..*#...#','#......*#','#..W....#','#.......#','#..W....#','#.......#','#.......#','#########']},
+{ name:'石之重', budget:4, map:[
+  '#########','#.......#','#.......#','#.S..#..#','#.......#','#.......#','#...C...#','#...*...#','#########']},
+{ name:'机关低语', budget:3, map:[
+  '#########','#.......#','#..W.W..#','#.......#','#.......#','#.......#','#.......#','#..*#P*##','#########']},
+{ name:'碎裂回廊', budget:4, map:[
+  '##########','#........#','#.S......#','#....W...#','#........#','#.C......#','#........#','#........#','#.*#....*#','##########']},
+{ name:'双向取舍', budget:5, map:[
+  '##########','#........#','#.S....S.#','#........#','#.......*#','#.C....#.#','#........#','#........#','#.*#.....#','##########']},
+{ name:'清晨终章', budget:6, map:[
+  '##########','#........#','#.S....S.#','#...P....#','#........#','#.C....C.#','#...W....#','#........#','#.*#.*#*##','##########']},
+];
+
+function parseMap(def){
+  const h = def.map.length, w = def.map[0].length;
+  const crates=[], cracks=[], plates=[], goals=[], blocks=[];
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const c = def.map[y][x];
+    if(c==='W') crates.push({x,y,type:'wood'});
+    else if(c==='S') crates.push({x,y,type:'stone'});
+    else if(c==='C') cracks.push({x,y});
+    else if(c==='P') plates.push({x,y});
+    else if(c==='*') goals.push({x,y});
+    else if(c==='#') blocks.push({x,y});
+  }
+  return {w,h,crates,cracks,plates,goals,blocks,budget:def.budget,name:def.name};
+}
+
+/* ================= 塌落求解（纯逻辑，供动画与 BFS 复用） =================
+   state: {crates:[{x,y,type}], broken:Set("x,y")}
+   level: {w,h,blocks,cracks,goals}
+   返回 {crates, broken, paths:[{idx,cells:[{x,y}...],broke:[{x,y}]}]} */
+const DIRS = {up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+function key(x,y){return x+','+y;}
+function solidAt(level, broken, x, y){
+  if(x<0||y<0||x>=level.w||y>=level.h) return 'wall';
+  if(level.blockSet.has(key(x,y))) return 'wall';
+  if(level.crackSet.has(key(x,y)) && !broken.has(key(x,y))) return 'crack';
+  return null;
+}
+function computeCollapse(level, state, dir){
+  const [dx,dy] = DIRS[dir];
+  const broken = new Set(state.broken);
+  const occ = new Map();
+  state.crates.forEach((c,i)=>occ.set(key(c.x,c.y),i));
+  const crates = state.crates.map(c=>({...c}));
+  // 沿方向从前到后处理
+  const order = crates.map((c,i)=>i).sort((a,b)=>{
+    const A=crates[a],B=crates[b];
+    return dx!==0 ? dx*(B.x-A.x) : dy*(B.y-A.y);
+  });
+  const paths = [];
+  for(const i of order){
+    const c = crates[i];
+    occ.delete(key(c.x,c.y));
+    let x=c.x, y=c.y;
+    const cells=[{x,y}], broke=[];
+    while(true){
+      const nx=x+dx, ny=y+dy;
+      const s = solidAt(level, broken, nx, ny);
+      if(s==='wall' || occ.has(key(nx,ny))) break;
+      if(s==='crack'){
+        if(c.type==='stone'){ broken.add(key(nx,ny)); broke.push({x:nx,y:ny}); x=nx; y=ny; cells.push({x,y}); continue; }
+        break;
+      }
+      x=nx; y=ny; cells.push({x,y});
+    }
+    c.x=x; c.y=y;
+    occ.set(key(x,y),i);
+    if(cells.length>1) paths.push({idx:i, cells, broke});
+  }
+  return {crates, broken, paths};
+}
+function goalsCovered(level, crates){
+  const occ = new Set(crates.map(c=>key(c.x,c.y)));
+  return level.goals.every(g=>occ.has(key(g.x,g.y)));
+}
+
+/* ================= 程序模式：PRNG 生成 + BFS 验证可解 ================= */
+function genLevel(seed){
+  const rng = new PRNG(seed);
+  for(let attempt=0; attempt<60; attempt++){
+    const w = rng.int(6,8), h = rng.int(6,8);
+    const blockSet = new Set(), crackSet = new Set();
+    const blocks=[], cracks=[];
+    const inner = [];
+    for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++) inner.push({x,y});
+    const take = ()=> inner.splice(Math.floor(rng.next()*inner.length),1)[0];
+    // 目标符印优先生成在靠墙格（塌落终点必在墙边，显著提高可解率）
+    const edge = inner.filter(c=>c.x===1||c.x===w-2||c.y===1||c.y===h-2);
+    const ng = rng.int(1,2);
+    const goals=[];
+    for(let i=0;i<ng && edge.length;i++){
+      const g = edge.splice(Math.floor(rng.next()*edge.length),1)[0];
+      goals.push(g);
+      const ii = inner.findIndex(c=>c.x===g.x&&c.y===g.y);
+      if(ii>=0) inner.splice(ii,1);
+    }
+    const nb = rng.int(1,2);
+    for(let i=0;i<nb && inner.length;i++){ const c=take(); blocks.push(c); blockSet.add(key(c.x,c.y)); }
+    const nc = rng.int(1,2);
+    for(let i=0;i<nc && inner.length;i++){ const c=take(); cracks.push(c); crackSet.add(key(c.x,c.y)); }
+    // 箱子 2~4，至少 1 石箱（若有裂纹墙）
+    const nc2 = Math.max(ng, rng.int(2,4));
+    const crates=[];
+    for(let i=0;i<nc2 && inner.length;i++){
+      const c=take();
+      crates.push({x:c.x,y:c.y,type: (cracks.length&&i===0)?'stone':(rng.bool(0.35)?'stone':'wood')});
+    }
+    const plates=[];
+    if(rng.bool(0.4) && inner.length){ plates.push(take()); }
+    const level = {w,h,blocks,blockSet,cracks,crackSet,goals,plates,
+      name:'随机密室 #'+seed, budget:0};
+    const sol = solve(level, crates);
+    if(sol && sol.length>=1){
+      level.budget = sol.length + 2;
+      return {level, crates, minSteps: sol.length};
+    }
+  }
+  return null;
+}
+function solve(level, crates0){
+  const start = {crates: crates0.map(c=>({...c})), broken:new Set()};
+  const sKey = (s)=> s.crates.map(c=>c.x+','+c.y).sort().join(';')+'|'+[...s.broken].sort().join(';');
+  const seen = new Set([sKey(start)]);
+  let frontier = [start];
+  const maxDepth = 12;
+  for(let d=0; d<maxDepth; d++){
+    const next = [];
+    for(const s of frontier){
+      if(goalsCovered(level, s.crates)) return new Array(d);
+      for(const dir of ['up','down','left','right']){
+        const r = computeCollapse(level, s, dir);
+        if(r.paths.length===0) continue;
+        const ns = {crates:r.crates, broken:r.broken};
+        const k = sKey(ns);
+        if(seen.has(k)) continue;
+        seen.add(k); next.push(ns);
+        if(seen.size>40000) return null;
+      }
+    }
+    frontier = next;
+  }
+  return null;
+}
+
+/* ================= 全局状态 ================= */
+const G = {
+  mode:'story',            // 'story' | 'random'
+  levelIdx: 0,
+  seed: (Math.random()*1e9)|0,
+  level: null, crates: [], broken: new Set(),
+  budget: 0, undoStack: [],
+  busy: false, over: false,
+  sound: true, outline: true, spin: true,
+};
+
+/* ================= 场景构建 ================= */
+const worldGroup = new THREE.Group();
+scene.add(worldGroup);
+const roomGroup = new THREE.Group();   // 房间（入场弹簧）
+worldGroup.add(roomGroup);
+let islandGroup = null, decorGroup = null;
+let crateMeshes = [], crackMeshes = new Map(), plateMeshes = [], goalMeshes = [];
+let altarFlame = null, altarLight = null, rimGlow = null;
+let tileMesh = null, wallMesh = null;
+
+function clearGroup(g){ while(g.children.length) g.remove(g.children[0]); }
+
+function buildIsland(w,h){
+  if(islandGroup) worldGroup.remove(islandGroup);
+  islandGroup = new THREE.Group();
+  const S = Math.max(w,h);
+  const perlin = makePerlin(42);
+  const size = S*1.9, seg = 26;
+  const geo = new THREE.PlaneGeometry(size,size,seg,seg);
+  geo.rotateX(-Math.PI/2);
+  const pos = geo.attributes.position;
+  for(let i=0;i<pos.count;i++){
+    const x=pos.getX(i), z=pos.getZ(i);
+    const d = Math.sqrt(x*x+z*z)/(size*0.5);
+    let y = perlin(x*0.35+9, z*0.35+9)*0.5 + perlin(x*0.12,z*0.12)*0.9;
+    y *= smoothstep(1.0,0.55,d);          // 边缘下沉
+    y -= smoothstep(0.75,1.0,d)*3.0;      // 岛沿收拢
+    pos.setY(i, y - 0.35);
+  }
+  const flat = geo.toNonIndexed();
+  flat.computeVertexNormals();
+  const m = new THREE.Mesh(flat, toon(P.terrain));
+  m.receiveShadow = true;
+  islandGroup.add(m);
+  // 圆润岩底
+  const rockGeo = new THREE.IcosahedronGeometry(size*0.34,1);
+  const rp = rockGeo.attributes.position;
+  for(let i=0;i<rp.count;i++){
+    const v = 1 + perlin(rp.getX(i)*0.5+3, rp.getZ(i)*0.5+3)*0.18;
+    rp.setXYZ(i, rp.getX(i)*v, rp.getY(i)*0.55*v, rp.getZ(i)*v);
+  }
+  const rock = new THREE.Mesh(rockGeo.toNonIndexed(), toon(P.soil));
+  rock.geometry.computeVertexNormals();
+  rock.position.y = -size*0.16;
+  islandGroup.add(rock);
+  worldGroup.add(islandGroup);
+
+  // 装饰：小草/蘑菇/石柱残件（InstancedMesh）
+  if(decorGroup) worldGroup.remove(decorGroup);
+  decorGroup = new THREE.Group();
+  const rng = new PRNG(7);
+  const dummy = new THREE.Object3D();
+  const grassGeo = new THREE.ConeGeometry(0.06,0.22,4);
+  const grass = new THREE.InstancedMesh(grassGeo, toon(P.leaf), 40);
+  const mushGeo = new THREE.SphereGeometry(0.1,6,4,0,Math.PI*2,0,Math.PI/2);
+  const mush = new THREE.InstancedMesh(mushGeo, toon(P.mush), 8);
+  const pillGeo = new THREE.CylinderGeometry(0.09,0.11,0.5,6);
+  const pill = new THREE.InstancedMesh(pillGeo, toon(P.pillar), 6);
+  let gi=0, mi=0, pi=0;
+  const R = S*0.85;
+  for(let i=0;i<200 && (gi<40||mi<8||pi<6);i++){
+    const a = rng.range(0,Math.PI*2), r = rng.range(S*0.62, R);
+    const x = Math.cos(a)*r, z = Math.sin(a)*r;
+    dummy.position.set(x, 0.15+perlin(x*0.35+9,z*0.35+9)*0.3, z);
+    dummy.rotation.y = rng.range(0,6.28);
+    const t = rng.next();
+    if(t<0.7 && gi<40){ dummy.scale.setScalar(rng.range(0.7,1.4)); dummy.updateMatrix(); grass.setMatrixAt(gi++,dummy.matrix); }
+    else if(t<0.85 && mi<8){ dummy.scale.setScalar(rng.range(0.8,1.3)); dummy.updateMatrix(); mush.setMatrixAt(mi++,dummy.matrix); }
+    else if(pi<6){ dummy.scale.set(rng.range(0.8,1.2),rng.range(0.5,1.6),rng.range(0.8,1.2)); dummy.updateMatrix(); pill.setMatrixAt(pi++,dummy.matrix); }
+  }
+  grass.count=gi; mush.count=mi; pill.count=pi;
+  grass.castShadow=true; pill.castShadow=true;
+  decorGroup.add(grass,mush,pill);
+  worldGroup.add(decorGroup);
+}
+
+const cellWorld = (x,y)=> new THREE.Vector3(
+  x-(G.level.w-1)/2, 0, y-(G.level.h-1)/2);
+
+function buildRoom(){
+  clearGroup(roomGroup);
+  crateMeshes=[]; crackMeshes.clear(); plateMeshes=[]; goalMeshes=[];
+  const {w,h,blocks,cracks,goals,plates} = G.level;
+  viewSize = Math.max(w,h)*1.45;
+  updateFrustum();
+  controls.target.set(0,0,0);
+
+  // 地面石砖（InstancedMesh，圆润倒角，略低于墙）
+  const tileGeo = roundedBox(0.94,0.94,0.18,0.07);
+  tileMesh = new THREE.InstancedMesh(tileGeo, toon(P.tile), w*h);
+  const dummy = new THREE.Object3D();
+  let ti=0;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const p = cellWorld(x,y);
+    dummy.position.set(p.x,-0.09,p.z);
+    dummy.updateMatrix();
+    tileMesh.setMatrixAt(ti++, dummy.matrix);
+  }
+  tileMesh.receiveShadow = true;
+  roomGroup.add(tileMesh);
+
+  // 周边墙（InstancedMesh）
+  const wallCells = [];
+  for(let x=-1;x<=w;x++){ wallCells.push({x,y:-1}); wallCells.push({x,y:h}); }
+  for(let y=0;y<h;y++){ wallCells.push({x:-1,y}); wallCells.push({x:w,y}); }
+  blocks.forEach(b=>wallCells.push(b));
+  const wallGeo = roundedBox(0.98,0.98,0.85,0.09);
+  wallMesh = new THREE.InstancedMesh(wallGeo, toon(P.wall), wallCells.length);
+  wallCells.forEach((c,i)=>{
+    const p = cellWorld(c.x,c.y);
+    dummy.position.set(p.x,0.425,p.z);
+    dummy.rotation.set(0,0,0); dummy.scale.set(1,1,1);
+    dummy.updateMatrix();
+    wallMesh.setMatrixAt(i,dummy.matrix);
+  });
+  wallMesh.castShadow = true; wallMesh.receiveShadow = true;
+  roomGroup.add(wallMesh);
+  wallMesh.userData.outline = addInstancedOutline(wallMesh,0.05,OUTLINE);
+
+  // 裂纹墙
+  const crackGeo = roundedBox(0.96,0.96,0.8,0.09);
+  cracks.forEach(c=>{
+    const m = new THREE.Mesh(crackGeo, toon(P.crack));
+    const p = cellWorld(c.x,c.y);
+    m.position.set(p.x,0.4,p.z);
+    m.castShadow = true;
+    // 裂纹线条
+    const lineMat = new THREE.MeshBasicMaterial({color:0x6B5F4C});
+    for(let i=0;i<3;i++){
+      const ln = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.03,0.03), lineMat);
+      ln.position.set(0,0.1+i*0.12-0.1,0.49);
+      ln.rotation.z = (i-1)*0.5;
+      m.add(ln);
+    }
+    m.userData.outline = addOutline(m,0.05,OUTLINE);
+    roomGroup.add(m);
+    crackMeshes.set(key(c.x,c.y), m);
+  });
+
+  // 压力机关
+  const plateGeo = new THREE.CylinderGeometry(0.32,0.36,0.1,8);
+  plates.forEach(c=>{
+    const m = new THREE.Mesh(plateGeo, toon('#D8CFBB'));
+    const p = cellWorld(c.x,c.y);
+    m.position.set(p.x,0.05,p.z);
+    m.userData.baseY = 0.05; m.userData.on = false;
+    m.userData.outline = addOutline(m,0.04,OUTLINE);
+    roomGroup.add(m); plateMeshes.push(m);
+  });
+
+  // 目标符印
+  const goalGeo = new THREE.OctahedronGeometry(0.26,0);
+  goals.forEach(c=>{
+    const g = new THREE.Group();
+    const p = cellWorld(c.x,c.y);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.34,0.035,6,24), toon(P.accent));
+    ring.rotation.x = Math.PI/2; ring.position.y = 0.03;
+    const gem = new THREE.Mesh(goalGeo, toon(P.accent));
+    gem.scale.y = 0.4; gem.position.y = 0.06;
+    gem.userData.outline = addOutline(gem,0.04,OUTLINE);
+    g.add(ring,gem);
+    g.position.set(p.x,0,p.z);
+    g.userData.lit = 0;
+    roomGroup.add(g); goalMeshes.push(g);
+  });
+
+  // 附魔台（角落祭坛）
+  const altar = new THREE.Group();
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.34,0.42,0.5,6), toon(P.pillar));
+  base.position.y = 0.25; base.castShadow = true;
+  base.userData.outline = addOutline(base,0.05,OUTLINE);
+  const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.16,0.16,6), toon(P.accent));
+  bowl.position.y = 0.56;
+  altarFlame = new THREE.Mesh(new THREE.ConeGeometry(0.14,0.5,6), toon(P.accent));
+  altarFlame.position.y = 0.85;
+  altarLight = new THREE.PointLight(0xE8833A, 2.2, 4);
+  altarLight.position.y = 0.95;
+  altar.add(base,bowl,altarFlame,altarLight);
+  const ap = cellWorld(0,0);
+  altar.position.set(ap.x, 0, ap.z); // 房间左上角格
+  roomGroup.add(altar);
+
+  // 房间边缘光晕（第二表达层 #4）
+  rimGlow = new THREE.Mesh(
+    new THREE.PlaneGeometry(w+1.6, h+1.6),
+    new THREE.MeshBasicMaterial({color:0xFFF3D9, transparent:true, opacity:0.35, depthWrite:false})
+  );
+  rimGlow.rotation.x = -Math.PI/2; rimGlow.position.y = -0.12;
+  roomGroup.add(rimGlow);
+
+  // 箱子
+  G.crates.forEach((c,i)=>{
+    const isStone = c.type==='stone';
+    const geo = roundedBox(isStone?0.8:0.72, isStone?0.8:0.72, isStone?0.8:0.72, 0.1);
+    const m = new THREE.Mesh(geo, toon(isStone?P.stone:P.wood));
+    const p = cellWorld(c.x,c.y);
+    m.position.set(p.x, (isStone?0.4:0.36), p.z);
+    m.castShadow = true;
+    if(isStone){ // 石纹：顶部凹槽
+      const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.18,0.05,8), toon('#7E8B94'));
+      cap.position.y = 0.42; m.add(cap);
+    }else{ // 木箱绑带
+      const band = new THREE.Mesh(new THREE.BoxGeometry(0.78,0.1,0.1), toon('#B07845'));
+      m.add(band);
+      const band2 = band.clone(); band2.rotation.y = Math.PI/2; m.add(band2);
+    }
+    m.userData.outline = addOutline(m,0.05,OUTLINE);
+    roomGroup.add(m);
+    crateMeshes.push(m);
+  });
+
+  // 幽灵箭头
+  ghostArrows = {};
+  const arrowShape = new THREE.Shape();
+  arrowShape.moveTo(0,0.4); arrowShape.lineTo(0.28,-0.05); arrowShape.lineTo(0.1,-0.05);
+  arrowShape.lineTo(0.1,-0.4); arrowShape.lineTo(-0.1,-0.4); arrowShape.lineTo(-0.1,-0.05);
+  arrowShape.lineTo(-0.28,-0.05); arrowShape.closePath();
+  const arrowGeo = new THREE.ShapeGeometry(arrowShape);
+  for(const dir of Object.keys(DIRS)){
+    const a = new THREE.Mesh(arrowGeo, new THREE.MeshBasicMaterial({color:0xE8833A,transparent:true,opacity:0,depthWrite:false}));
+    a.rotation.x = -Math.PI/2;
+    a.rotation.z = {up:0,left:Math.PI/2,down:Math.PI,right:-Math.PI/2}[dir];
+    a.position.y = 0.02;
+    a.scale.setScalar(1.6);
+    roomGroup.add(a);
+    ghostArrows[dir] = a;
+  }
+
+  // 入场弹簧
+  roomGroup.position.y = -6;
+  entranceSpring.value = -6; entranceSpring.vel = 0; entranceSpring.set(0);
+  applyOutlineVisibility();
+}
+let ghostArrows = {};
+const entranceSpring = new Spring(-6, 140, 14); // damping 比 0.4 左右
+
+/* ================= 粒子系统 ================= */
+const MAXP = 220;
+const pGeo = new THREE.BufferGeometry();
+const pPos = new Float32Array(MAXP*3);
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos,3));
+const pMat = new THREE.PointsMaterial({color:0xD8C9A8, size:0.09, transparent:true, opacity:0.9, depthWrite:false});
+const points = new THREE.Points(pGeo, pMat);
+points.frustumCulled = false;
+scene.add(points);
+const particles = []; // {x,y,z,vx,vy,vz,life,maxLife,gold}
+function spawnParticles(pos, n, gold=false, spread=1.4, up=2.2){
+  for(let i=0;i<n;i++){
+    if(particles.length>=MAXP) particles.shift();
+    particles.push({x:pos.x,y:pos.y,z:pos.z,
+      vx:(Math.random()-0.5)*spread, vy:Math.random()*up+0.5, vz:(Math.random()-0.5)*spread,
+      life:0, maxLife:gold?0.9:0.55, gold});
+  }
+}
+// 碎墙碎片（InstancedMesh 抛物线）
+const debris = new THREE.InstancedMesh(new THREE.BoxGeometry(0.14,0.14,0.14), toon(P.crack), 24);
+debris.frustumCulled=false; debris.count=0; debris.castShadow=false;
+scene.add(debris);
+const debrisList = [];
+function spawnDebris(pos){
+  const n = 10;
+  for(let i=0;i<n;i++){
+    const a = Math.random()*Math.PI*2;
+    debrisList.push({x:pos.x,y:0.4,z:pos.z,
+      vx:Math.cos(a)*(0.8+Math.random()*1.2), vz:Math.sin(a)*(0.8+Math.random()*1.2),
+      vy:2+Math.random()*1.6, rot:Math.random()*6, life:0, maxLife:0.5});
+  }
+}
+// 金光涟漪
+const ripples = [];
+const rippleGeo = new THREE.TorusGeometry(0.4,0.03,6,32);
+function spawnRipple(x,z,big=1){
+  const m = new THREE.Mesh(rippleGeo, new THREE.MeshBasicMaterial({color:0xFFC966,transparent:true,opacity:0.8,depthWrite:false}));
+  m.rotation.x = Math.PI/2;
+  m.position.set(x,0.06,z);
+  m.scale.setScalar(0.2);
+  scene.add(m);
+  ripples.push({m, life:0, maxLife:0.4, big});
+}
+
+/* ================= 音频 ================= */
+let actx=null, masterGain=null;
+function initAudio(){
+  if(actx) return;
+  try{
+    actx = new (window.AudioContext||window.webkitAudioContext)();
+    masterGain = actx.createGain(); masterGain.gain.value = 0.5;
+    masterGain.connect(actx.destination);
+  }catch(e){ actx=null; }
+}
+function semitoneOffset(){ // 剩余魔咒越少音越低
+  const ratio = G.level && G.level.budget ? G.budget/G.level.budget : 1;
+  return -(1-ratio)*6;
+}
+function sfx(fn){ if(!actx || !G.sound) return; try{fn();}catch(e){} }
+function tone(freq, dur, type='sine', gain=0.2, when=0, slideTo=null){
+  const t0 = actx.currentTime+when;
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type=type; o.frequency.setValueAtTime(freq,t0);
+  if(slideTo) o.frequency.exponentialRampToValueAtTime(slideTo,t0+dur);
+  g.gain.setValueAtTime(gain,t0);
+  g.gain.exponentialRampToValueAtTime(0.001,t0+dur);
+  o.connect(g); g.connect(masterGain);
+  o.start(t0); o.stop(t0+dur+0.02);
+}
+function noise(dur, cutoff, gain=0.2, when=0, slideCut=null){
+  const t0 = actx.currentTime+when;
+  const len = Math.max(1,(dur*actx.sampleRate)|0);
+  const buf = actx.createBuffer(1,len,actx.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+  const src = actx.createBufferSource(); src.buffer=buf;
+  const f = actx.createBiquadFilter(); f.type='lowpass';
+  f.frequency.setValueAtTime(cutoff,t0);
+  if(slideCut) f.frequency.exponentialRampToValueAtTime(slideCut,t0+dur);
+  const g = actx.createGain();
+  g.gain.setValueAtTime(gain,t0);
+  g.gain.exponentialRampToValueAtTime(0.001,t0+dur);
+  src.connect(f); f.connect(g); g.connect(masterGain);
+  src.start(t0); src.stop(t0+dur);
+}
+const SFX = {
+  click(){ sfx(()=>tone(660,0.06,'square',0.08)); },
+  slide(){ const st=semitoneOffset(), mul=Math.pow(2,st/12);
+    sfx(()=>noise(0.32, 500*mul, 0.14, 0, 180*mul)); },
+  thud(){ const st=semitoneOffset(), mul=Math.pow(2,st/12);
+    sfx(()=>{ tone(90*mul,0.12,'sine',0.3,0,45*mul); noise(0.08,300,0.1); }); },
+  crack(){ sfx(()=>{ noise(0.3,2400,0.25,0,300); tone(180,0.15,'triangle',0.12,0,60); }); },
+  plate(){ sfx(()=>{ tone(1244,0.5,'sine',0.15); tone(1866,0.4,'sine',0.08,0.02); }); },
+  win(){ sfx(()=>{ tone(523,0.22,'triangle',0.18); tone(659,0.22,'triangle',0.18,0.2); tone(784,0.4,'triangle',0.2,0.4); }); },
+  lose(){ sfx(()=>tone(220,0.7,'sine',0.2,0,55)); },
+  undo(){ sfx(()=>tone(440,0.15,'sine',0.1,0,660)); },
+};
+
+/* ================= 动画队列 ================= */
+const tweens = [];
+function tween(dur, onUpdate, ease=easeOutCubic, onDone=null, delay=0){
+  tweens.push({t:-delay, dur, onUpdate, ease, onDone, dead:false});
+}
+function easeOutCubic(t){ return 1-Math.pow(1-t,3); }
+function easeInOut(t){ return t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2; }
+let shakeT = 0;
+function shake(){ shakeT = 0.06; }
+
+/* ================= 关卡装载 ================= */
+function loadStory(idx){
+  G.mode='story'; G.levelIdx = clamp(idx,0,LEVELS.length-1);
+  const lv = parseMap(LEVELS[G.levelIdx]);
+  lv.blockSet = new Set(lv.blocks.map(b=>key(b.x,b.y)));
+  lv.crackSet = new Set(lv.cracks.map(c=>key(c.x,c.y)));
+  document.getElementById('bestLine').textContent = '';
+  setLevel(lv, lv.crates);
+}
+function loadRandom(newSeed=true){
+  if(newSeed) G.seed = (Math.random()*1e9)|0;
+  const gen = genLevel(G.seed);
+  if(!gen){ G.seed++; return loadRandom(false); }
+  G.mode='random';
+  gen.level.crackSet = new Set(gen.level.cracks.map(c=>key(c.x,c.y)));
+  setLevel(gen.level, gen.crates);
+  const best = localStorage.getItem('gravity-enchant:best:'+G.seed);
+  document.getElementById('bestLine').textContent =
+    `种子 ${G.seed} · 最少 ${gen.minSteps}${best?` · 你的最佳 ${best}`:''}`;
+  G.minSteps = gen.minSteps;
+}
+function setLevel(level, crates){
+  G.level = level;
+  G.crates = crates.map(c=>({...c}));
+  G.broken = new Set();
+  G.budget = level.budget;
+  G.undoStack = [];
+  G.busy=false; G.over=false;
+  buildIsland(level.w, level.h);
+  buildRoom();
+  updateHUD();
+  document.getElementById('overlay').style.display='none';
+  document.getElementById('failTint').style.transition='none';
+  document.getElementById('failTint').style.opacity=0;
+  renderer.domElement.style.filter='';
+}
+
+/* ================= HUD ================= */
+function updateHUD(){
+  document.getElementById('levelName').textContent =
+    (G.mode==='story'?`第 ${G.levelIdx+1} / ${LEVELS.length} 关 · `:'') + G.level.name;
+  const flames = document.getElementById('flames');
+  flames.innerHTML='';
+  for(let i=0;i<G.level.budget;i++){
+    const s=document.createElement('span');
+    s.textContent='🔥';
+    if(i>=G.budget) s.classList.add('off');
+    flames.appendChild(s);
+  }
+  updateSeals();
+  updateAltar();
+}
+function updateSeals(){
+  const occ = new Set(G.crates.map(c=>key(c.x,c.y)));
+  let n=0;
+  G.level.goals.forEach((g,i)=>{
+    const on = occ.has(key(g.x,g.y));
+    if(on) n++;
+    const gm = goalMeshes[i];
+    if(gm) gm.userData.target = on?1:0;
+  });
+  document.getElementById('sealCount').textContent = `${n}/${G.level.goals.length}`;
+  // 机关
+  G.level.plates.forEach((p,i)=>{
+    const on = occ.has(key(p.x,p.y));
+    const pm = plateMeshes[i];
+    if(pm && on!==pm.userData.on){
+      pm.userData.on = on;
+      if(on){ SFX.plate(); spawnRipple(pm.position.x, pm.position.z, 1); }
+    }
+  });
+}
+function updateAltar(){
+  if(!altarFlame) return;
+  const ratio = G.level.budget? G.budget/G.level.budget : 0;
+  const targetH = 0.15 + ratio*0.85;
+  const cA = new THREE.Color(P.accent), cB = new THREE.Color(P.flameOff);
+  const c = cA.lerp(cB, 1-ratio);
+  tween(0.4,(e)=>{
+    altarFlame.scale.set(1, lerp(altarFlame.scale.y, targetH, e), 1);
+    altarFlame.material.color.lerpColors(altarFlame.material.color, c, e);
+    altarLight.intensity = lerp(altarLight.intensity, 0.3+ratio*2, e);
+    rimGlow.material.opacity = lerp(rimGlow.material.opacity, 0.08+ratio*0.3, e);
+  }, t=>t);
+}
+
+/* ================= 附魔塌落 ================= */
+function enchant(dir){
+  if(G.busy || G.over || G.budget<=0) return;
+  initAudio();
+  const state = {crates:G.crates.map(c=>({...c})), broken:new Set(G.broken)};
+  const res = computeCollapse(G.level, state, dir);
+  if(res.paths.length===0){ // 无效方向：轻震提示
+    shake(); return;
+  }
+  // 压栈（倒带用）
+  G.undoStack.push({crates:state.crates, broken:[...state.broken]});
+  G.budget--;
+  G.crates = res.crates;
+  const newlyBroken = [...res.broken].filter(k=>!state.broken.has(k));
+  G.broken = res.broken;
+  G.busy = true;
+  SFX.slide();
+  const amp = 0.4 + 0.6*(G.level.budget?G.budget/G.level.budget:0);
+  spawnRipple(0, 0, amp);
+
+  // 动画：所有箱子并发，格子间 140ms + hit-stop 40ms
+  let maxDur = 0;
+  const anims = [];
+  res.paths.forEach(p=>{
+    const mesh = crateMeshes[p.idx];
+    const cells = p.cells;
+    const segs = cells.length-1;
+    const segDur = 0.14, stop = 0.04;
+    const total = segs*(segDur+stop);
+    maxDur = Math.max(maxDur,total);
+    const [dx,dy] = DIRS[dir];
+    const axis = new THREE.Vector3(dy,0,-dx).normalize(); // 翻滚轴
+    const from = cells.map(c=>cellWorld(c.x,c.y));
+    anims.push({mesh, from, segs, segDur, stop, total, axis,
+      baseY: mesh.position.y, broke:p.broke});
+  });
+  const brokeDone = new Set();
+  anims.forEach(a=>{
+    tween(a.total, (e)=>{
+      const t = e*a.total;
+      let seg = Math.floor(t/(a.segDur+a.stop));
+      let lt = (t - seg*(a.segDur+a.stop))/a.segDur;
+      if(lt>1){ lt=1; } // hit-stop 中保持
+      seg = Math.min(seg, a.segs-1);
+      const p0=a.from[seg], p1=a.from[seg+1];
+      const ee = easeInOut(clamp(lt,0,1));
+      a.mesh.position.x = lerp(p0.x,p1.x,ee);
+      a.mesh.position.z = lerp(p0.z,p1.z,ee);
+      const ang = (seg+ee)*Math.PI/2;
+      a.mesh.setRotationFromAxisAngle(a.axis, ang);
+      // 碎墙触发时机：经过碎裂格
+      a.broke.forEach(b=>{
+        const bi = a.from.findIndex(c=>c.x===b.x&&c.y===b.y);
+        if(bi>0 && seg+ee>=bi-0.5 && !brokeDone.has(key(b.x,b.y))){
+          brokeDone.add(key(b.x,b.y));
+          const cm = crackMeshes.get(key(b.x,b.y));
+          if(cm){ cm.visible=false; spawnDebris(cm.position); SFX.crack(); shake(); }
+        }
+      });
+    }, t=>t, ()=>{
+      a.mesh.position.y = a.baseY;
+      SFX.thud(); shake();
+      spawnParticles(a.mesh.position, 6);
+    });
+  });
+  tween(maxDur+0.05, ()=>{}, t=>t, ()=>{
+    G.busy=false;
+    crateMeshes.forEach((m,i)=>{
+      const p = cellWorld(G.crates[i].x, G.crates[i].y);
+      m.position.x=p.x; m.position.z=p.z;
+    });
+    updateSeals(); updateHUD();
+    checkEnd();
+  });
+}
+
+function checkEnd(){
+  if(goalsCovered(G.level, G.crates)){
+    G.over = true;
+    SFX.win();
+    goalMeshes.forEach(g=>spawnParticles(g.position, 22, true, 0.8, 3));
+    goalMeshes.forEach((g,i)=>tween(0.6,(e)=>{ g.children[1].position.y = 0.06+e*0.9; }, easeOutCubic));
+    if(G.mode==='random'){
+      const used = G.level.budget - G.budget;
+      const k = 'gravity-enchant:best:'+G.seed;
+      const prev = localStorage.getItem(k);
+      if(!prev || used<+prev) localStorage.setItem(k, used);
+    }
+    setTimeout(()=>showOverlay('房间安静了。',
+      G.mode==='story'&&G.levelIdx===LEVELS.length-1 ? '八间神庙尽数苏醒。\n清晨的光落回石砖。' : '所有符印同时亮起。',
+      G.mode==='story'&&G.levelIdx<LEVELS.length-1 ? '下一关 ▶' : '🎲 再来一间',
+      ()=>{ G.mode==='story'&&G.levelIdx<LEVELS.length-1 ? loadStory(G.levelIdx+1) : loadRandom(); },
+      '重玩本关', ()=>resetLevel()), 900);
+  }else if(G.budget<=0){
+    G.over = true;
+    SFX.lose();
+    const tint = document.getElementById('failTint');
+    tint.style.transition='opacity .6s';
+    tint.style.opacity=0.45;
+    renderer.domElement.style.transition='filter .6s';
+    renderer.domElement.style.filter='grayscale(.85)';
+    setTimeout(()=>showOverlay('魔咒耗尽。','房间重归沉寂。\n倒带也无法挽回已燃尽的火苗——但可以重来。',
+      '↺ 重试', ()=>resetLevel(), '换一间 🎲', ()=>loadRandom()), 800);
+  }
+}
+function showOverlay(title,text,b1,f1,b2,f2){
+  const ov=document.getElementById('overlay');
+  document.getElementById('ovTitle').textContent=title;
+  document.getElementById('ovText').textContent=text;
+  const B1=document.getElementById('ovBtn1'),B2=document.getElementById('ovBtn2');
+  B1.textContent=b1; B2.textContent=b2;
+  B1.onclick=()=>{SFX.click();f1();}; B2.onclick=()=>{SFX.click();f2();};
+  ov.style.display='flex';
+}
+function resetLevel(){
+  if(G.mode==='story') loadStory(G.levelIdx);
+  else loadRandom(false);
+}
+function undo(){
+  if(G.busy || G.over || G.undoStack.length===0) return;
+  initAudio(); SFX.undo();
+  const prev = G.undoStack.pop();
+  const oldCrates = G.crates;
+  const oldBroken = G.broken;
+  G.crates = prev.crates.map(c=>({...c}));
+  G.broken = new Set(prev.broken);
+  // 恢复碎墙
+  oldBroken.forEach(k=>{ if(!G.broken.has(k)){ const cm=crackMeshes.get(k); if(cm) cm.visible=true; }});
+  // 2 倍速倒放：直接插值回原位 250ms
+  G.busy=true;
+  const fromPos = crateMeshes.map(m=>({x:m.position.x,z:m.position.z,r:0}));
+  crateMeshes.forEach((m,i)=>{
+    fromPos[i].r = m.rotation.y + m.rotation.x + m.rotation.z;
+    const p = cellWorld(G.crates[i].x, G.crates[i].y);
+    tween(0.25,(e)=>{
+      m.position.x = lerp(fromPos[i].x, p.x, e);
+      m.position.z = lerp(fromPos[i].z, p.z, e);
+      m.rotation.x *= (1-e); m.rotation.z *= (1-e);
+    }, easeOutCubic, i===0?()=>{G.busy=false;}:null);
+  });
+  updateSeals(); updateHUD();
+}
+
+/* ================= 输入 ================= */
+const dirKeyMap = {ArrowUp:'up',KeyW:'up',ArrowLeft:'left',KeyA:'left',
+  ArrowDown:'down',KeyS:'down',ArrowRight:'right',KeyD:'right'};
+addEventListener('keydown',(e)=>{
+  if(e.code==='Escape'){
+    document.getElementById('helpBox').style.display='none';
+    document.getElementById('overlay').style.display='none';
+    return;
+  }
+  if(e.code==='Space'){ e.preventDefault(); initAudio(); SFX.click(); resetLevel(); return; }
+  if(e.code==='KeyZ'){ undo(); return; }
+  if(e.code==='KeyR'){ loadRandom(); return; }
+  const dir = dirKeyMap[e.code];
+  if(dir){ e.preventDefault(); enchant(dir); }
+});
+document.querySelectorAll('.dirbtn').forEach(b=>{
+  const dir = b.dataset.dir;
+  b.addEventListener('click',()=>{ SFX.click(); enchant(dir); });
+  b.addEventListener('pointerenter',()=>showGhost(dir,true));
+  b.addEventListener('pointerleave',()=>showGhost(dir,false));
+  b.addEventListener('touchstart',()=>{showGhost(dir,true);setTimeout(()=>showGhost(dir,false),500);},{passive:true});
+});
+function showGhost(dir,on){
+  const a = ghostArrows[dir];
+  if(!a) return;
+  tween(0.22,(e)=>{ a.material.opacity = on? e*0.55 : (1-e)*0.55; },
+    t=>1-Math.pow(1-t,3)); // ~cubic-bezier(.23,1,.32,1)
+}
+document.getElementById('undoBtn').onclick = ()=>undo();
+document.getElementById('prevBtn').onclick = ()=>{ SFX.click(); loadStory(G.levelIdx-1); };
+document.getElementById('nextBtn').onclick = ()=>{ SFX.click(); loadStory(G.levelIdx+1); };
+document.getElementById('seedBtn').onclick = ()=>{ SFX.click(); loadRandom(); };
+document.getElementById('spinBtn').onclick = (e)=>{ G.spin=!G.spin; e.target.classList.toggle('on',G.spin); controls.autoRotate=G.spin; };
+document.getElementById('outlineBtn').onclick = (e)=>{ G.outline=!G.outline; e.target.classList.toggle('on',G.outline); applyOutlineVisibility(); };
+document.getElementById('soundBtn').onclick = (e)=>{ initAudio(); G.sound=!G.sound; e.target.classList.toggle('on',G.sound); };
+document.getElementById('helpBtn').onclick = ()=>{ document.getElementById('helpBox').style.display='flex'; };
+document.getElementById('helpClose').onclick = ()=>{ document.getElementById('helpBox').style.display='none'; };
+document.getElementById('collapseToggle').onclick = ()=>{ document.getElementById('panelTL').classList.toggle('collapsed'); };
+controls.autoRotate = true; controls.autoRotateSpeed = 0.7;
+
+function applyOutlineVisibility(){
+  roomGroup.traverse(o=>{ if(o.name==='outline') o.visible=G.outline; });
+  if(wallMesh && wallMesh.userData.outline) wallMesh.userData.outline.visible=G.outline;
+}
+
+renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());
+addEventListener('resize',()=>{
+  renderer.setSize(innerWidth,innerHeight);
+  updateFrustum();
+});
+addEventListener('pointerdown', initAudio, {once:true});
+
+/* ================= 主循环 ================= */
+const clock = new THREE.Clock();
+const dummy = new THREE.Object3D();
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const t = clock.elapsedTime;
+
+  // 入场弹簧
+  roomGroup.position.y = entranceSpring.update(dt);
+
+  // tweens
+  for(const tw of tweens){
+    if(tw.dead) continue;
+    tw.t += dt;
+    if(tw.t<0) continue;
+    const e = clamp(tw.t/tw.dur,0,1);
+    tw.onUpdate(tw.ease(e));
+    if(e>=1){ tw.dead=true; if(tw.onDone) tw.onDone(); }
+  }
+  for(let i=tweens.length-1;i>=0;i--) if(tweens[i].dead) tweens.splice(i,1);
+
+  // 镜头微震（抖动房间而非相机，避免与 OrbitControls 冲突）
+  if(shakeT>0){
+    shakeT-=dt;
+    const s = shakeT>0? shakeT/0.06 : 0;
+    roomGroup.position.x = (Math.random()-0.5)*0.05*s;
+    roomGroup.position.z = (Math.random()-0.5)*0.05*s;
+  }else{
+    roomGroup.position.x = 0; roomGroup.position.z = 0;
+  }
+
+  // 符印金光
+  goalMeshes.forEach(g=>{
+    const target = g.userData.target||0;
+    g.userData.lit = lerp(g.userData.lit||0, target, 1-Math.exp(-dt/0.15));
+    g.children[0].material.color.set(P.accent).lerp(new THREE.Color(0xFFD166), g.userData.lit);
+    g.children[1].rotation.y += dt*(1+g.userData.lit*3);
+  });
+  // 机关下沉
+  plateMeshes.forEach(p=>{
+    const ty = p.userData.on? p.userData.baseY-0.04 : p.userData.baseY;
+    p.position.y = lerp(p.position.y, ty, 1-Math.exp(-dt/0.08));
+    p.material.color.set(p.userData.on? 0xFFD166 : 0xD8CFBB);
+  });
+  // 火苗摇曳
+  if(altarFlame){
+    altarFlame.rotation.y += dt*3;
+    const w = 1+Math.sin(t*9)*0.06;
+    altarFlame.scale.x = altarFlame.scale.z = w;
+  }
+  // 粒子
+  for(let i=particles.length-1;i>=0;i--){
+    const p = particles[i];
+    p.life+=dt;
+    if(p.life>=p.maxLife){ particles.splice(i,1); continue; }
+    p.vy -= dt*4.5;
+    p.x+=p.vx*dt; p.y+=p.vy*dt; p.z+=p.vz*dt;
+    if(p.y<0.02){ p.y=0.02; p.vy*=-0.3; }
+  }
+  for(let i=0;i<MAXP;i++){
+    if(i<particles.length){
+      const p=particles[i];
+      pPos[i*3]=p.x; pPos[i*3+1]=p.y; pPos[i*3+2]=p.z;
+    }else{ pPos[i*3+1]=-999; }
+  }
+  pGeo.attributes.position.needsUpdate = true;
+  pMat.color.set(particles.some(p=>p.gold)?0xFFD166:0xD8C9A8);
+
+  // 碎片
+  for(let i=debrisList.length-1;i>=0;i--){
+    const d=debrisList[i];
+    d.life+=dt;
+    if(d.life>=d.maxLife){ debrisList.splice(i,1); continue; }
+    d.vy -= dt*9;
+    d.x+=d.vx*dt; d.y+=d.vy*dt; d.z+=d.vz*dt;
+  }
+  debris.count = debrisList.length;
+  debrisList.forEach((d,i)=>{
+    dummy.position.set(d.x,Math.max(d.y,0.05),d.z);
+    dummy.rotation.set(d.rot+d.life*8,d.rot,d.life*5);
+    const s = 1-d.life/d.maxLife;
+    dummy.scale.setScalar(Math.max(s,0.01));
+    dummy.updateMatrix();
+    debris.setMatrixAt(i,dummy.matrix);
+  });
+  if(debris.count) debris.instanceMatrix.needsUpdate = true;
+
+  // 涟漪
+  for(let i=ripples.length-1;i>=0;i--){
+    const r=ripples[i];
+    r.life+=dt;
+    const e=r.life/r.maxLife;
+    if(e>=1){ scene.remove(r.m); ripples.splice(i,1); continue; }
+    r.m.scale.setScalar(0.2+e*4*r.big);
+    r.m.material.opacity = 0.8*(1-e);
+  }
+
+  controls.update();
+  renderer.render(scene,camera);
+}
+
+loadStory(0);
+animate();
+</script>
+</body>
+</html>
