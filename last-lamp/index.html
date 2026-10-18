@@ -271,9 +271,9 @@ const PAL = {
   bg:        '#101728',
   bgDawn:    '#F2C089',
   grass:     '#4B6082',
-  soil:      '#41536F',
-  rim:       '#41567A',
-  rock:      '#313F5D',
+  soil:      '#3A4A64',
+  rim:       '#2E3E59',
+  rock:      '#212B40',
   street:    '#2F3C54',
   roofA:     '#41526F',
   roofB:     '#4C5F82',
@@ -409,7 +409,8 @@ const G = {
   outlineOn: true, soundOn: true, rotateOn: false, started: false,
   audio: null, showFail: false, debug: false,
   calls: 0, frameMs: 0, fps: 0, best: 0,
-  frameCx: 0, frameCz: 0, followMax: 5.5,
+  frameCx: 0, frameCz: 0, followMax: 5.5, frameDead: 0, portraitFrame: false,
+  frameRightX: 1, frameRightZ: 0, frameRightDot: 1,
   ray: null, ndc: new THREE.Vector2(),
   tmp: { v1: new THREE.Vector3(), v2: new THREE.Vector3(), v3: new THREE.Vector3(),
          q: new THREE.Quaternion(), m: new THREE.Matrix4(), m2: new THREE.Matrix4(),
@@ -704,8 +705,50 @@ function applyFrustum() {
   G.camera.updateProjectionMatrix();
 }
 
-// 取景用的世界点：岛缘一圈 + 每户最高处的外轮廓角点
+// 取景用的世界点：每户的外轮廓（屋脊四角 + 台基四角 + 门前台阶）。
+// 岛缘不参与构图——只有房屋绝不允许被裁。
+function houseFramePoints() {
+  const pts = [];
+  for (const h of G.houses) {
+    const rise = h.tier === 2 ? 1.02 : 0.92;
+    const wallH = (h.tier === 2 ? H.wall2 : H.wall1) + 0.34;
+    const top = wallH + rise + 0.12;
+    const cs = Math.cos(h.rot), sn = Math.sin(h.rot);
+    for (const y of [0, top]) {
+      for (const sx of [-1, 1]) {
+        for (const sz of [-1, 1]) {
+          const lx = sx * (H.w + 0.3) / 2, lz = sz * (H.d + 0.3) / 2;
+          pts.push(new THREE.Vector3(h.x + lx * cs + lz * sn, y, h.z - lx * sn + lz * cs));
+        }
+      }
+    }
+    // 台阶 / 门廊前沿，玩家站在这里
+    const lz = H.d / 2 + 0.95;
+    for (const sx of [-1, 1]) {
+      const lx = sx * (H.w / 2 - 0.1);
+      pts.push(new THREE.Vector3(h.x + lx * cs + lz * sn, 0.1, h.z - lx * sn + lz * cs));
+    }
+  }
+  return pts;
+}
+
+// 镇子包围盒 = 房屋外轮廓 + 街道带状区域（两端各留 1.2，路宽外各留 1.2）
 function townFramePoints() {
+  const pts = houseFramePoints();
+  const us = G.houses.map(h => projectStreet(h.x, h.z));
+  const uA = Math.min(...us) - 1.2, uB = Math.max(...us) + 1.2;
+  const lat = STREET_HW + 1.2;
+  for (const u of [uA, uB]) {
+    for (const l of [-lat, lat]) {
+      const s = streetPoint(u, l);
+      pts.push(new THREE.Vector3(s.x, 0.05, s.z));
+    }
+  }
+  return pts;
+}
+
+// 岛缘一圈只用来给 viewSize 封顶，绝不充当构图基准
+function islandFramePoints() {
   const pts = [];
   const N = 48;
   for (let i = 0; i < N; i++) {
@@ -713,22 +756,11 @@ function townFramePoints() {
     const x = Math.cos(a) * (WORLD_R + 0.25), z = Math.sin(a) * (WORLD_R + 0.25);
     pts.push(new THREE.Vector3(x, G.heightAt ? G.heightAt(x, z) : -0.6, z));
   }
-  for (const h of G.houses) {
-    const rise = h.tier === 2 ? 1.02 : 0.92;
-    const wallH = (h.tier === 2 ? H.wall2 : H.wall1) + 0.34;
-    const top = wallH + rise + 0.12;
-    const cs = Math.cos(h.rot), sn = Math.sin(h.rot);
-    for (const sx of [-1, 1]) {
-      for (const sz of [-1, 1]) {
-        const lx = sx * (H.w + 0.3) / 2, lz = sz * (H.d + 0.3) / 2;
-        pts.push(new THREE.Vector3(h.x + lx * cs + lz * sn, top, h.z - lx * sn + lz * cs));
-      }
-    }
-  }
   return pts;
 }
 
-// 正交机位按包围盒自适应：包围盒在当前视口宽高比下装进画面，四周留 10% 白
+// 正交机位按镇子包围盒自适应：横屏按户数收紧（3 户约 13.9，7 户由岛缘封顶），
+// 竖屏用街道长轴填满视口宽
 // resetZoom 只在换夜 / 换种子时清掉用户的手动缩放；平时不覆盖用户的旋转与缩放
 function fitCameraToTown(resetZoom) {
   if (!G.camera || !G.controls || !G.houses || !G.houses.length) { applyFrustum(); return; }
@@ -739,32 +771,68 @@ function fitCameraToTown(resetZoom) {
   cam.updateMatrixWorld(true);
   const inv = new THREE.Matrix4().copy(cam.matrixWorld).invert();
   const v = new THREE.Vector3();
-  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-  for (const p of townFramePoints()) {
-    v.copy(p).applyMatrix4(inv);
-    if (v.x < minX) minX = v.x;
-    if (v.x > maxX) maxX = v.x;
-    if (v.y < minY) minY = v.y;
-    if (v.y > maxY) maxY = v.y;
-  }
+  const boundsOf = (pts) => {
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    for (const p of pts) {
+      v.copy(p).applyMatrix4(inv);
+      if (v.x < minX) minX = v.x;
+      if (v.x > maxX) maxX = v.x;
+      if (v.y < minY) minY = v.y;
+      if (v.y > maxY) maxY = v.y;
+    }
+    return { minX, maxX, minY, maxY };
+  };
 
   const aspect = Math.max(0.3, window.innerWidth / Math.max(1, window.innerHeight));
-  const needW = (maxX - minX) * 1.1;
-  const needH = (maxY - minY) * 1.1;
-  G.viewSize = clamp(Math.max(needH, needW / aspect), 8, 96);
+  const box = boundsOf(townFramePoints());
+  const home = boundsOf(houseFramePoints());
+  const isle = boundsOf(islandFramePoints());
+  const needW = box.maxX - box.minX, needH = box.maxY - box.minY;
+  const homeW = home.maxX - home.minX;
+
+  // 岛缘封顶：永远不比整岛取景更远
+  const islandFit = Math.max((isle.maxY - isle.minY) * 1.04, (isle.maxX - isle.minX) * 1.04 / aspect);
+
+  let center = box;
+  if (aspect < 0.85) {
+    // 竖屏：房屋与街道长轴填满视口宽，左右可裁岛缘、路肩与空地
+    G.portraitFrame = true;
+    center = home;
+    G.viewSize = Math.min(islandFit, clamp(homeW / (aspect * 0.94), 22, 25.4));
+  } else {
+    // 横屏：以镇子包围盒为准（房屋永远在框内），岛缘出框就出框
+    G.portraitFrame = false;
+    G.viewSize = Math.min(islandFit, clamp(Math.max(needH, needW / aspect) * 1.51, 8, 96));
+  }
 
   // 包围盒中心对到画面中心：正交投影只平移，不改朝向
   const rot = new THREE.Matrix4().extractRotation(cam.matrixWorld);
-  v.set((minX + maxX) / 2, (minY + maxY) / 2, 0).applyMatrix4(rot);
+  v.set((center.minX + center.maxX) / 2, (center.minY + center.maxY) / 2, 0).applyMatrix4(rot);
   cam.position.add(v);
   ctl.target.add(v);
   cam.lookAt(ctl.target);
   cam.updateMatrixWorld(true);
 
-  // 手机端跟随镜头的最大偏移：不许越过留白把镇子挤出画面
-  const slackX = (G.viewSize * aspect - (maxX - minX)) / 2;
-  const padWorld = Math.max(maxX - minX, maxY - minY) * 0.06;
-  G.followMax = clamp(slackX - padWorld, 0, 5.5);
+  if (G.portraitFrame) {
+    // 竖屏沿街道方向滑移：镇子装不下就跟着玩家走，装得下也把街尾起点的人带进画面
+    const us = G.houses.map(h => projectStreet(h.x, h.z));
+    const uHalf = (Math.max(...us) - Math.min(...us)) / 2 + 1.2;
+    const rx = rot.elements[0], rz = rot.elements[2];   // 相机右轴（世界坐标）
+    const rightDot = Math.max(0.25, Math.abs(SD.x * rx + SD.z * rz));
+    const visW = G.viewSize * aspect;                  // 视口宽（世界单位）
+    const pOff = Math.abs((G.player.pos.x - ctl.target.x) * rx + (G.player.pos.z - ctl.target.z) * rz);
+    const pOut = Math.max(0, pOff + 1.4 - visW / 2) / rightDot;
+    G.followMax = clamp(uHalf - (0.5 - 0.18) * (visW / rightDot) + pOut, 0, 10);
+    G.frameDead = Math.max(0, visW / 2 - 1.4);
+    G.frameRightX = rx;
+    G.frameRightZ = rz;
+    G.frameRightDot = rightDot;
+  } else {
+    // 横屏 / 平板：跟随不许越过留白把镇子挤出画面
+    const slackX = (G.viewSize * aspect - needW) / 2;
+    G.followMax = clamp(slackX - Math.max(needW, needH) * 0.06, 0, 5.5);
+    G.frameDead = 0;
+  }
   G.frameCx = ctl.target.x;
   G.frameCz = ctl.target.z;
 
@@ -898,7 +966,9 @@ function buildTerrain(bucket) {
     const nv = G.perlin(cx * 1.6 + 11, cz * 1.6 - 5);
     c.copy(grass).lerp(soil, smoothstep(0.94, 0.6, slope) * 0.9);
     c.multiplyScalar(0.91 + 0.15 * nv);
-    c.lerp(rim, smoothstep(10.9, 12.5, Math.hypot(cx, cz)) * 0.9);
+    c.lerp(rim, smoothstep(10.9, 12.45, Math.hypot(cx, cz)) * 0.95);
+    // 岛缘最后收一刀：最外一圈压到接近背景，边缘才不会读成盘子边
+    c.multiplyScalar(1 - smoothstep(11.6, 12.85, Math.hypot(cx, cz)) * 0.22);
     c.offsetHSL(0, 0, clamp(cy_ * 0.02, -0.02, 0.02));
     for (let k = 0; k < 3; k++) {
       colors[(t + k) * 3] = c.r;
@@ -2567,6 +2637,9 @@ function startNight(level) {
     G.scene.background.set(PAL.bg);
     G.scene.fog.color.set(PAL.bg);
     G.scene.fog.density = 0.0065;
+    // 目标回中时把相机一起平移，避免换夜累积取景偏移把机位拧歪
+    G.tmp.v1.set(0, 1.0, 0).sub(G.controls.target);
+    G.camera.position.add(G.tmp.v1);
     G.controls.target.set(0, 1.0, 0);
     G.controls.autoRotate = G.rotateOn;
   }
@@ -2870,14 +2943,28 @@ function loop(now) {
   updateLights(dt);
   updateVignette();
 
-  // 移动端跟随角色：fit 视图下偏移不超过留白，免得把镇子挤出画面
+  // 移动端跟随角色：横屏按留白夹取，竖屏沿街道长轴横移
   if (G.mobile && G.controls) {
+    const ox = G.controls.target.x, oz = G.controls.target.z;
     const fitted = G.followMax != null && (!G.camera || G.camera.zoom <= 1.02);
-    const fm = fitted ? G.followMax : 5.5;
-    const fx = fitted ? (G.frameCx || 0) : 0;
-    const fz = fitted ? (G.frameCz || 0) : 0;
-    G.controls.target.x = expDamp(G.controls.target.x, fx + clamp(G.player.pos.x - fx, -fm, fm), 0.55, dt);
-    G.controls.target.z = expDamp(G.controls.target.z, fz + clamp(G.player.pos.z - fz, -fm, fm), 0.55, dt);
+    if (fitted && G.portraitFrame) {
+      // 竖屏按屏幕横向量玩家偏移，沿街道方向补到画面里
+      const sx = (G.player.pos.x - G.frameCx) * G.frameRightX + (G.player.pos.z - G.frameCz) * G.frameRightZ;
+      const dead = G.frameDead || 0;
+      const over = sx > dead ? (sx - dead) / G.frameRightDot : (sx < -dead ? (sx + dead) / G.frameRightDot : 0);
+      const cu = clamp(over, -G.followMax, G.followMax);
+      G.controls.target.x = expDamp(G.controls.target.x, G.frameCx + SD.x * cu, 0.55, dt);
+      G.controls.target.z = expDamp(G.controls.target.z, G.frameCz + SD.z * cu, 0.55, dt);
+    } else {
+      const fm = fitted ? G.followMax : 5.5;
+      const fx = fitted ? (G.frameCx || 0) : 0;
+      const fz = fitted ? (G.frameCz || 0) : 0;
+      G.controls.target.x = expDamp(G.controls.target.x, fx + clamp(G.player.pos.x - fx, -fm, fm), 0.55, dt);
+      G.controls.target.z = expDamp(G.controls.target.z, fz + clamp(G.player.pos.z - fz, -fm, fm), 0.55, dt);
+    }
+    // 相机跟着目标一起平移：跟着走的是取景框，不是把机位拧一圈
+    G.camera.position.x += G.controls.target.x - ox;
+    G.camera.position.z += G.controls.target.z - oz;
   }
 
   G.hudT = (G.hudT || 0) + dt;
