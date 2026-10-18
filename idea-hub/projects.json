@@ -309,5 +309,26 @@
       "assets",
       "vendor"
     ]
+  },
+  {
+    "id": "redstone-pulse-garden",
+    "name": "红石脉冲花园",
+    "category": "逻辑解谜",
+    "description": "在浅色微缩花园中种下逻辑植物，让浆果脉冲沿藤蔓传播，点亮所有花苞。",
+    "hint": "把延迟蘑菇拖到空印记上，连接脉冲花和白色花苞，再发射脉冲。",
+    "label": "Three.js · 植物电路",
+    "color": "#dce7cf",
+    "directory": "../redstone-pulse-garden",
+    "port": 4304,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "identity": "红石脉冲花园",
+    "enabled": true,
+    "publicDirectories": []
   }
 ]

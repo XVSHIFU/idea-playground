@@ -25,6 +25,7 @@ idea-playground/
   roundland/               圆野，微缩岛屿沙盒
   syntax-path/             句法小径，已登记为隐藏草稿
   note-block-studio/       音符方块，Minecraft 风格的 3D 音序工作台
+  redstone-pulse-garden/   红石脉冲花园，植物电路解谜
   panel-adapt-check/       原有检查工具，不作为作品发布
   tools/                  构建、接入初始化与验证工具
   docs/                   接入约定
