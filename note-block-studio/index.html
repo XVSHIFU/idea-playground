@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#f7f7f2"><meta name="description" content="一块可以演奏的世界。放下音符、搭起旋律，在 Minecraft 风格的 3D 工作台里创作自己的音乐。">
+<title>NOTE BLOCK · 音符方块</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+ <a class="brand" href="./" aria-label="音符方块首页"><span class="brand-block"><i></i><b>♪</b></span><div><strong>NOTE BLOCK<span class="brand-dot">.</span></strong><span class="brand-sub">音符方块 · A LITTLE WORLD OF SOUND</span></div></a>
+ <div class="project-name"><span class="small-block">✦</span><input id="project-name" maxlength="32" value="草地上的午后" aria-label="作品名称"><span class="project-tag">个人作品</span></div>
+ <div class="header-actions"><span class="save-status" id="save-status"><i></i>已保存在此设备</span><button class="icon-btn" id="help" aria-label="使用帮助与素材来源" title="使用帮助"><span data-icon="help"></span></button><button class="export-btn" id="export"><span data-icon="download"></span><span>导出作品</span></button></div>
+</header>
+<main class="workspace">
+<aside class="sound-library">
+ <div class="panel-heading"><span>声音方块</span><span class="micro">08</span></div>
+ <p class="panel-subtitle">每一种材质，都有自己的声音。</p>
+ <div id="instrument-list" class="instrument-list"></div>
+ <div class="library-bottom"><span class="tiny-redstone"></span><div><b>原版音符盒的灵感</b><span>让熟悉的方块，唱一首新歌。</span></div></div>
+ <button id="sound-state" class="sound-state" title="点击重新加载音色"><span class="status-dot"></span><span>正在准备音色…</span></button>
+</aside>
+<section class="workbench" aria-label="音乐工作台">
+ <div class="workbench-heading"><div><span class="eyebrow">BUILD A LITTLE MELODY</span><h1>把灵感，放进世界<span>。</span></h1><p>一块一个音符。一点一点，长成你的旋律。</p></div><button class="outline-btn" id="presets"><span data-icon="sparkles"></span>灵感曲库<span class="new-dot"></span></button></div>
+ <div class="stage" id="stage">
+  <div class="stage-toolbar"><div class="tool-group" role="group" aria-label="编辑工具"><button class="tool active" data-tool="place" title="放置音符 (1)" aria-label="放置音符" aria-pressed="true"><span data-icon="pointer"></span></button><button class="tool" data-tool="erase" title="擦除音符 (2)" aria-label="擦除音符" aria-pressed="false"><span data-icon="eraser"></span></button><button class="tool" data-tool="orbit" title="旋转视角 (3)" aria-label="旋转视角" aria-pressed="false"><span data-icon="orbit"></span></button><span class="tool-divider"></span><button class="tool" id="undo" title="撤销 (Ctrl/⌘ Z)" aria-label="撤销"><span data-icon="undo"></span></button><button class="tool" id="redo" title="重做 (Ctrl/⌘ Shift Z)" aria-label="重做"><span data-icon="redo"></span></button></div>
+   <div class="view-group"><span class="live-badge"><i></i><span id="world-status">等一阵旋律</span></span><button class="icon-btn" id="view" title="切换俯视 / 立体" aria-label="切换俯视或立体视角"><span data-icon="view"></span></button><button class="icon-btn" id="reset-view" title="复位视角" aria-label="复位视角"><span data-icon="expand"></span></button></div>
+  </div>
+  <canvas id="world" aria-label="16步8轨三维音乐舞台，点击空格放置音符，拖动音符移动，右键删除"></canvas>
+  <div class="scene-loading" id="scene-loading"><span class="loader-block"></span><span>正在搭起你的音乐世界</span></div>
+  <div class="hover-tip" id="hover-tip"></div>
+  <div class="scene-caption"><span class="scene-badge"><i></i>OVERWORLD STUDIO</span><span id="note-count">0 个音符</span></div>
+  <div class="stage-hints"><span><kbd>点击</kbd> 放置 / 选中</span><span><kbd>拖动</kbd> 移动音符</span><span><kbd>右键</kbd> 删除</span><span><kbd>滚轮</kbd> 调整音高</span></div>
+ </div>
+ <div class="timeline"><div class="timeline-label"><span data-icon="repeat"></span><b>LOOP 01</b><span>1 小节 · 16 步</span></div><div class="step-strip" id="steps" aria-label="播放位置"></div><button class="text-btn" id="grid-toggle" title="展开可用键盘操作的二维音序网格"><span data-icon="grid"></span>音序网格</button></div>
+ <div class="grid-editor" id="grid-editor" hidden></div>
+</section>
+<aside class="inspector">
+ <div class="panel-heading"><span>音符调校</span><span class="micro" id="selection-label">放置设置</span></div>
+ <div class="note-preview" id="note-preview"><div class="pixel-sparks"><i></i><i></i><i></i></div><img id="selected-block-image" class="selected-block-image" src="assets/icons/grass.png" alt="草方块原版外观" width="96" height="96"></div>
+ <div class="selected-instrument"><span id="selected-name">草方块</span><span id="selected-instrument">钢琴 / HARP</span></div>
+ <div class="pitch-control"><button class="icon-btn" id="pitch-down" aria-label="降低音高"><span data-icon="minus"></span></button><div><strong id="pitch-name">C4</strong><span id="pitch-description">中央 C</span></div><button class="icon-btn" id="pitch-up" aria-label="升高音高"><span data-icon="plus"></span></button></div>
+ <div class="scale-picker"><span data-icon="lock"></span><select id="scale" aria-label="音阶"><option value="pentatonic">C 大调 · 五声音阶</option><option value="minor">A 小调 · 五声音阶</option><option value="chromatic">自由半音 · 完整音域</option></select></div>
+ <label class="slider-label" for="velocity"><span>力度 <span class="muted">VELOCITY</span></span><output id="velocity-value">80%</output></label><input id="velocity" type="range" min="10" max="100" value="80">
+ <div class="inspector-divider"></div>
+ <div class="panel-heading mix-heading"><span>空间与声音</span><span data-icon="sliders"></span></div>
+ <label class="slider-label" for="reverb"><span>空间混响</span><output id="reverb-value">24%</output></label><input id="reverb" type="range" min="0" max="65" value="24">
+ <label class="slider-label" for="volume"><span>主音量</span><output id="volume-value">70%</output></label><input id="volume" type="range" min="0" max="100" value="70">
+ <div class="inspector-footer"><span data-icon="headphones"></span><span>戴上耳机，听见小小世界。</span></div>
+ <button class="clear-btn" id="clear"><span data-icon="trash"></span>清空舞台</button>
+</aside>
+</main>
+<footer class="transport">
+ <div class="transport-story"><span class="story-icon">♪</span><div><b id="transport-title">草地上的午后</b><span id="transport-subtitle">原创循环 · 随手搭一段好心情</span></div></div>
+ <div class="transport-center"><button class="icon-btn stop-button" id="stop" aria-label="停止并回到开头" title="停止"><span data-icon="stop"></span></button><button class="play-button" id="play" aria-label="播放" title="播放 / 暂停（空格）"><span data-icon="play"></span><span id="play-label">播放</span></button><span class="transport-divider"></span><label class="tempo"><input type="number" id="bpm" min="40" max="200" value="88" aria-label="每分钟节拍数"><span>BPM</span></label><div class="tempo-step"><button id="bpm-up" aria-label="速度加一">⌃</button><button id="bpm-down" aria-label="速度减一">⌄</button></div><span class="transport-divider"></span><button id="metronome" class="icon-btn" title="节拍器" aria-label="切换节拍器" aria-pressed="false"><span data-icon="metronome"></span></button><label class="swing"><span>摇摆</span><input id="swing" type="range" min="0" max="45" value="0" aria-label="摇摆程度"><output id="swing-value">0%</output></label></div>
+ <div class="transport-end"><span class="meter" id="meter"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="keyboard-hint"><kbd>Space</kbd> 播放 / 暂停</span></div>
+</footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<dialog id="modal"><div class="modal-header"><div><span class="eyebrow" id="modal-eyebrow">NOTE BLOCK STUDIO</span><h2 id="modal-title"></h2></div><button class="icon-btn" id="close-modal" aria-label="关闭"><span data-icon="close"></span></button></div><div id="modal-content"></div></dialog>
+<input type="file" id="import-file" accept="application/json,.json" hidden>
+<script type="module" src="app.js"></script>
+</body></html>

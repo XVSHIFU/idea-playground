@@ -1,0 +1,410 @@
+{
+  "title": "NOTE BLOCK asset provenance",
+  "retrievedAt": "2026-10-17",
+  "notes": [
+    "Audio files were located through the user-provided MCSounds site and downloaded from its linked public CDN.",
+    "Textures and inventory icons were downloaded from Minecraft Wiki public image endpoints.",
+    "These Minecraft game assets remain attributable to their original rights holders. This file records provenance and makes no claim of a redistribution license.",
+    "Note-block texture is the Wiki BlockSprite note-block.png redirect target BlockSprite jukebox-side.png."
+  ],
+  "audio": [
+    {
+      "id": "harp",
+      "file": "audio/harp.ogg",
+      "event": "block.note_block.harp",
+      "originalPath": "note/harp2",
+      "eventPitch": 1,
+      "sampleBaseMidi": 66,
+      "url": "https://mc-sounds-static-v3.imbottle.com/ogg/4a/4a2b2aca57376ac8daf67a9c339914d2ffbe9828",
+      "reference": "https://o.xbottle.top/mcsounds/",
+      "api": "https://o.xbottle.top/mcsounds_api/v3/sounds/details/block.note_block.harp",
+      "sha1": "4a2b2aca57376ac8daf67a9c339914d2ffbe9828",
+      "bytes": 7648,
+      "pitchReference": "https://minecraft.wiki/w/Note_Block#Notes",
+      "pitchBasis": "Wiki instrument octave ranges and pitch multiplier 1.0 at note index 12. Three percussion samples have no fixed note.",
+      "duration": 0.573479,
+      "codec": {
+        "codec_name": "vorbis",
+        "sample_rate": "48000",
+        "channels": 1
+      }
+    },
+    {
+      "id": "bass",
+      "file": "audio/bass.ogg",
+      "event": "block.note_block.bass",
+      "originalPath": "note/bassattack",
+      "eventPitch": 1,
+      "sampleBaseMidi": 42,
+      "url": "https://mc-sounds-static-v3.imbottle.com/ogg/42/4211ca09a11fcf0bb2f20d210389ddeae6e0fc8e",
+      "reference": "https://o.xbottle.top/mcsounds/",
+      "api": "https://o.xbottle.top/mcsounds_api/v3/sounds/details/block.note_block.bass",
+      "sha1": "4211ca09a11fcf0bb2f20d210389ddeae6e0fc8e",
+      "bytes": 6382,
+      "pitchReference": "https://minecraft.wiki/w/Note_Block#Notes",
+      "pitchBasis": "Wiki instrument octave ranges and pitch multiplier 1.0 at note index 12. Three percussion samples have no fixed note.",
+      "duration": 0.465374,
+      "codec": {
+        "codec_name": "vorbis",
+        "sample_rate": "44100",
+        "channels": 1
+      }
+    },
+    {
+      "id": "basedrum",
+      "file": "audio/basedrum.ogg",
+      "event": "block.note_block.basedrum",
+      "originalPath": "note/bd",
+      "eventPitch": 1,
+      "sampleBaseMidi": null,
+      "url": "https://mc-sounds-static-v3.imbottle.com/ogg/11/11fb23958cae11865bedec00522d70a188ca5d1b",
+      "reference": "https://o.xbottle.top/mcsounds/",
+      "api": "https://o.xbottle.top/mcsounds_api/v3/sounds/details/block.note_block.basedrum",
+      "sha1": "11fb23958cae11865bedec00522d70a188ca5d1b",
+      "bytes": 4489,
+      "pitchReference": "https://minecraft.wiki/w/Note_Block#Notes",
+      "pitchBasis": "Wiki instrument octave ranges and pitch multiplier 1.0 at note index 12. Three percussion samples have no fixed note.",
+      "duration": 0.122109,
+      "codec": {
+        "codec_name": "vorbis",
+        "sample_rate": "44100",
+        "channels": 1
+      }
+    },
+    {
+      "id": "snare",
+      "file": "audio/snare.ogg",
+      "event": "block.note_block.snare",
+      "originalPath": "note/snare",
+      "eventPitch": 1,
+      "sampleBaseMidi": null,
+      "url": "https://mc-sounds-static-v3.imbottle.com/ogg/2d/2db5799d39524c6f99e439d310e4a0817c61660e",
+      "reference": "https://o.xbottle.top/mcsounds/",
+      "api": "https://o.xbottle.top/mcsounds_api/v3/sounds/details/block.note_block.snare",
+      "sha1": "2db5799d39524c6f99e439d310e4a0817c61660e",
+      "bytes": 4423,
+      "pitchReference": "https://minecraft.wiki/w/Note_Block#Notes",
+      "pitchBasis": "Wiki instrument octave ranges and pitch multiplier 1.0 at note index 12. Three percussion samples have no fixed note.",
+      "duration": 0.056712,
+      "codec": {
+        "codec_name": "vorbis",
+        "sample_rate": "44100",
+        "channels": 1
+      }
+    },
+    {
+      "id": "hat",
+      "file": "audio/hat.ogg",
+      "event": "block.note_block.hat",
+      "originalPath": "note/hat",
+      "eventPitch": 1,
+      "sampleBaseMidi": null,
+      "url": "https://mc-sounds-static-v3.imbottle.com/ogg/db/db3b85662c0000733a04d5087d7d835771a70cc5",
+      "reference": "https://o.xbottle.top/mcsounds/",
+      "api": "https://o.xbottle.top/mcsounds_api/v3/sounds/details/block.note_block.hat",
+      "sha1": "db3b85662c0000733a04d5087d7d835771a70cc5",
+      "bytes": 4531,
+      "pitchReference": "https://minecraft.wiki/w/Note_Block#Notes",
+      "pitchBasis": "Wiki instrument octave ranges and pitch multiplier 1.0 at note index 12. Three percussion samples have no fixed note.",
+      "duration": 0.059637,
+      "codec": {
+        "codec_name": "vorbis",
+        "sample_rate": "44100",
+        "channels": 1
+      }
+    },
+    {
+      "id": "bell",
+      "file": "audio/bell.ogg",
+      "event": "block.note_block.bell",
+      "originalPath": "note/bell",
+      "eventPitch": 1,
+      "sampleBaseMidi": 90,
+      "url": "https://mc-sounds-static-v3.imbottle.com/ogg/a1/a1e833dec61595dc79d0c672fcd7838579ca4b14",
+      "reference": "https://o.xbottle.top/mcsounds/",
+      "api": "https://o.xbottle.top/mcsounds_api/v3/sounds/details/block.note_block.bell",
+      "sha1": "a1e833dec61595dc79d0c672fcd7838579ca4b14",
+      "bytes": 6087,
+      "pitchReference": "https://minecraft.wiki/w/Note_Block#Notes",
+      "pitchBasis": "Wiki instrument octave ranges and pitch multiplier 1.0 at note index 12. Three percussion samples have no fixed note.",
+      "duration": 0.436229,
+      "codec": {
+        "codec_name": "vorbis",
+        "sample_rate": "48000",
+        "channels": 1
+      }
+    },
+    {
+      "id": "flute",
+      "file": "audio/flute.ogg",
+      "event": "block.note_block.flute",
+      "originalPath": "note/flute",
+      "eventPitch": 1,
+      "sampleBaseMidi": 78,
+      "url": "https://mc-sounds-static-v3.imbottle.com/ogg/04/0445f088325b39038df2b37a958ec6c987f5e714",
+      "reference": "https://o.xbottle.top/mcsounds/",
+      "api": "https://o.xbottle.top/mcsounds_api/v3/sounds/details/block.note_block.flute",
+      "sha1": "0445f088325b39038df2b37a958ec6c987f5e714",
+      "bytes": 8349,
+      "pitchReference": "https://minecraft.wiki/w/Note_Block#Notes",
+      "pitchBasis": "Wiki instrument octave ranges and pitch multiplier 1.0 at note index 12. Three percussion samples have no fixed note.",
+      "duration": 0.614583,
+      "codec": {
+        "codec_name": "vorbis",
+        "sample_rate": "48000",
+        "channels": 1
+      }
+    },
+    {
+      "id": "pling",
+      "file": "audio/pling.ogg",
+      "event": "block.note_block.pling",
+      "originalPath": "note/pling",
+      "eventPitch": 1,
+      "sampleBaseMidi": 66,
+      "url": "https://mc-sounds-static-v3.imbottle.com/ogg/77/774ae41e86f0b62a5cc961d1bc2e3d0aef9d229c",
+      "reference": "https://o.xbottle.top/mcsounds/",
+      "api": "https://o.xbottle.top/mcsounds_api/v3/sounds/details/block.note_block.pling",
+      "sha1": "774ae41e86f0b62a5cc961d1bc2e3d0aef9d229c",
+      "bytes": 7149,
+      "pitchReference": "https://minecraft.wiki/w/Note_Block#Notes",
+      "pitchBasis": "Wiki instrument octave ranges and pitch multiplier 1.0 at note index 12. Three percussion samples have no fixed note.",
+      "duration": 0.645805,
+      "codec": {
+        "codec_name": "vorbis",
+        "sample_rate": "44100",
+        "channels": 1
+      }
+    }
+  ],
+  "textures": [
+    {
+      "id": "grass-side",
+      "file": "textures/grass-side.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_grass-block.png?97c2e",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 16,
+      "height": 16,
+      "bytes": 261,
+      "sha256": "07feabf08c6c55321550f69d8c21647da410e0be2744717e397f358dff337cb7"
+    },
+    {
+      "id": "stone",
+      "file": "textures/stone.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_stone.png?e9a91",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 16,
+      "height": 16,
+      "bytes": 151,
+      "sha256": "15995eed63b8d8f00cff2c71d2b7327a23cee8aa61e1a0127c28e95d5d50520f"
+    },
+    {
+      "id": "sand",
+      "file": "textures/sand.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_sand.png?d87f8",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 16,
+      "height": 16,
+      "bytes": 176,
+      "sha256": "d7eea84513c65e3b3a4c6409f906e4f9d5aa722d8ed35d203feb056898196b0f"
+    },
+    {
+      "id": "glass",
+      "file": "textures/glass.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_glass.png?791aa",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 16,
+      "height": 16,
+      "bytes": 140,
+      "sha256": "0be697e533f7de0ddbb27eef37f13166d7da3f75a47d3a74839d4753b8b05c07"
+    },
+    {
+      "id": "clay",
+      "file": "textures/clay.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_clay.png?13fec",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 16,
+      "height": 16,
+      "bytes": 188,
+      "sha256": "63ec8236b71664dd0d0b2ae47a85a0ed02358254b36e21db3c02dadd64530c28"
+    },
+    {
+      "id": "glowstone",
+      "file": "textures/glowstone.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_glowstone.png?68d86",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 16,
+      "height": 16,
+      "bytes": 214,
+      "sha256": "1d5ce74687d9d3638a713a61bafc08aa6007cb7cbac4d7ed6fd866aebaf31509"
+    },
+    {
+      "id": "note-block",
+      "file": "textures/note-block.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_jukebox-side.png?8477e",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 16,
+      "height": 16,
+      "bytes": 172,
+      "sha256": "1ee2c1b986993a87ba79d628bd890e4698a6d54e1f53e87c62987f2d492df623"
+    },
+    {
+      "id": "gold",
+      "file": "textures/gold.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_block-of-gold.png?3beb4",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 16,
+      "height": 16,
+      "bytes": 202,
+      "sha256": "376ddfb3ac8bb3a1fd1cc036a879bd3892d82624ef1532e1dc41fa9187239eb6"
+    },
+    {
+      "id": "wood",
+      "file": "textures/wood.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_oak-log.png?36ad2",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 16,
+      "height": 16,
+      "bytes": 178,
+      "sha256": "31561703a4fd9865116bb13163aaac786a3c1e0fdbe3a4676561096861d6cdd3"
+    },
+    {
+      "id": "wood-top",
+      "file": "textures/wood-top.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_oak-log-top.png?849e0",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 16,
+      "height": 16,
+      "bytes": 193,
+      "sha256": "bab7d036b35292b93990904cbd4d4d785710fc98b83f1507166e89cc171e20bb"
+    },
+    {
+      "id": "grass-top",
+      "file": "textures/grass-top.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_grass-block-top.png?87234",
+      "reference": "https://minecraft.wiki/w/File:BlockSprite_grass-block-top.png",
+      "width": 16,
+      "height": 16,
+      "bytes": 487,
+      "sha256": "138f206f3994558dc4f1f8f41fc91d315ff302d41f3717db04fb705f36d80c11"
+    },
+    {
+      "id": "dirt",
+      "file": "textures/dirt.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_dirt.png?55495",
+      "reference": "https://minecraft.wiki/w/File:BlockSprite_dirt.png",
+      "width": 16,
+      "height": 16,
+      "bytes": 182,
+      "sha256": "888a3ab1e3d3b05a67ca69b28a8687560f115a40c1505cd2cdd3a4547e56ca11"
+    },
+    {
+      "id": "oak-leaves",
+      "file": "textures/oak-leaves.png",
+      "url": "https://minecraft.wiki/images/BlockSprite_oak-leaves.png?81553",
+      "reference": "https://minecraft.wiki/w/File:BlockSprite_oak-leaves.png",
+      "width": 16,
+      "height": 16,
+      "bytes": 197,
+      "sha256": "07bfc56cf28548b64f8f88254d1cba113a4f50d63cbe4058c2b745dea47b5596"
+    }
+  ],
+  "icons": [
+    {
+      "id": "note-block",
+      "file": "icons/note-block.png",
+      "url": "https://minecraft.wiki/images/Invicon_Note_Block.png?a3073",
+      "reference": "https://minecraft.wiki/w/Note_Block",
+      "width": 32,
+      "height": 32,
+      "bytes": 454,
+      "sha256": "4b00c7413de2c73fb15c73a877c5a78852b39a1f113bd21384d368ac23cd7d04"
+    },
+    {
+      "id": "gold",
+      "file": "icons/gold.png",
+      "url": "https://minecraft.wiki/images/Invicon_Block_of_Gold.png?d136d",
+      "reference": "https://minecraft.wiki/w/File:Invicon_Block_of_Gold.png",
+      "width": 32,
+      "height": 32,
+      "bytes": 495,
+      "sha256": "63366a28110f3c211fe1c124c6b2c60c98bd3b4164740a13a3a8ca2fab742a8d"
+    },
+    {
+      "id": "clay",
+      "file": "icons/clay.png",
+      "url": "https://minecraft.wiki/images/Invicon_Clay.png?21b54",
+      "reference": "https://minecraft.wiki/w/File:Invicon_Clay.png",
+      "width": 32,
+      "height": 32,
+      "bytes": 508,
+      "sha256": "fc40af12adc8b68792b3953079fdfe1836f3d170234fb6e283f729293723ae85"
+    },
+    {
+      "id": "glass",
+      "file": "icons/glass.png",
+      "url": "https://minecraft.wiki/images/Invicon_Glass.png?d00f0",
+      "reference": "https://minecraft.wiki/w/File:Invicon_Glass.png",
+      "width": 32,
+      "height": 32,
+      "bytes": 271,
+      "sha256": "e0d45343dcf7d8eefffdfb1c2def6d63e6d3940ff7e8cb7d19d6874298dcbd89"
+    },
+    {
+      "id": "glowstone",
+      "file": "icons/glowstone.png",
+      "url": "https://minecraft.wiki/images/Invicon_Glowstone.png?9f8f1",
+      "reference": "https://minecraft.wiki/w/File:Invicon_Glowstone.png",
+      "width": 32,
+      "height": 32,
+      "bytes": 577,
+      "sha256": "5278159684fb4a97f7fd8638ba7a11019689f1838c96454932018c21324e4983"
+    },
+    {
+      "id": "grass",
+      "file": "icons/grass.png",
+      "url": "https://minecraft.wiki/images/Invicon_Grass_Block.png?a5d1f",
+      "reference": "https://minecraft.wiki/w/File:Invicon_Grass_Block.png",
+      "width": 32,
+      "height": 32,
+      "bytes": 871,
+      "sha256": "9666f4d3542f35b858f044832a89030659abe02929d94601aac97854b9718809"
+    },
+    {
+      "id": "wood",
+      "file": "icons/wood.png",
+      "url": "https://minecraft.wiki/images/Invicon_Oak_Log.png?08160",
+      "reference": "https://minecraft.wiki/w/File:Invicon_Oak_Log.png",
+      "width": 32,
+      "height": 32,
+      "bytes": 488,
+      "sha256": "78988204472cf2ef46af411e20f48610fb56d15f59004311e8ffe5e007117435"
+    },
+    {
+      "id": "sand",
+      "file": "icons/sand.png",
+      "url": "https://minecraft.wiki/images/Invicon_Sand.png?36d8d",
+      "reference": "https://minecraft.wiki/w/File:Invicon_Sand.png",
+      "width": 32,
+      "height": 32,
+      "bytes": 483,
+      "sha256": "d63eb52ef6fafe0edc473e3d33bd60445a5a7dc5495d184537ed96dbd0db2307"
+    },
+    {
+      "id": "stone",
+      "file": "icons/stone.png",
+      "url": "https://minecraft.wiki/images/Invicon_Stone.png?909de",
+      "reference": "https://minecraft.wiki/w/File:Invicon_Stone.png",
+      "width": 32,
+      "height": 32,
+      "bytes": 434,
+      "sha256": "63652758feeadc1a1b770de464f01aca96be664a0e24831292a8a728553e0afa"
+    }
+  ],
+  "references": [
+    "https://o.xbottle.top/mcsounds/",
+    "https://minecraft.wiki/w/Note_Block",
+    "https://minecraft.wiki/w/Note_Block#Notes"
+  ],
+  "updatedAt": "2026-10-18"
+}

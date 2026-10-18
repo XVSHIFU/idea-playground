@@ -271,5 +271,43 @@
     "identity": "圆野 Roundland",
     "enabled": true,
     "publicDirectories": []
+  },
+  {
+    "id": "note-block-studio",
+    "name": "音符方块",
+    "category": "互动实验",
+    "description": "把熟悉的像素方块放进 3D 舞台，用八种音色搭起自己的循环旋律。",
+    "hint": "先点播放试听，再在空格放一块方块",
+    "label": "方块 · 音乐创作",
+    "color": "#e9ece5",
+    "directory": "../note-block-studio",
+    "port": 4303,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "style.css",
+      "app.js",
+      "world.js",
+      "audio.js",
+      "blocks.js",
+      "model.js",
+      "vendor/three.module.js",
+      "vendor/RoundedBoxGeometry.js"
+    ],
+    "files": [
+      "index.html",
+      "style.css",
+      "app.js",
+      "world.js",
+      "audio.js",
+      "blocks.js",
+      "model.js"
+    ],
+    "identity": "音符方块",
+    "enabled": true,
+    "publicDirectories": [
+      "assets",
+      "vendor"
+    ]
   }
 ]
