@@ -383,7 +383,7 @@ const NEAR_R = 3.35;
 const STAGE_FADE = 0.8;
 const DRAG_PX_RAD = 0.0098;
 const WIN_DEAD = 0.1396;          // 8 degrees
-const SMOOTH_R = 31;              // px contact radius
+const SMOOTH_R = 30;              // px contact radius
 const AUDIO_MIN = 0.02;
 
 // ---- 4. 状态 ---------------------------------------------------------
@@ -1384,10 +1384,13 @@ function buildProps(bucket, rng) {
   bucket.add(cy(0.58, 0.64, 0.58, 12, wx, 0.29, wz, PAL.stone), PAL.stone, 0.045);
   bucket.add(cy(0.64, 0.6, 0.1, 12, wx, 0.62, wz, '#41506A'), '#41506A', 0.02);
   bucket.add(cy(0.44, 0.44, 0.03, 12, wx, 0.66, wz, '#1B2334'), '#1B2334', 0);
-  bucket.add(bx(0.1, 1.5, 0.1, wx - 0.4, 0.75, wz, PAL.wood), PAL.wood, 0.028);
-  bucket.add(bx(0.1, 1.5, 0.1, wx + 0.4, 0.75, wz, PAL.wood), PAL.wood, 0.028);
-  bucket.add(bx(1.0, 0.09, 0.09, wx, 1.46, wz, PAL.wood), PAL.wood, 0.022);
-  bucket.add(bx(0.9, 0.08, 0.78, wx, 1.62, wz, PAL.roofA), PAL.roofA, 0.03);
+  bucket.add(bx(0.1, 1.32, 0.1, wx - 0.4, 0.66, wz, PAL.wood), PAL.wood, 0.028);
+  bucket.add(bx(0.1, 1.32, 0.1, wx + 0.4, 0.66, wz, PAL.wood), PAL.wood, 0.028);
+  bucket.add(bx(1.0, 0.09, 0.09, wx, 1.3, wz, PAL.wood), PAL.wood, 0.022);
+  const rp1 = new THREE.BoxGeometry(0.92, 0.07, 0.55); rp1.rotateX(0.62); rp1.translate(wx, 1.48, wz + 0.19);
+  bucket.add(strip(rp1), PAL.roofA, 0.028);
+  const rp2 = new THREE.BoxGeometry(0.92, 0.07, 0.55); rp2.rotateX(-0.62); rp2.translate(wx, 1.48, wz - 0.19);
+  bucket.add(strip(rp2), PAL.roofB, 0.028);
   bucket.add(cy(0.02, 0.02, 0.36, 4, wx, 1.24, wz, '#8C93A6'), '#8C93A6', 0);
   bucket.add(cy(0.13, 0.1, 0.18, 8, wx, 1.0, wz, PAL.woodLight), PAL.woodLight, 0.02);
 
@@ -1791,9 +1794,9 @@ function updateHouses(dt) {
     }
 
     // 入睡判定（失眠户要抚平两遍）
-    if (h.coverVis > 0.87 && h.wrinkle < 0.3 && h.winClosed && !h.lampOn) {
+    if (h.coverVis > 0.87 && h.wrinkle < 0.32 && h.winClosed && !h.lampOn) {
       h.passTimer += dt;
-      if (h.passTimer > 1.15 && !h.smoothDone) {
+      if (h.passTimer > 0.9 && !h.smoothDone) {
         h.passTimer = 0;
         if (h.resident === 'insomniac' && h.smoothPass < 2) {
           h.smoothPass++;
@@ -1807,7 +1810,7 @@ function updateHouses(dt) {
           h.smoothDone = true;
         }
       }
-    } else {
+    } else if (h.wrinkle > 0.5 || h.coverVis < 0.8) {
       h.passTimer = 0;
     }
 
@@ -1930,6 +1933,7 @@ function moveDrag(x, y, dt) {
     h.pull = clamp(dy / 90, 0, 1);
     if (dy > 6) h.swingVel += 0.03;
   } else if (d.kind === 'blanket') {
+    if (d.flipped) return;                      // 掀翻后这一把不再继续盖
     const t = clamp(d.coverStart + (-dy) / 185, 0, 1);
     d.coverVel = (t - h.cover) / Math.max(dt, 0.008);
     h.cover = t;
@@ -1987,7 +1991,7 @@ function smoothAt(h, x, y) {
   let touched = false;
   for (const g of h.wrinkles) {
     const dx = local.x - g.x, dz = local.z - g.z;
-    if (dx * dx + dz * dz < R * R) { g.a *= 0.8; touched = true; }
+    if (dx * dx + dz * dz < R * R) { g.a *= 0.86; touched = true; }
   }
   if (touched) {
     h.wrinkle = sumWrinkle(h);
@@ -2883,7 +2887,6 @@ function boot() {
     };
   }
   requestAnimationFrame(loop);
-  setTimeout(() => { if (G.state === 'play') toast('点地面走路。走到窗边，把这座镇子哄睡。', 3600); }, 2400);
 }
 
 boot();
