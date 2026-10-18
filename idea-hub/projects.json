@@ -330,5 +330,28 @@
     "identity": "红石脉冲花园",
     "enabled": true,
     "publicDirectories": []
+  },
+  {
+    "id": "lantern-way",
+    "name": "归途灯火",
+    "category": "氛围解谜",
+    "description": "在黄昏浮岛上点起有限的火把，引迷路的小人在天黑前走回家。",
+    "hint": "在小人身边点起第一支火把，再把光连到岛中央的床。",
+    "label": "Three.js · 灯火归途",
+    "color": "#4a5a78",
+    "directory": "../lantern-way",
+    "port": 4305,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "shared.js"
+    ],
+    "files": [
+      "index.html",
+      "shared.js"
+    ],
+    "identity": "归途灯火",
+    "enabled": true,
+    "publicDirectories": []
   }
 ]

@@ -4,9 +4,11 @@
 
 ## 运行
 
+在线游玩：https://xvshifu.github.io/idea-playground/projects/lantern-way/ 。已接入仓库总入口与 GitHub Pages 自动构建。
+
 在本目录执行 `python -m http.server 8080`，浏览器打开 http://localhost:8080/ 。无需安装依赖或构建。不要直接通过 `file://` 双击打开：浏览器会限制共享 ES 模块。运行需要联网加载 Three.js 0.160.0 CDN。
 
-项目只有三个文件：`index.html` 承载全部界面与游戏；`shared.js` 提供种子 PRNG、Perlin 噪声、Canvas 三阶 Toon 材质、平滑法线外壳描边和弹簧；本文件说明运行与验证。仓库原先没有 shared/ 或 shared.js，因此在本子目录新建。全部模型由代码生成，没有外部模型或贴图。
+游戏源文件为：`index.html` 承载全部界面与游戏；`shared.js` 提供种子 PRNG、Perlin 噪声、Canvas 三阶 Toon 材质、平滑法线外壳描边和弹簧；本文件说明运行与验证。仓库原先没有 shared/ 或 shared.js，因此在本子目录新建。全部模型由代码生成，没有外部模型或贴图。
 
 ## 玩
 
@@ -43,4 +45,4 @@ A* 在 41×41 网格上计算，黑暗代价为 90，禁止斜穿障碍拐角。
 - 从场景对象与阴影投射物估算最大约 67 draw calls；`?debug` 可显示实际 draw calls、平均 JS 帧耗时和 FPS。
 - **浏览器实测未完成**：当前受管预览环境报 `bwrap: Can't mount proc on /newroot/proc: Operation not permitted`。因此不能宣称已验证零浏览器 console error、真机触控、40fps 或 JS <3ms/帧。以上性能数值中 67 是估算，不是 GPU 实测。
 - 需要现代 WebGL 浏览器及可访问的 CDN；WebGL 创建失败显示友好提示。恐惧影子为贴地的风格化平面，陡坡可能有轻微穿插；不是精确地形投影。
-- 为遵守本次「不覆盖仓库已有文件」，仅新增 `lantern-way/`，未修改 `idea-hub/projects.json`。因此不会自动出现在现有总入口或其 Pages 构建清单中；子目录可独立静态托管。
+- `integration.json` 注册 `index.html` 和 `shared.js` 为公开资源，Pages 构建输出到 `projects/lantern-way/`；README 与接入清单不进入游戏公开目录。
