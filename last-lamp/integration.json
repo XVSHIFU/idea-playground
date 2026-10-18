@@ -1,0 +1,23 @@
+{
+  "id": "last-lamp",
+  "name": "熄灯人",
+  "category": "氛围解谜",
+  "description": "挨家挨户关窗、熄灯、盖被，把全镇人哄睡，天才会亮。",
+  "hint": "走到第一户窗边，把窗帘拉上。",
+  "label": "Three.js · 深夜哄睡",
+  "color": "#101728",
+  "directory": "../last-lamp",
+  "port": 4308,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "shared.js"
+  ],
+  "files": [
+    "index.html",
+    "shared.js"
+  ],
+  "identity": "熄灯人",
+  "enabled": true,
+  "publicDirectories": []
+}

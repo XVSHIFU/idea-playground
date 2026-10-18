@@ -1,0 +1,2893 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>熄灯人 · The Last Lamp</title>
+<style>
+  :root{
+    --ink:#0A0E18; --paper:#E5E0D4; --paper2:#D2CCC0; --warm:#F2B45C;
+    --cool:#7C93C4; --line:3px; --rad:9px; --night:#101728; --vig:.18;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; height:100%; overflow:hidden; background:var(--night);
+    font-family:Inter,ui-sans-serif,system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    color:var(--ink); user-select:none; -webkit-user-select:none; }
+  canvas{ position:fixed; inset:0; display:block; touch-action:none; outline:none; }
+  #ui{ position:fixed; inset:0; pointer-events:none; z-index:10; }
+
+  /* atmosphere layers */
+  #sky{ position:fixed; inset:0; z-index:2; pointer-events:none;
+    background:radial-gradient(120% 100% at 50% 46%, rgba(124,147,196,.11) 0%, rgba(16,23,40,0) 58%),
+               linear-gradient(180deg, rgba(16,23,40,0) 55%, rgba(6,9,16,.26) 100%); }
+  #vig{ position:fixed; inset:0; z-index:3; pointer-events:none;
+    background:radial-gradient(120% 95% at 50% 48%, rgba(4,6,12,0) 34%, rgba(4,6,12,var(--vig)) 100%);
+    transition:background .5s linear; }
+  #dawn{ position:fixed; inset:0; z-index:4; pointer-events:none; opacity:0;
+    background:linear-gradient(0deg, rgba(242,180,92,.42) 0%, rgba(226,150,110,.16) 36%, rgba(16,23,40,0) 68%); }
+  #fade{ position:fixed; inset:0; z-index:8; pointer-events:none; opacity:0;
+    background:#070A12; transition:opacity .6s linear; }
+
+  /* panels */
+  .panel{ position:absolute; pointer-events:auto; background:var(--paper);
+    border:var(--line) solid var(--ink); border-radius:var(--rad);
+    box-shadow:5px 5px 0 rgba(6,9,16,.92); padding:11px 12px; }
+  .mono{ font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-variant-numeric:tabular-nums; }
+  .mini{ pointer-events:auto; cursor:pointer; border:2px solid var(--ink); background:var(--paper2);
+    border-radius:6px; padding:4px 7px; font-size:11px; font-weight:800; color:var(--ink);
+    box-shadow:2px 2px 0 var(--ink); transition:transform .1s, box-shadow .1s, background .18s; }
+  .mini:active{ transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink); }
+  .mini.on{ background:var(--warm); }
+  .mini.small{ padding:3px 6px; font-size:10px; }
+
+  #ctrl{ left:12px; top:12px; width:228px; }
+  #ctrl .title{ font-size:17px; font-weight:900; letter-spacing:.04em; margin:0; line-height:1.05; }
+  #ctrl .title small{ display:block; font-size:9px; font-weight:700; letter-spacing:.28em; opacity:.55; margin-top:3px; }
+  #clock{ font-size:23px; font-weight:800; margin:9px 0 1px; letter-spacing:.02em; }
+  #lit{ font-size:12px; font-weight:800; opacity:.78; }
+  #lit b{ font-size:15px; opacity:1; }
+  .switches{ display:flex; gap:5px; flex-wrap:wrap; margin-top:9px; }
+  .sect{ font-size:9px; font-weight:900; letter-spacing:.16em; text-transform:uppercase; opacity:.45; margin:10px 0 4px; }
+  #levelSel{ width:100%; border:2px solid var(--ink); border-radius:6px; background:#EFEADF;
+    font:800 12px/1.2 inherit; color:var(--ink); padding:6px 7px; box-shadow:2px 2px 0 var(--ink); cursor:pointer; }
+  #collapse{ display:none; position:absolute; right:8px; top:8px; cursor:pointer; font-weight:900; font-size:13px;
+    border:2px solid var(--ink); border-radius:5px; padding:1px 6px; background:var(--paper2); }
+
+  #info{ right:12px; top:12px; min-width:150px; text-align:right; padding:9px 12px; }
+  #lvlName{ font-size:14px; font-weight:900; letter-spacing:.02em; max-width:190px; }
+  #timeLeft{ font-size:30px; font-weight:800; line-height:1.05; margin-top:2px; }
+  #timeLeft.warn{ color:#C0532B; }
+  #info .sub{ font-size:10px; font-weight:800; letter-spacing:.12em; opacity:.5; }
+
+  /* bottom action bar */
+  #bar{ left:50%; transform:translateX(-50%); bottom:14px; display:flex; align-items:center; gap:7px;
+    padding:8px 9px; max-width:calc(100vw - 24px); overflow-x:auto; scrollbar-width:none; }
+  #bar::-webkit-scrollbar{ display:none; }
+  .chip{ position:relative; flex:0 0 auto; display:flex; align-items:center; gap:6px; cursor:pointer;
+    border:2px solid var(--ink); background:var(--paper2); border-radius:7px; padding:6px 9px 6px 7px;
+    font-size:12px; font-weight:900; color:var(--ink); box-shadow:2px 2px 0 var(--ink); opacity:.46;
+    transition:opacity .22s, background .22s, transform .12s; }
+  .chip svg{ width:17px; height:17px; flex:0 0 auto; }
+  .chip.ready{ opacity:1; background:#FBF6E8; box-shadow:2px 2px 0 var(--ink), 0 0 0 3px rgba(242,180,92,.55); }
+  .chip.ready:active{ transform:translate(1px,1px); }
+  .chip.done{ opacity:.9; background:rgba(242,180,92,.42); }
+  .chip .tick{ font-size:10px; font-weight:900; opacity:.75; }
+  .chip[disabled]{ pointer-events:none; }
+  #btnRestart{ flex:0 0 auto; border:2px solid var(--ink); background:var(--ink); color:var(--paper);
+    border-radius:7px; padding:9px 13px; font-size:12px; font-weight:900; cursor:pointer; box-shadow:2px 2px 0 rgba(6,9,16,.4); }
+  #btnRestart:active{ transform:translate(1px,1px); }
+  #doorChip{ display:none; }
+
+  /* toast + hotspot + banner */
+  #toast{ position:absolute; left:50%; bottom:82px; transform:translateX(-50%) translateY(6px);
+    background:rgba(10,14,24,.86); color:#EDE7DA; border:2px solid #0A0E18; border-radius:7px;
+    padding:6px 12px; font-size:12px; font-weight:700; letter-spacing:.02em; opacity:0;
+    transition:opacity .28s, transform .28s; pointer-events:none; white-space:nowrap; max-width:92vw; overflow:hidden; text-overflow:ellipsis; }
+  #toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  #hot{ position:absolute; left:0; top:0; width:58px; height:58px; margin:-29px 0 0 -29px;
+    border:2px dashed rgba(242,180,92,.9); border-radius:50%; opacity:0; pointer-events:none;
+    transition:opacity .22s; will-change:transform; }
+  #hot.show{ opacity:1; }
+  #hot::after{ content:''; position:absolute; inset:-7px; border:2px solid rgba(242,180,92,.22); border-radius:50%;
+    animation:hotPulse 1.9s ease-out infinite; }
+  @keyframes hotPulse{ 0%{ transform:scale(.72); opacity:.9 } 70%{ transform:scale(1.18); opacity:0 } 100%{ opacity:0 } }
+  #hotLabel{ position:absolute; left:50%; top:64px; transform:translateX(-50%); white-space:nowrap;
+    background:rgba(10,14,24,.9); color:#F4EDDF; font-size:11px; font-weight:800; padding:3px 7px;
+    border-radius:5px; border:1px solid rgba(242,180,92,.5); }
+
+  #banner{ position:absolute; left:50%; top:43%; transform:translate(-50%,-50%) scale(.97); text-align:center;
+    pointer-events:none; opacity:0; visibility:hidden; transition:opacity .5s, transform .5s, visibility .5s; }
+  #banner.show{ opacity:1; visibility:visible; transform:translate(-50%,-50%) scale(1); }
+  #banner .card{ pointer-events:auto; background:var(--paper); border:3px solid var(--ink); border-radius:11px;
+    box-shadow:7px 7px 0 rgba(6,9,16,.92); padding:16px 20px 14px; min-width:236px; }
+  #banner .big{ font-size:26px; font-weight:900; letter-spacing:.06em; line-height:1.25; }
+  #banner .sub{ font-size:11px; font-weight:700; opacity:.62; margin-top:7px; letter-spacing:.05em; }
+  #banner .acts{ display:flex; gap:6px; justify-content:center; margin-top:11px; }
+  #banner .btn{ border:2px solid var(--ink); background:var(--paper2); border-radius:7px; padding:7px 12px;
+    font-size:12px; font-weight:900; cursor:pointer; box-shadow:2px 2px 0 var(--ink); }
+  #banner .btn.primary{ background:var(--warm); }
+
+  /* help */
+  #helpBack{ position:fixed; inset:0; z-index:20; background:rgba(8,11,20,.52); display:none; pointer-events:auto; }
+  #helpBack.show{ display:block; }
+  #help{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); z-index:21; width:min(458px,92vw);
+    display:none; padding:15px 17px; max-height:84vh; overflow:auto; }
+  #help.show{ display:block; }
+  #help h2{ margin:0 0 6px; font-size:16px; letter-spacing:.04em; }
+  #help p{ font-size:12.5px; line-height:1.6; margin:6px 0; }
+  #help .k{ font-family:ui-monospace,monospace; background:#FBF6E8; border:2px solid var(--ink);
+    border-radius:4px; padding:0 5px; font-weight:800; font-size:11px; }
+  #help hr{ border:0; border-top:2px dashed rgba(10,14,24,.18); margin:9px 0; }
+  #help .close{ position:absolute; right:10px; top:8px; cursor:pointer; font-weight:900; font-size:14px; }
+
+  /* webgl failure */
+  #fail{ position:fixed; inset:0; z-index:99; display:none; align-items:center; justify-content:center;
+    text-align:center; background:#101728; color:#E9E4D8; padding:24px; }
+  #fail h2{ font-size:18px; margin:0 0 8px; }
+  #fail p{ font-size:13px; opacity:.75; line-height:1.6; max-width:380px; }
+
+  @media (max-width:720px){
+    #ctrl{ width:198px; padding:8px 9px; }
+    #ctrl.collapsed .body{ display:none; }
+    #collapse{ display:block; }
+    #clock{ font-size:17px; margin:7px 0 0; }
+    #lit{ font-size:10px; }
+    .switches{ gap:3px; margin-top:7px; }
+    #ctrl .mini{ font-size:9.5px; padding:3px 4px; }
+    .mini{ font-size:10px; padding:3px 5px; box-shadow:2px 2px 0 var(--ink); }
+    #levelSel{ font-size:11px; padding:5px 6px; }
+    #info{ padding:6px 9px; min-width:104px; }
+    #lvlName{ font-size:11px; max-width:110px; }
+    #timeLeft{ font-size:21px; }
+    #bar{ left:8px; right:8px; bottom:8px; transform:none; max-width:none; width:auto;
+      padding:5px 6px; gap:4px; flex-wrap:wrap; justify-content:center; overflow:visible; }
+    .chip{ font-size:10px; padding:4px 6px; gap:4px; border-width:2px; }
+    .chip svg{ width:13px; height:13px; }
+    #btnRestart{ padding:7px 9px; font-size:11px; }
+    #toast{ bottom:96px; font-size:11px; }
+    #banner .big{ font-size:21px; }
+  }
+  @media (max-width:430px){
+    #ctrl{ width:168px; }
+    #info .sub{ display:none; }
+    #bar{ gap:3px; }
+    .chip span:not(.tick){ font-size:10px; }
+  }
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<div id="vig"></div>
+<div id="dawn"></div>
+<div id="fade"></div>
+
+<div id="ui">
+  <div id="ctrl" class="panel">
+    <div id="collapse">≡</div>
+    <h1 class="title">熄灯人<small>THE LAST LAMP</small></h1>
+    <div class="body">
+      <div id="clock" class="mono">夜 22:40</div>
+      <div id="lit"><b><span id="litNum">3</span> / <span id="litTot">7</span></b> 盏灯还亮着</div>
+      <div class="switches">
+        <button id="btnOutline" class="mini on" title="描边开关 (O)">描边 O</button>
+        <button id="btnSound" class="mini on" title="音效开关 (M)">音效 M</button>
+        <button id="btnRotate" class="mini" title="自转视角">自转</button>
+        <button id="btnHelp" class="mini" title="说明">?</button>
+      </div>
+      <div class="sect">今夜</div>
+      <select id="levelSel" aria-label="选择关卡"></select>
+    </div>
+  </div>
+
+  <div id="info" class="panel">
+    <div id="lvlName">第一户</div>
+    <div id="timeLeft" class="mono">05:00</div>
+    <div class="sub">距天亮</div>
+  </div>
+
+  <div id="bar" class="panel">
+    <button class="chip" id="chipWin" data-act="win">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M12 3v18M4 11h16"/></svg>
+      <span>关窗</span><span class="tick"></span>
+    </button>
+    <button class="chip" id="chipLamp" data-act="lamp">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6"/><path d="M7 14l2-6h6l2 6z"/><circle cx="12" cy="17.5" r="2.2"/></svg>
+      <span>熄灯</span><span class="tick"></span>
+    </button>
+    <button class="chip" id="chipBed" data-act="bed">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 18V9M22 18v-5a3 3 0 0 0-3-3H9"/><path d="M2 13h20"/><path d="M5 13V11h5v2"/></svg>
+      <span>盖被</span><span class="tick"></span>
+    </button>
+    <button class="chip" id="doorChip" data-act="door">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v17"/><path d="M3 21h18"/><circle cx="13" cy="12" r="1"/></svg>
+      <span>带门</span><span class="tick"></span>
+    </button>
+    <button id="btnRestart">重来</button>
+  </div>
+
+  <div id="toast"></div>
+  <div id="hot"><div id="hotLabel">拉下灯绳</div></div>
+
+  <div id="banner">
+    <div class="card">
+      <div class="big" id="bannerText">全城都睡了。</div>
+      <div class="sub" id="bannerSub">天亮了。</div>
+      <div class="acts">
+        <button class="btn primary" id="btnNext">下一夜</button>
+        <button class="btn" id="btnAgain">再来一次</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="helpBack"></div>
+<div id="help" class="panel">
+  <span class="close" id="helpClose">✕</span>
+  <h2>怎么哄睡一镇人</h2>
+  <p>点地面走路，走到窗边。每户只做三件事：<b>关窗 → 熄灯 → 盖被</b>。</p>
+  <p>· <b>关窗</b>：按住窗帘往左下拉，拉到底会自己扣上。<br/>
+     · <b>熄灯</b>：等灯绳不晃了，按住绳球往下拽。<br/>
+     · <b>盖被</b>：按住被角往上拖，盖过肩膀；再用手掌在黑被面上来回抚平褶皱。<br/>
+     · 拖得太急会掀翻被子；灯没熄就盖被，他会坐起来。</p>
+  <hr/>
+  <p>门外风大。走之前把门带上，不然起风时灯会重新亮起来。<br/>
+     你也会越来越困：走得越来越慢，但时间不会。</p>
+  <p><span class="k">空格</span> 重开本关 · <span class="k">R</span> 换一个镇子 · <span class="k">M</span> 音效 ·
+     <span class="k">O</span> 描边 · <span class="k">Esc</span> 取消拖拽</p>
+</div>
+
+<div id="fail">
+  <div>
+    <h2>无法启动 WebGL</h2>
+    <p>请使用支持 WebGL 的现代浏览器（Chrome / Edge / Safari），并确认已开启硬件加速。这盏灯需要一点显卡的光。</p>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import {
+  PRNG, makePerlin, makeToonGradient, Spring,
+  clamp, lerp, smoothstep, expDamp, easeOutCubic, shortAngle, dampFactor
+} from './shared.js';
+
+// =====================================================================
+//  《熄灯人 · The Last Lamp》
+//  深夜蓝与窗内的暖。把七户人家一一哄睡，天才会亮。
+// =====================================================================
+
+// ---- 1. 调色板 -------------------------------------------------------
+const PAL = {
+  bg:        '#101728',
+  bgDawn:    '#F2C089',
+  grass:     '#4A5D79',
+  soil:      '#3A4A64',
+  rim:       '#2E3E59',
+  rock:      '#212B40',
+  street:    '#27334A',
+  roofA:     '#41526F',
+  roofB:     '#4C5F82',
+  wall:      '#57647D',
+  wallDark:  '#4B5770',
+  trim:      '#6B7890',
+  outline:   '#0A0E18',
+  moon:      '#7C93C4',
+  warm1:     '#F2B45C',
+  warm2:     '#C98A4B',
+  warm3:     '#2A3A5E',
+  warmDawn:  '#FFD8A2',
+  wood:      '#4C4152',
+  woodLight: '#6A5A66',
+  cloth:     '#7E8AA6',
+  clothLight:'#98A3BA',
+  skin:      '#D8C2AE',
+  skinDark:  '#C2AA96',
+  cat:       '#CBB69C',
+  leaf:      '#2C4749',
+  leafDark:  '#243C40',
+  trunk:     '#4A3B44',
+  stone:     '#4A566D',
+  metal:     '#3C4457'
+};
+
+// ---- 2. 关卡数据 -----------------------------------------------------
+// 斜街七户，坐标为沿街偏移槽位；前脸朝 +x/+z，正对正交等距相机。
+const SLOT = [
+  { x: -8.01, z:  6.83, rot: 0.7854 },
+  { x: -5.54, z:  4.36, rot: 0.7854 },
+  { x: -3.06, z:  1.88, rot: 0.7854 },
+  { x: -0.59, z: -0.59, rot: 0.7854 },
+  { x:  1.88, z: -3.06, rot: 0.7854 },
+  { x:  4.36, z: -5.54, rot: 0.7854 },
+  { x:  6.83, z: -8.01, rot: 0.7854 }
+];
+
+function housesAt(slots, res = {}, tier = {}) {
+  return slots.map((slot, k) => ({
+    ...SLOT[slot], tier: tier[k] || 1, resident: res[k] || 'plain'
+  }));
+}
+
+const LEVELS = [
+  {
+    id: 'n1', name: '第一户', time: 300, wind: 0, windAt: 999, cat: false, crack: false,
+    hint: '走到窗边，把窗帘拉上。',
+    houses: housesAt([2, 3, 4])
+  },
+  {
+    id: 'n2', name: '睡不着的老先生', time: 320, wind: 0, windAt: 999, cat: false, crack: false,
+    hint: '老先生怕皱：被面要抚平两遍。',
+    houses: housesAt([2, 3, 4, 5], { 1: 'insomniac' })
+  },
+  {
+    id: 'n3', name: '怕黑的孩子', time: 320, wind: 0, windAt: 999, cat: false, crack: false,
+    hint: '先熄大灯，再熄小灯——反了会醒。',
+    houses: housesAt([1, 2, 4, 5], { 1: 'child' })
+  },
+  {
+    id: 'n4', name: '猫在灯绳上', time: 340, wind: 0, windAt: 999, cat: true, crack: false,
+    hint: '猫蹲在灯绳上。先把它引开。',
+    houses: housesAt([1, 2, 3, 4, 5], {}, { 1: 2 })
+  },
+  {
+    id: 'n5', name: '风从西边来', time: 340, wind: 1, windAt: 40, cat: false, crack: false,
+    hint: '40 秒起风。出门记得把门带上。',
+    houses: housesAt([0, 2, 3, 4, 5])
+  },
+  {
+    id: 'n6', name: '二楼的人', time: 360, wind: 0, windAt: 999, cat: false, crack: false,
+    hint: '两户住楼上。门口有台阶。',
+    houses: housesAt([0, 1, 2, 3, 4, 5], {}, { 1: 2, 3: 2 })
+  },
+  {
+    id: 'n7', name: '整条街', time: 400, wind: 1, windAt: 30, cat: true, crack: false,
+    hint: '七户人家，一条街。慢慢来。',
+    houses: housesAt([0, 1, 2, 3, 4, 5, 6], { 2: 'insomniac', 4: 'child' }, { 5: 2 })
+  },
+  {
+    id: 'n8', name: '最后一扇窗', time: 420, wind: 1, windAt: 25, cat: true, crack: true,
+    hint: '最后一户的窗，只能拉到留一条缝。',
+    houses: housesAt([0, 1, 2, 3, 4, 5, 6], { 3: 'insomniac', 5: 'child' }, { 0: 2, 4: 2 })
+  }
+];
+
+// ---- 3. 尺寸与常量 ---------------------------------------------------
+const H = {
+  w: 3.02, d: 2.8, wallT: 0.18,
+  wall1: 2.05, wall2: 3.62, floor2: 1.86,
+  winX: -0.62, winY: 1.28, winW: 1.02, winH: 0.92,
+  doorX: 0.86, doorW: 0.72, doorH: 1.52,
+  bedX: 0.42, bedZ: -0.62, bedW: 1.28, bedL: 1.86, bedTop: 0.63,
+  lampX: 0.42, lampZ: -0.58
+};
+
+const WORLD_R = 12.6;
+const STREET_LEN = 24;
+const STREET_HW = 1.42;
+const SD = { x: Math.SQRT1_2, z: -Math.SQRT1_2 };   // street direction
+const SN = { x: Math.SQRT1_2, z: Math.SQRT1_2 };    // toward camera / house front
+const SC = { x: 1.6, z: 1.6 };
+
+const SPEED = 2.05;
+const NEAR_R = 3.35;
+const STAGE_FADE = 0.8;
+const DRAG_PX_RAD = 0.0098;
+const WIN_DEAD = 0.1396;          // 8 degrees
+const SMOOTH_R = 31;              // px contact radius
+const AUDIO_MIN = 0.02;
+
+// ---- 4. 状态 ---------------------------------------------------------
+const G = {
+  renderer: null, scene: null, camera: null, controls: null, clock: null,
+  toonTex: null, toonMat: null, toonTrans: null, outlineMat: null, basicVC: null,
+  world: null, terrain: null, heightAt: null,
+  sun: null, hemi: null, amb: null, playerLight: null, sunDisc: null, ridge: null, stars: null,
+  level: null, levelIdx: 0, endless: false, seed: 1, nightKey: 0,
+  houses: [], houseMeshes: [], glowBatch: null, bulbs: null,
+  player: {
+    pos: new THREE.Vector3(), path: [], facing: 0, speed: 1,
+    moving: false, near: null, spot: null, onUpper: false, bob: 0
+  },
+  charGroup: null, charMesh: null, cat: null,
+  doorMesh: null, sashMesh: null, pendantMesh: null, residentMesh: null,
+  state: 'intro', t: 0, elapsed: 0, duration: 300, timeLeft: 300,
+  dawn: 0, dawnT: 0, fatigue: 0, vignette: 0.18,
+  focus: null, hover: null, anchors: [], worldAnchors: [],
+  drag: null, pointer: { x: 0, y: 0, down: false, sx: 0, sy: 0, st: 0, moved: 0 },
+  wind: { on: false, next: 0, gust: 0 },
+  catState: { free: false, freeUntil: 0, next: 0, hop: 0, perched: -1 },
+  outlineOn: true, soundOn: true, rotateOn: false, started: false,
+  audio: null, showFail: false, debug: false,
+  calls: 0, frameMs: 0, fps: 0, best: 0,
+  ray: null, ndc: new THREE.Vector2(),
+  tmp: { v1: new THREE.Vector3(), v2: new THREE.Vector3(), v3: new THREE.Vector3(),
+         q: new THREE.Quaternion(), m: new THREE.Matrix4(), m2: new THREE.Matrix4(),
+         e: new THREE.Euler(), c: new THREE.Color(), c2: new THREE.Color() }
+};
+
+// ---- 5. DOM ----------------------------------------------------------
+const $ = id => document.getElementById(id);
+const dom = {};
+
+// ---- 6. 小工具 -------------------------------------------------------
+const TAU = Math.PI * 2;
+const sign = v => (v < 0 ? -1 : 1);
+const fmtTime = (s) => {
+  const v = Math.max(0, Math.ceil(s));
+  return `${String(Math.floor(v / 60)).padStart(2, '0')}:${String(v % 60).padStart(2, '0')}`;
+};
+const clockText = (k) => {
+  // 22:40 -> 05:20 随夜色推进
+  const total = 22 * 60 + 40 + k * (6 * 60 + 40);
+  const m = ((Math.floor(total) % 1440) + 1440) % 1440;
+  return `夜 ${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+};
+const streetPoint = (u, lateral = 0) => ({
+  x: SC.x + SD.x * u + SN.x * lateral,
+  z: SC.z + SD.z * u + SN.z * lateral
+});
+const projectStreet = (x, z) => {
+  const dx = x - SC.x, dz = z - SC.z;
+  return dx * SD.x + dz * SD.z;
+};
+
+// ---- 7. 几何工具 -----------------------------------------------------
+function strip(geo) {
+  if (geo.index) geo = geo.toNonIndexed();
+  geo.deleteAttribute('uv');
+  geo.deleteAttribute('uv1');
+  geo.deleteAttribute('uv2');
+  if (!geo.attributes.normal) geo.computeVertexNormals();
+  return geo;
+}
+
+function tint(geo, hex) {
+  const c = new THREE.Color(hex);
+  const n = geo.attributes.position.count;
+  const arr = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    arr[i * 3] = c.r; arr[i * 3 + 1] = c.g; arr[i * 3 + 2] = c.b;
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(arr, 3));
+  return geo;
+}
+
+function bx(w, h, d, x, y, z, hex, ry = 0) {
+  const g = new THREE.BoxGeometry(w, h, d);
+  if (ry) g.rotateY(ry);
+  g.translate(x, y, z);
+  return tint(strip(g), hex);
+}
+
+function cy(rt, rb, h, seg, x, y, z, hex, rx = 0, rz = 0) {
+  const g = new THREE.CylinderGeometry(rt, rb, h, seg, 1, false);
+  if (rx) g.rotateX(rx);
+  if (rz) g.rotateZ(rz);
+  g.translate(x, y, z);
+  return tint(strip(g), hex);
+}
+
+function sphere(r, seg, x, y, z, hex, sy = 1) {
+  const g = new THREE.SphereGeometry(r, seg, Math.max(4, Math.round(seg * 0.7)));
+  if (sy !== 1) g.scale(1, sy, 1);
+  g.translate(x, y, z);
+  return tint(strip(g), hex);
+}
+
+function expandGeo(geo, t) {
+  const p = geo.attributes.position, n = geo.attributes.normal;
+  for (let i = 0; i < p.count; i++) {
+    p.setXYZ(i,
+      p.getX(i) + n.getX(i) * t,
+      p.getY(i) + n.getY(i) * t,
+      p.getZ(i) + n.getZ(i) * t);
+  }
+  p.needsUpdate = true;
+  return geo;
+}
+
+function triG(a, b, c, hex) {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute([...a, ...b, ...c], 3));
+  g.computeVertexNormals();
+  return tint(g, hex);
+}
+
+// 顶点色合批
+class Bucket {
+  constructor() { this.parts = []; this.outlines = []; }
+  add(geo, hex, outline = 0) {
+    const g = tint(strip(geo), hex);
+    this.parts.push(g);
+    if (outline > 0) {
+      const o = g.clone();
+      o.deleteAttribute('color');
+      expandGeo(o, outline);
+      this.outlines.push(o);
+    }
+    return g;
+  }
+  merge(mat, cast = true, receive = true, parent = null) {
+    if (!this.parts.length) return null;
+    const merged = mergeGeometries(this.parts, false);
+    merged.computeBoundingSphere();
+    const mesh = new THREE.Mesh(merged, mat);
+    mesh.castShadow = cast; mesh.receiveShadow = receive;
+    mesh.matrixAutoUpdate = false;
+    if (parent) parent.add(mesh);
+    return mesh;
+  }
+  mergeOutline(mat, parent = null, thicknessTest = 0) {
+    if (!this.outlines.length) return null;
+    const merged = mergeGeometries(this.outlines, false);
+    merged.computeBoundingSphere();
+    const mesh = new THREE.Mesh(merged, mat);
+    mesh.castShadow = false; mesh.receiveShadow = false;
+    mesh.renderOrder = -1;
+    mesh.matrixAutoUpdate = false;
+    if (parent) parent.add(mesh);
+    return mesh;
+  }
+}
+
+// 颜色批次：按 key 连续写入，可局部改色（窗光 / 灯芯）
+class ColorBatch {
+  constructor() { this.items = []; this.ranges = new Map(); this.count = 0; }
+  add(key, geo, hex) {
+    const g = tint(strip(geo), hex);
+    const n = g.attributes.position.count;
+    this.items.push(g);
+    const r = this.ranges.get(key) || { start: this.count, count: 0 };
+    r.count += n;
+    this.ranges.set(key, r);
+    this.count += n;
+    return g;
+  }
+  build(mat) {
+    const merged = mergeGeometries(this.items, false);
+    merged.computeBoundingSphere();
+    this.mesh = new THREE.Mesh(merged, mat);
+    this.mesh.matrixAutoUpdate = false;
+    this.mesh.castShadow = false;
+    this.mesh.receiveShadow = false;
+    this.colorAttr = merged.attributes.color;
+    return this.mesh;
+  }
+  set(key, hex) {
+    const r = this.ranges.get(key);
+    if (!r) return;
+    const c = new THREE.Color(hex);
+    for (let i = r.start; i < r.start + r.count; i++) this.colorAttr.setXYZ(i, c.r, c.g, c.b);
+    this.colorAttr.needsUpdate = true;
+  }
+}
+
+function makeWorldMatrix(x, y, z, rot) {
+  const m = new THREE.Matrix4();
+  m.compose(
+    new THREE.Vector3(x, y, z),
+    new THREE.Quaternion().setFromEuler(new THREE.Euler(0, rot, 0)),
+    new THREE.Vector3(1, 1, 1)
+  );
+  return m;
+}
+
+// =====================================================================
+//  8. 渲染器 · 相机 · 灯光
+// =====================================================================
+function initThree() {
+  try {
+    G.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  } catch (e) {
+    $('fail').style.display = 'flex';
+    return false;
+  }
+  const r = G.renderer;
+  r.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  r.setSize(window.innerWidth, window.innerHeight);
+  r.shadowMap.enabled = true;
+  r.shadowMap.type = THREE.PCFShadowMap;
+  r.outputColorSpace = THREE.SRGBColorSpace;
+  r.toneMapping = THREE.NoToneMapping;
+  document.body.appendChild(r.domElement);
+  r.domElement.addEventListener('contextmenu', e => e.preventDefault());
+
+  G.scene = new THREE.Scene();
+  G.scene.background = new THREE.Color(PAL.bg);
+  G.scene.fog = new THREE.FogExp2(PAL.bg, 0.0065);
+
+  G.toonTex = makeToonGradient(3);
+  G.toonMat = new THREE.MeshToonMaterial({ color: 0xffffff, vertexColors: true, gradientMap: G.toonTex });
+  G.basicVC = new THREE.MeshBasicMaterial({ vertexColors: true });
+  G.outlineMat = new THREE.MeshBasicMaterial({ color: PAL.outline, side: THREE.BackSide, fog: false });
+  G.blanketMat = new THREE.MeshToonMaterial({ color: PAL.clothLight, gradientMap: G.toonTex });
+  G.extraMats = [];
+  G.ray = new THREE.Raycaster();
+
+  const aspect = window.innerWidth / window.innerHeight;
+  const size = viewSizeFor(aspect);
+  G.camera = new THREE.OrthographicCamera(-size * aspect / 2, size * aspect / 2, size / 2, -size / 2, 0.5, 300);
+  placeCamera();
+
+  G.controls = new OrbitControls(G.camera, r.domElement);
+  G.controls.target.set(0, 1.0, 0);
+  G.controls.enableDamping = true;
+  G.controls.dampingFactor = 0.075;
+  G.controls.enablePan = false;
+  G.controls.rotateSpeed = 0.55;
+  G.controls.zoomSpeed = 0.8;
+  G.controls.minPolarAngle = THREE.MathUtils.degToRad(35);
+  G.controls.maxPolarAngle = THREE.MathUtils.degToRad(70);
+  G.controls.minZoom = 0.55;
+  G.controls.maxZoom = 2.8;
+  G.controls.mouseButtons = { LEFT: null, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+  G.controls.touches = { ONE: null, TWO: THREE.TOUCH.DOLLY_ROTATE };
+  G.controls.autoRotateSpeed = 0.191; // ~0.02 rad/s
+  G.controls.update();
+
+  // 月光：短硬影，夜间缓慢变长变淡
+  G.sun = new THREE.DirectionalLight(PAL.moon, 1.85);
+  G.sun.position.set(7.5, 16, 15);
+  G.sun.castShadow = true;
+  G.sun.shadow.mapSize.set(2048, 2048);
+  const sc = G.sun.shadow.camera;
+  sc.left = -14; sc.right = 14; sc.top = 14; sc.bottom = -14; sc.near = 1; sc.far = 60;
+  G.sun.shadow.bias = -0.0006;
+  G.sun.shadow.normalBias = 0.24;
+  G.sun.target.position.set(0, 0, 0);
+  G.scene.add(G.sun, G.sun.target);
+
+  G.hemi = new THREE.HemisphereLight(0x5C7196, 0x1A2334, 1.15);
+  G.scene.add(G.hemi);
+  G.amb = new THREE.AmbientLight(0x4E6189, 0.56);
+  G.scene.add(G.amb);
+
+  G.playerLight = new THREE.PointLight(PAL.warm1, 0, 5.2, 2);
+  G.scene.add(G.playerLight);
+
+  buildSky();
+  window.addEventListener('resize', resize);
+  return true;
+}
+
+function viewSizeFor(aspect) {
+  if (aspect >= 1.35) return 15.4;
+  if (aspect >= 1.0) return lerp(15.4, 19.5, (1.35 - aspect) / 0.35);
+  return lerp(20.5, 25.5, clamp((1.0 - aspect) / 0.55, 0, 1));
+}
+
+function placeCamera() {
+  const az = THREE.MathUtils.degToRad(62);
+  const pol = THREE.MathUtils.degToRad(45);
+  const R = 44;
+  G.camera.position.set(
+    Math.sin(pol) * Math.sin(az) * R,
+    Math.cos(pol) * R,
+    Math.sin(pol) * Math.cos(az) * R
+  );
+  G.camera.lookAt(0, 1.0, 0);
+  G.baseCam = G.camera.position.clone();
+}
+
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  applyFrustum();
+  G.renderer.setSize(w, h);
+  G.mobile = w / h < 1.12;
+  if (G.controls) G.controls.minZoom = G.mobile ? 0.5 : 0.72;
+}
+
+function applyFrustum() {
+  const w = window.innerWidth, h = window.innerHeight;
+  const aspect = w / h;
+  let size = G.viewSize || 15.4;
+  if (aspect < 1) size = Math.max(size, Math.min(8.4 / aspect, 27));
+  G.camera.left = -size * aspect / 2;
+  G.camera.right = size * aspect / 2;
+  G.camera.top = size / 2;
+  G.camera.bottom = -size / 2;
+  G.camera.updateProjectionMatrix();
+}
+
+function frameTown() {
+  if (!G.houses.length) return;
+  const us = G.houses.map(h => projectStreet(h.x, h.z));
+  const pts = G.houses.map(h => standSpot(h));
+  for (const h of G.houses) pts.push(new THREE.Vector3(h.x, (h.tier === 2 ? 4.6 : 3.4), h.z));
+  const sA = streetPoint(Math.min(...us) - 3.6, 0.8);
+  const sB = streetPoint(Math.max(...us) + 3.6, 0.8);
+  pts.push(new THREE.Vector3(sA.x, 0.05, sA.z));
+  pts.push(new THREE.Vector3(sB.x, 0.05, sB.z));
+
+  const c = new THREE.Vector3();
+  for (const p of pts) c.add(p);
+  c.multiplyScalar(1 / pts.length);
+  c.y = 0.85;
+
+  const delta = c.clone().sub(G.controls.target);
+  G.camera.position.add(delta);
+  G.controls.target.copy(c);
+  G.camera.lookAt(c);
+  G.camera.updateMatrixWorld(true);
+
+  const inv = new THREE.Matrix4().copy(G.camera.matrixWorld).invert();
+  let minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
+  for (const p of pts) {
+    const v = p.clone().applyMatrix4(inv);
+    minX = Math.min(minX, v.x); maxX = Math.max(maxX, v.x);
+    minY = Math.min(minY, v.y); maxY = Math.max(maxY, v.y);
+  }
+  const aspect = window.innerWidth / window.innerHeight;
+  const needW = (maxX - minX) + 3.4;
+  const needH = (maxY - minY) + 3.6;
+  G.viewSize = clamp(Math.max(needH, needW / Math.max(0.9, aspect)), 10.2, 21.5);
+
+  // 让包围盒在画面里居中
+  const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+  const rot = new THREE.Matrix4().extractRotation(G.camera.matrixWorld);
+  const shift = new THREE.Vector3(cx, cy, 0).applyMatrix4(rot);
+  G.controls.target.add(shift);
+  G.camera.position.add(shift);
+
+  applyFrustum();
+  G.controls.update();
+}
+
+function buildSky() {
+  // 星点
+  const n = 220, pos = new Float32Array(n * 3);
+  const rng = new PRNG(9182);
+  for (let i = 0; i < n; i++) {
+    const a = rng.range(0, TAU), r = rng.range(28, 46);
+    pos[i * 3] = Math.cos(a) * r;
+    pos[i * 3 + 1] = rng.range(7, 32);
+    pos[i * 3 + 2] = Math.sin(a) * r;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  const m = new THREE.PointsMaterial({ color: 0x8FA6CC, size: 1.7, sizeAttenuation: false, transparent: true, opacity: 0.5, depthWrite: false, fog: false });
+  G.stars = new THREE.Points(g, m);
+  G.stars.frustumCulled = false;
+  G.scene.add(G.stars);
+
+  // 远山脊（日出时被照亮）
+  const ridgePos = [], ridgeIdx = [];
+  const segs = 46, span = Math.PI * 0.72, a0 = THREE.MathUtils.degToRad(168);
+  for (let i = 0; i <= segs; i++) {
+    const a = a0 + span * (i / segs);
+    const r = 34 + Math.sin(i * 0.7) * 1.6;
+    const h = 2.4 + Math.sin(i * 0.42 + 1.1) * 0.9 + Math.sin(i * 1.9) * 0.4;
+    ridgePos.push(Math.sin(a) * r, -5, Math.cos(a) * r);
+    ridgePos.push(Math.sin(a) * r, h, Math.cos(a) * r);
+  }
+  for (let i = 0; i < segs; i++) {
+    const a = i * 2, b = a + 1, c = a + 2, d = a + 3;
+    ridgeIdx.push(a, b, d, a, d, c);
+  }
+  const rg = new THREE.BufferGeometry();
+  rg.setAttribute('position', new THREE.Float32BufferAttribute(ridgePos, 3));
+  rg.setIndex(ridgeIdx);
+  rg.computeVertexNormals();
+  const rm = new THREE.MeshBasicMaterial({ color: 0x182134, fog: false });
+  G.ridge = new THREE.Mesh(rg, rm);
+  G.ridge.frustumCulled = false;
+  G.scene.add(G.ridge);
+
+  // 太阳
+  G.sunDisc = new THREE.Mesh(
+    new THREE.SphereGeometry(3.1, 20, 14),
+    new THREE.MeshBasicMaterial({ color: 0xF7C97F, fog: false })
+  );
+  G.sunDisc.position.set(-19, -8, -20);
+  G.sunDisc.visible = false;
+  G.scene.add(G.sunDisc);
+}
+
+// =====================================================================
+//  9. 地形
+// =====================================================================
+function makeHeightFn(houses, perlin) {
+  return (x, z) => {
+    const r = Math.hypot(x, z);
+    const n = perlin(x * 0.105 + 3.1, z * 0.105 - 1.7) * 0.78
+            + perlin(x * 0.29 - 2.2, z * 0.29 + 5.5) * 0.22;
+    let y = n * (1 - smoothstep(7.6, 4.0, r) * 0.94);
+    // 街面
+    const dLine = Math.abs((x - SC.x) * SN.x + (z - SC.z) * SN.z);
+    const along = Math.abs((x - SC.x) * SD.x + (z - SC.z) * SD.z);
+    if (along < 13.2) y = lerp(y, 0.02, smoothstep(2.9, 1.5, dLine) * 0.9);
+    // 每户台基
+    for (const h of houses) {
+      const d = Math.hypot(x - h.x, z - h.z);
+      y = lerp(y, 0.015, smoothstep(3.0, 2.0, d));
+    }
+    // 岛缘收口
+    y = lerp(-0.62, y, smoothstep(12.45, 10.85, r));
+    return y;
+  };
+}
+
+function buildTerrain(bucket) {
+  const rings = 22, segs = 54;
+  const positions = [0, G.heightAt(0, 0), 0];
+  for (let i = 1; i <= rings; i++) {
+    const rr = WORLD_R * Math.pow(i / rings, 0.97);
+    for (let j = 0; j < segs; j++) {
+      const a = j / segs * TAU;
+      const x = Math.cos(a) * rr, z = Math.sin(a) * rr;
+      positions.push(x, G.heightAt(x, z), z);
+    }
+  }
+  const idx = [];
+  for (let j = 0; j < segs; j++) idx.push(0, 1 + (j + 1) % segs, 1 + j);
+  for (let i = 1; i < rings; i++) {
+    const a0 = 1 + (i - 1) * segs, b0 = 1 + i * segs;
+    for (let j = 0; j < segs; j++) {
+      const j2 = (j + 1) % segs;
+      idx.push(a0 + j, b0 + j, b0 + j2, a0 + j, b0 + j2, a0 + j2);
+    }
+  }
+  let g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  g.setIndex(idx);
+  g = g.toNonIndexed();
+
+  // 统一朝上
+  const p = g.attributes.position.array;
+  for (let t = 0; t < p.length; t += 9) {
+    const ax = p[t], ay = p[t + 1], az = p[t + 2];
+    const bx_ = p[t + 3], bz = p[t + 5];
+    const cx = p[t + 6], cz = p[t + 8];
+    const ny = (bz - az) * (cx - ax) - (bx_ - ax) * (cz - az);
+    if (ny < 0) {
+      for (let k = 0; k < 3; k++) { const tmp = p[t + 3 + k]; p[t + 3 + k] = p[t + 6 + k]; p[t + 6 + k] = tmp; }
+    }
+  }
+  g.computeVertexNormals();
+
+  // 面着色
+  const nor = g.attributes.normal;
+  const cnt = g.attributes.position.count;
+  const colors = new Float32Array(cnt * 3);
+  const c = new THREE.Color(), grass = new THREE.Color(PAL.grass),
+        soil = new THREE.Color(PAL.soil), rim = new THREE.Color(PAL.rim);
+  for (let t = 0; t < cnt; t += 3) {
+    const cx = (p[t * 3] + p[t * 3 + 3] + p[t * 3 + 6]) / 3;
+    const cy_ = (p[t * 3 + 1] + p[t * 3 + 4] + p[t * 3 + 7]) / 3;
+    const cz = (p[t * 3 + 2] + p[t * 3 + 5] + p[t * 3 + 8]) / 3;
+    const slope = nor.getY(t);
+    const nv = G.perlin(cx * 1.6 + 11, cz * 1.6 - 5);
+    c.copy(grass).lerp(soil, smoothstep(0.94, 0.6, slope) * 0.9);
+    c.multiplyScalar(0.93 + 0.12 * nv);
+    c.lerp(rim, smoothstep(10.9, 12.5, Math.hypot(cx, cz)) * 0.9);
+    c.offsetHSL(0, 0, clamp(cy_ * 0.02, -0.02, 0.02));
+    for (let k = 0; k < 3; k++) {
+      colors[(t + k) * 3] = c.r;
+      colors[(t + k) * 3 + 1] = c.g;
+      colors[(t + k) * 3 + 2] = c.b;
+    }
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const mesh = new THREE.Mesh(g, G.toonMat);
+  mesh.receiveShadow = true;
+  mesh.castShadow = false;
+  mesh.matrixAutoUpdate = false;
+  G.world.add(mesh);
+  G.terrain = mesh;
+
+  // 圆润岩底：草皮直接收在岩石上
+  const rock = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(1, 1),
+    new THREE.MeshToonMaterial({ color: PAL.rock, gradientMap: G.toonTex })
+  );
+  rock.scale.set(13.7, 3.4, 13.7);
+  rock.position.y = -3.75;
+  rock.receiveShadow = false;
+  rock.castShadow = false;
+  G.world.add(rock);
+}
+
+function buildStreet(bucket) {
+  const N = 34, half = STREET_HW;
+  for (let i = 0; i < N; i++) {
+    const u0 = -STREET_LEN / 2 + (i / N) * STREET_LEN;
+    const u1 = -STREET_LEN / 2 + ((i + 1) / N) * STREET_LEN;
+    const a = streetPoint(u0, -half), b = streetPoint(u0, half);
+    const c = streetPoint(u1, half), d = streetPoint(u1, -half);
+    const shade = 0.92 + 0.1 * G.perlin(u0 * 1.3, 4.4);
+    const col = new THREE.Color(PAL.street).multiplyScalar(shade).getHexString();
+    bucket.add(triG([a.x, 0.045, a.z], [b.x, 0.045, b.z], [c.x, 0.045, c.z], '#' + col), '#' + col);
+    bucket.add(triG([a.x, 0.045, a.z], [c.x, 0.045, c.z], [d.x, 0.045, d.z], '#' + col), '#' + col);
+  }
+  // 路缘石
+  for (let i = 0; i < N; i++) {
+    const u0 = -STREET_LEN / 2 + (i / N) * STREET_LEN;
+    const u1 = -STREET_LEN / 2 + ((i + 1) / N) * STREET_LEN;
+    for (const s of [-1, 1]) {
+      const a = streetPoint(u0, s * (half + 0.09)), b = streetPoint(u1, s * (half + 0.09));
+      bucket.add(bx(0.22, 0.1, Math.hypot(b.x - a.x, b.z - a.z) + 0.02,
+        (a.x + b.x) / 2, 0.05, (a.z + b.z) / 2, '#465770', Math.atan2(b.x - a.x, b.z - a.z)), '#3B4B66', 0.02);
+    }
+  }
+}
+
+// =====================================================================
+//  10. 小镇生成
+// =====================================================================
+function disposeWorld() {
+  if (!G.world) return;
+  G.scene.remove(G.world);
+  G.world.traverse(o => {
+    if (o.geometry) o.geometry.dispose();
+    if (o.material && o.material.userData && o.material.userData.temp) o.material.dispose();
+  });
+  G.extraMats = [];
+  G.world = null;
+}
+
+function buildTown() {
+  disposeWorld();
+  G.world = new THREE.Group();
+  G.scene.add(G.world);
+
+  const rng = new PRNG((G.seed * 2654435761) ^ ((G.levelIdx + 1) * 7919) ^ 0x9e3779b9);
+  G.perlin = makePerlin(G.seed * 13 + G.levelIdx * 101 + 7);
+
+  G.houses = G.level.houses.map((src, i) => {
+    const jx = (rng.next() - 0.5) * 0.30;
+    const jz = (rng.next() - 0.5) * 0.30;
+    const jr = (rng.next() - 0.5) * 0.05;
+    return {
+      ...src, index: i,
+      x: src.x + jx, z: src.z + jz, rot: src.rot + jr,
+      upper: src.tier === 2 ? H.floor2 : 0,
+      // 状态
+      winOpen: 1.32, winClosed: false, winTarget: 1.32,
+      winSpring: new Spring(1.32, 300, 26),
+      doorSpring: new Spring(0, 150, 22),
+      lampOn: true, lamp2On: true, lamp2: src.resident === 'child',
+      cover: 0, coverVis: 0, wrinkle: 1, smoothPass: 0, smoothDone: false,
+      reboundAt: 0, doorOpen: 0, doorTarget: 0, doorForced: false,
+      visited: false, seen: false, blanketShown: -1, wrinkleDirty: true,
+      passTimer: 0, catTimer: 0,
+      sleep: new Spring(0, 28, 8.2), sleepVis: 0, stage: 0,
+      glow: new THREE.Color(PAL.warm1), glowKey: 'h' + i,
+      wake: 0, sitting: 0, curtainLift: 0, lastHint: 0, roofOp: 1
+    };
+  });
+
+  G.heightAt = makeHeightFn(G.houses, G.perlin);
+  for (const h of G.houses) {
+    h.groundY = 0.015;
+    h.matrix = makeWorldMatrix(h.x, h.groundY, h.z, h.rot);
+    h.frontZ = H.d / 2;
+    h.lampY = (h.tier === 2 ? H.wall2 - 0.22 : H.wall1 - 0.06) + 0;
+    h.ceil = h.tier === 2 ? H.wall2 - 0.12 : 1.96;
+    h.swing = 0;
+    h.swingVel = 0;
+    h.wrinkles = Array.from({ length: 9 }, () => ({
+      x: rng.range(-0.58, 0.58),
+      z: rng.range(-0.86, 0.5),
+      r: rng.range(0.14, 0.3),
+      a: rng.range(0.4, 1)
+    }));
+    h.wrinkle = h.wrinkles.reduce((a, w) => a + w.a, 0) / h.wrinkles.length;
+  }
+
+  const bodyB = new Bucket(), interB = new Bucket(), propB = new Bucket();
+  G.glowBatch = new ColorBatch();
+  G.blankets = [];
+
+  buildTerrain(propB);
+  buildStreet(propB);
+
+  // ---- 每户 ----
+  for (const h of G.houses) {
+    buildHouse(h, bodyB, interB);
+  }
+
+  buildProps(propB, rng);
+  buildGrass(rng);
+
+  // 合并静态主体
+  G.bodyMesh = bodyB.merge(G.toonMat, true, true, G.world);
+  G.bodyOutline = bodyB.mergeOutline(G.outlineMat, G.world);
+  G.interMesh = interB.merge(G.toonMat, true, true, G.world);
+  G.propMesh = propB.merge(G.toonMat, true, true, G.world);
+  G.propOutline = propB.mergeOutline(G.outlineMat, G.world);
+  if (G.bodyOutline) G.bodyOutline.userData.isOutline = true;
+  if (G.propOutline) G.propOutline.userData.isOutline = true;
+
+  // 窗光 / 灯芯
+  G.glowMesh = G.glowBatch.build(G.basicVC);
+  G.world.add(G.glowMesh);
+  G.glowBatch.set('street', '#9DB3D6');
+
+  // 实例化：门 / 窗帘 / 灯绳 / 住户
+  buildInstanced();
+
+  // 角色 / 猫
+  buildCharacter();
+  if (G.level.cat) buildCat();
+  else G.cat = null;
+
+  // 玩家起点
+  const us = G.houses.map(h => projectStreet(h.x, h.z));
+  const startU = Math.min(...us) - 3.4;
+  const sp = streetPoint(startU, 0.85);
+  G.player.pos.set(sp.x, G.heightAt(sp.x, sp.z) + 0.001, sp.z);
+  G.player.path.length = 0;
+  G.player.moving = false;
+  G.player.facing = Math.atan2(SN.x, SN.z) + Math.PI;
+  G.charGroup.position.copy(G.player.pos);
+  G.charGroup.rotation.y = G.player.facing;
+
+  applyOutlineVisibility();
+  G.playerLight.position.set(G.player.pos.x, 1.2, G.player.pos.z);
+}
+
+function buildHouse(h, bodyB, interB) {
+  const M = h.matrix;
+  const Y = h.upper;
+  const wallH = (h.tier === 2 ? H.wall2 : H.wall1) + (h.index % 3) * 0.17;
+  const frontZ = H.d / 2;
+  const winL = H.winX - H.winW / 2, winR = H.winX + H.winW / 2;
+  const winB = H.winY - H.winH / 2, winT = H.winY + H.winH / 2;
+  const doorL = H.doorX - H.doorW / 2, doorR = H.doorX + H.doorW / 2;
+
+  const addBody = (geo, hex, outline = 0.072) => {
+    const g = strip(geo);
+    g.applyMatrix4(M);
+    bodyB.add(g, hex, outline);
+  };
+  const addIn = (geo, hex) => {
+    const g = strip(geo);
+    g.applyMatrix4(M);
+    interB.add(g, hex, 0);
+  };
+  const addGlow = (geo, hex) => {
+    const g = strip(geo);
+    g.applyMatrix4(M);
+    G.glowBatch.add(h.glowKey, g, hex);
+  };
+
+  // 墙
+  addBody(bx(H.w, wallH, H.wallT, 0, wallH / 2, -frontZ, PAL.wall), PAL.wall);
+  addBody(bx(H.wallT, wallH, H.d, -H.w / 2, wallH / 2, 0, PAL.wallDark), PAL.wallDark);
+  addBody(bx(H.wallT, wallH, H.d, H.w / 2, wallH / 2, 0, PAL.wallDark), PAL.wallDark);
+
+  const upperY = Y;
+  const upperH = wallH - Y;
+  const paneTop = Y + winT;
+
+  // 前脸：下段（两层楼时是实体，单层时留窗下与门）
+  if (h.tier === 2) {
+    addBody(bx(H.w, Y, H.wallT, 0, Y / 2, frontZ, PAL.wallDark), PAL.wallDark);
+  }
+  // 前脸面板（相对于上层起点）
+  const fp = (w, hh, x, y) => addBody(bx(w, hh, H.wallT, x, y, frontZ, PAL.wall), PAL.wall);
+  fp(winL + H.w / 2, upperH, (-H.w / 2 + winL) / 2, Y + upperH / 2);
+  fp(doorL - winR, upperH, (winR + doorL) / 2, Y + upperH / 2);
+  fp(H.w / 2 - doorR, upperH, (doorR + H.w / 2) / 2, Y + upperH / 2);
+  fp(H.winW, winB, H.winX, Y + winB / 2);
+  fp(H.winW, Math.max(0.02, wallH - (Y + winT)), H.winX, (Y + winT + wallH) / 2);
+  fp(H.doorW, Math.max(0.02, wallH - (Y + H.doorH)), H.doorX, (Y + H.doorH + wallH) / 2);
+
+  // 门框 / 窗框 / 窗台
+  addBody(bx(0.07, H.doorH + 0.06, 0.12, doorL - 0.035, Y + H.doorH / 2, frontZ + 0.03, PAL.trim), PAL.trim, 0);
+  addBody(bx(0.07, H.doorH + 0.06, 0.12, doorR + 0.035, Y + H.doorH / 2, frontZ + 0.03, PAL.trim), PAL.trim, 0);
+  addBody(bx(H.doorW + 0.14, 0.07, 0.12, H.doorX, Y + H.doorH + 0.035, frontZ + 0.03, PAL.trim), PAL.trim, 0);
+  addBody(bx(H.winW + 0.16, 0.07, 0.16, H.winX, winB - 0.035 + Y, frontZ + 0.04, PAL.trim), PAL.trim, 0);
+  addBody(bx(H.winW + 0.16, 0.06, 0.12, H.winX, winT + 0.03 + Y, frontZ + 0.03, PAL.trim), PAL.trim, 0);
+  addBody(bx(0.06, H.winH + 0.1, 0.12, winL - 0.03, H.winY + Y, frontZ + 0.03, PAL.trim), PAL.trim, 0);
+  addBody(bx(0.06, H.winH + 0.1, 0.12, winR + 0.03, H.winY + Y, frontZ + 0.03, PAL.trim), PAL.trim, 0);
+  // 台阶
+  addBody(bx(0.98, 0.12, 0.42, H.doorX, 0.05, frontZ + 0.24, PAL.stone), PAL.stone, 0.03);
+
+  // 二楼楼板 / 阳台 / 外楼梯
+  if (h.tier === 2) {
+    addBody(bx(H.w + 0.1, 0.12, H.d + 0.1, 0, Y, 0, PAL.woodLight), PAL.woodLight, 0.03);
+    addBody(bx(H.w, 0.1, 0.9, 0, Y - 0.02, frontZ + 0.4, PAL.woodLight), PAL.woodLight, 0.035);
+    addBody(bx(0.07, 0.42, 0.07, -H.w / 2 + 0.06, Y + 0.2, frontZ + 0.78, PAL.trim), PAL.trim, 0);
+    addBody(bx(0.07, 0.42, 0.07, H.w / 2 - 0.06, Y + 0.2, frontZ + 0.78, PAL.trim), PAL.trim, 0);
+    addBody(bx(H.w, 0.06, 0.06, 0, Y + 0.4, frontZ + 0.78, PAL.trim), PAL.trim, 0);
+    const steps = 7;
+    for (let s = 0; s < steps; s++) {
+      const k = s / (steps - 1);
+      addBody(bx(0.92, 0.11, 0.36, -H.w / 2 - 0.34, 0.1 + k * (Y - 0.18), frontZ + 1.02 - k * 0.5, PAL.stone), PAL.stone, 0.025);
+    }
+    addBody(bx(0.08, Y + 0.5, 0.08, -H.w / 2 - 0.84, (Y + 0.5) / 2, frontZ + 0.92, PAL.trim), PAL.trim, 0);
+  }
+  // 屋檐梁
+  addBody(bx(H.w + 0.2, 0.1, 0.1, 0, wallH + 0.02, frontZ + 0.05, PAL.wallDark), PAL.wallDark, 0);
+  // 吊灯横梁
+  addBody(bx(1.5, 0.09, 0.12, H.lampX, h.ceil, H.lampZ, PAL.wood), PAL.wood, 0);
+
+  // ---- 屋顶（可淡出）----
+  const rise = h.tier === 2 ? 1.02 : 0.92;
+  const o = 0.13;
+  const rd = H.d + o * 2, rw = H.w + o * 2;
+  const halfD = rd / 2;
+  const ang = Math.atan2(rise, halfD);
+  const slope = Math.hypot(halfD, rise);
+  const rb = new Bucket();
+  const p1 = new THREE.BoxGeometry(rw, 0.1, slope);
+  p1.rotateX(ang); p1.translate(0, wallH + rise / 2 + 0.02, halfD / 2);
+  rb.add(strip(p1), h.index % 2 ? PAL.roofA : PAL.roofB, 0.065);
+  const p2 = new THREE.BoxGeometry(rw, 0.1, slope);
+  p2.rotateX(-ang); p2.translate(0, wallH + rise / 2 + 0.02, -halfD / 2);
+  rb.add(strip(p2), h.index % 2 ? PAL.roofB : PAL.roofA, 0.065);
+  for (const sx of [-1, 1]) {
+    const x = sx * H.w / 2;
+    const g1 = triG([x, wallH, -frontZ], [x, wallH + rise, 0], [x, wallH, frontZ], PAL.wallDark);
+    const g2 = triG([x, wallH, -frontZ], [x, wallH, frontZ], [x, wallH + rise, 0], PAL.wallDark);
+    rb.add(g1, PAL.wallDark, 0.04);
+    rb.add(g2, PAL.wallDark, 0.04);
+  }
+  rb.add(bx(0.32, 0.7, 0.32, 0.95, wallH + rise * 0.55, -0.4, PAL.wallDark), PAL.wallDark, 0.03);
+  rb.add(bx(0.42, 0.09, 0.42, 0.95, wallH + rise * 0.55 + 0.36, -0.4, PAL.trim), PAL.trim, 0);
+
+  const roofMat = new THREE.MeshToonMaterial({
+    color: 0xffffff, vertexColors: true, gradientMap: G.toonTex,
+    transparent: true, opacity: 1
+  });
+  roofMat.userData.temp = true;
+  const roofGeo = mergeGeometries(rb.parts, false);
+  roofGeo.applyMatrix4(M);
+  roofGeo.computeBoundingSphere();
+  h.roof = new THREE.Mesh(roofGeo, roofMat);
+  h.roof.castShadow = true; h.roof.receiveShadow = true;
+  G.world.add(h.roof);
+
+  const outMat = new THREE.MeshBasicMaterial({
+    color: PAL.outline, side: THREE.BackSide, transparent: true, opacity: 1, fog: false
+  });
+  outMat.userData.temp = true;
+  const outGeo = mergeGeometries(rb.outlines, false);
+  outGeo.applyMatrix4(M);
+  outGeo.computeBoundingSphere();
+  h.roofOutline = new THREE.Mesh(outGeo, outMat);
+  h.roofOutline.renderOrder = -1;
+  h.roofOutline.userData.isOutline = true;
+  G.world.add(h.roofOutline);
+
+  // ---- 家具 ----
+  const bedY = Y;
+  addIn(bx(H.bedW + 0.1, 0.3, H.bedL + 0.08, H.bedX, 0.15 + bedY, H.bedZ, PAL.wood), PAL.wood);
+  addIn(bx(H.bedW - 0.06, 0.2, H.bedL - 0.06, H.bedX, 0.5 + bedY, H.bedZ, '#AAB4C8'), '#AAB4C8');
+  addIn(bx(0.66, 0.15, 0.34, H.bedX, 0.65 + bedY, H.bedZ - H.bedL / 2 + 0.3, '#E0D8C8'), '#E0D8C8');
+  addIn(bx(H.bedW + 0.12, 0.5, 0.09, H.bedX, 0.55 + bedY, H.bedZ - H.bedL / 2 - 0.06, PAL.woodLight), PAL.woodLight);
+  addIn(bx(0.42, 0.42, 0.4, H.bedX - 0.94, 0.21 + bedY, H.bedZ - 0.4, PAL.woodLight), PAL.woodLight);
+  // 木地板 + 床下小地毯
+  addIn(bx(H.w - 0.24, 0.06, H.d - 0.24, 0, 0.04 + bedY, 0, '#4A4356'), '#4A4356');
+  addIn(bx(1.9, 0.03, 2.3, H.bedX - 0.1, 0.09 + bedY, H.bedZ + 0.1, '#3E4B66'), '#3E4B66');
+  // 二楼楼下的一张小桌
+  if (h.tier === 2) {
+    addIn(bx(0.8, 0.1, 0.6, -0.5, 0.62, -0.9, PAL.woodLight), PAL.woodLight);
+    addIn(bx(0.08, 0.6, 0.08, -0.85, 0.3, -0.7, PAL.wood), PAL.wood);
+    addIn(bx(0.08, 0.6, 0.08, -0.15, 0.3, -1.1, PAL.wood), PAL.wood);
+    addIn(bx(0.26, 0.24, 0.26, -0.5, 0.79, -0.9, '#4E5A74'), '#4E5A74');
+  }
+
+  // ---- 窗玻璃 + 漏光 + 灯泡（同色批次）----
+  const paneZ = frontZ - 0.02;
+  const pane = new THREE.PlaneGeometry(H.winW - 0.1, H.winH - 0.1);
+  pane.translate(H.winX, Y + H.winY, paneZ);
+  addGlow(pane, PAL.warm1);
+  for (const [w, hh, x, y] of [
+    [H.winW - 0.02, 0.035, H.winX, Y + winB + 0.02],
+    [H.winW - 0.02, 0.035, H.winX, Y + winT - 0.02],
+    [0.035, H.winH - 0.04, winL + 0.02, Y + H.winY],
+    [0.035, H.winH - 0.04, winR - 0.02, Y + H.winY]
+  ]) {
+    addGlow(bx(w, hh, 0.03, x, y, frontZ + 0.055, PAL.warm1), PAL.warm1);
+  }
+  const bulbY = h.ceil - 0.44;
+  addGlow(sphere(0.075, 8, H.lampX, bulbY, H.lampZ, PAL.warm1), PAL.warm1);
+  // 屋内墙面的暖色回光（跟着灯一起暗下去）
+  const wash = new THREE.PlaneGeometry(2.35, 1.45);
+  wash.translate(0, 1.05 + Y, -H.d / 2 + 0.1);
+  G.glowBatch.add('wash' + h.index, strip(wash.clone()).applyMatrix4(M), '#3B2E22');
+  if (h.lamp2) {
+    // 孩子的第二盏小灯：床头
+    addBody(bx(0.3, 0.06, 0.3, H.bedX - 0.94, 0.44 + Y, H.bedZ - 0.4, PAL.trim), PAL.trim, 0);
+    addBody(cy(0.02, 0.06, 0.2, 8, H.bedX - 0.94, 0.56 + Y, H.bedZ - 0.4, PAL.metal), PAL.metal, 0);
+    addGlow(sphere(0.09, 8, H.bedX - 0.94, 0.71 + Y, H.bedZ - 0.4, PAL.warm1), PAL.warm1);
+  }
+
+  // ---- 被子 ----
+  makeBlanket(h, bedY);
+}
+
+function makeBlanket(h, bedY) {
+  const nx = 8, nz = 10;
+  const pos = [], uv = [], idx = [];
+  for (let j = 0; j <= nz; j++) {
+    for (let i = 0; i <= nx; i++) {
+      pos.push(0, 0, 0);
+      uv.push(i / nx, j / nz);
+    }
+  }
+  for (let j = 0; j < nz; j++) {
+    for (let i = 0; i < nx; i++) {
+      const a = j * (nx + 1) + i, b = a + 1, c = a + nx + 1, d = c + 1;
+      idx.push(a, c, b, b, c, d);
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  const mesh = new THREE.Mesh(g, G.blanketMat);
+  mesh.castShadow = false; mesh.receiveShadow = true;
+  mesh.matrixAutoUpdate = false;
+  mesh.matrix.copy(h.matrix).multiply(
+    new THREE.Matrix4().makeTranslation(H.bedX, H.bedTop + 0.02 + bedY, H.bedZ)
+  );
+  mesh.matrixWorldNeedsUpdate = true;
+  G.world.add(mesh);
+  h.blanket = mesh;
+  h.blanketGeo = g;
+  h.uv = uv;
+  h.coverSpring = new Spring(0, 150, 22);
+  updateBlanket(h, true);
+}
+
+function updateBlanket(h, force) {
+  const cv = h.coverVis;
+  const pos = h.blanketGeo.attributes.position;
+  const uv = h.uv;
+  for (let k = 0; k < uv.length / 2; k++) {
+    const u = uv[k * 2], v = uv[k * 2 + 1];
+    const x = (u - 0.5) * 1.54;
+    const zFull = -0.96 + v * 1.6;
+    const zFold = 0.40 + v * 0.24;
+    const z = lerp(zFold, zFull, cv);
+    let y = 0.055 + 0.012 * Math.sin(x * 3.6 + z * 2.2);
+    for (const w of h.wrinkles) {
+      const dx = x - w.x, dz = z - w.z;
+      y += w.a * 0.062 * Math.exp(-(dx * dx + dz * dz) / (2 * w.r * w.r));
+    }
+    y -= 0.10 * smoothstep(0.46, 0.77, Math.abs(x));
+    pos.setXYZ(k, x, y, z);
+  }
+  pos.needsUpdate = true;
+  h.blanketGeo.computeVertexNormals();
+  h.blanketGeo.computeBoundingSphere();
+}
+
+// ---- 门 / 窗帘 / 灯绳 / 住户：实例化 ----
+function buildInstanced() {
+  const n = G.houses.length;
+
+  // 门：铰链在门洞左侧
+  const doorGeos = [
+    bx(H.doorW, H.doorH, 0.06, H.doorW / 2, 0, 0, PAL.woodLight),
+    sphere(0.032, 6, H.doorW - 0.1, 0.02, 0.06, PAL.warm2),
+    bx(H.doorW - 0.18, 0.1, 0.02, H.doorW / 2, 0.32, 0.045, PAL.wood),
+    bx(H.doorW - 0.18, 0.1, 0.02, H.doorW / 2, -0.34, 0.045, PAL.wood)
+  ];
+  const doorMesh = new THREE.InstancedMesh(mergeGeometries(doorGeos.map(strip), false), G.toonMat, n);
+  doorMesh.castShadow = true; doorMesh.receiveShadow = true;
+  doorMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  doorMesh.frustumCulled = false;
+  G.world.add(doorMesh);
+  G.doorMesh = doorMesh;
+
+  // 窗帘（拉起 = 旋转）
+  const sashGeos = [
+    bx(H.winW, H.winH, 0.05, H.winW / 2, 0, 0, PAL.cloth),
+    bx(0.055, H.winH - 0.06, 0.03, 0.16, 0, 0.04, PAL.clothLight),
+    bx(0.055, H.winH - 0.06, 0.03, H.winW * 0.5, 0, 0.04, PAL.cloth),
+    bx(0.055, H.winH - 0.06, 0.03, H.winW * 0.84, 0, 0.04, PAL.clothLight),
+    sphere(0.03, 6, H.winW - 0.07, 0, 0.05, PAL.trim)
+  ];
+  const sashMesh = new THREE.InstancedMesh(mergeGeometries(sashGeos.map(strip), false), G.toonMat, n);
+  sashMesh.castShadow = true; sashMesh.receiveShadow = true;
+  sashMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  sashMesh.frustumCulled = false;
+  G.world.add(sashMesh);
+  G.sashMesh = sashMesh;
+
+  // 灯绳 + 灯罩 + 绳球
+  const pGeos = [
+    cy(0.014, 0.014, 0.3, 5, 0, -0.15, 0, '#3B4356'),
+    cy(0.055, 0.2, 0.19, 10, 0, -0.37, 0, '#454F66'),
+    cy(0.2, 0.19, 0.03, 10, 0, -0.465, 0, PAL.warm2),
+    sphere(0.04, 8, 0, -0.56, 0, PAL.warm2)
+  ];
+  const pendMesh = new THREE.InstancedMesh(mergeGeometries(pGeos.map(strip), false), G.toonMat, n);
+  pendMesh.castShadow = true; pendMesh.receiveShadow = true;
+  pendMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  pendMesh.frustumCulled = false;
+  G.world.add(pendMesh);
+  G.pendantMesh = pendMesh;
+
+  // 住户（黏土人，髋部为轴）
+  const rGeos = [
+    cylLike(0.145, 0.3, 0, 0.3, 0, PAL.cloth),
+    sphere(0.152, 9, 0, 0.72, 0, PAL.skin),
+    capsule(0.085, 0.16, -0.16, 0.42, 0.03, PAL.cloth),
+    capsule(0.085, 0.16, 0.16, 0.42, 0.03, PAL.cloth),
+    bx(0.3, 0.15, 0.52, 0, 0.06, 0.28, PAL.cloth),
+    cy(0.1, 0.15, 0.14, 8, 0, 0.86, 0, PAL.skinDark)
+  ];
+  const rMesh = new THREE.InstancedMesh(mergeGeometries(rGeos.map(strip), false), G.toonMat, n);
+  rMesh.castShadow = true; rMesh.receiveShadow = false;
+  rMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  rMesh.frustumCulled = false;
+  G.world.add(rMesh);
+  G.residentMesh = rMesh;
+}
+
+function cylLike(r, h, x, y, z, hex) {
+  const g = new THREE.CapsuleGeometry(r, h, 3, 8);
+  g.translate(x, y, z);
+  return tint(strip(g), hex);
+}
+function capsule(r, h, x, y, z, hex) {
+  const g = new THREE.CapsuleGeometry(r, h, 3, 7);
+  g.rotateZ(Math.PI / 2.4);
+  g.translate(x, y, z);
+  return tint(strip(g), hex);
+}
+
+function updateInstanced() {
+  const t = G.tmp;
+  const n = G.houses.length;
+  for (let i = 0; i < n; i++) {
+    const h = G.houses[i];
+    const rad = THREE.MathUtils.degToRad;
+    // 门
+    t.m.copy(h.matrix);
+    t.m.multiply(new THREE.Matrix4().makeTranslation(H.doorX - H.doorW / 2, H.doorH / 2 + h.upper, H.d / 2 + 0.03));
+    t.m.multiply(new THREE.Matrix4().makeRotationY(-h.doorOpen * 1.18));
+    G.doorMesh.setMatrixAt(i, t.m);
+    // 窗帘
+    t.m.copy(h.matrix);
+    t.m.multiply(new THREE.Matrix4().makeTranslation(H.winX - H.winW / 2, H.winY + h.upper, H.d / 2 + 0.09));
+    t.m.multiply(new THREE.Matrix4().makeRotationY(-(h.winOpen + h.curtainLift * Math.sin(G.elapsed * 13) * 0.04)));
+    G.sashMesh.setMatrixAt(i, t.m);
+    // 吊灯
+    t.m.copy(h.matrix);
+    t.m.multiply(new THREE.Matrix4().makeTranslation(H.lampX, h.ceil, H.lampZ));
+    t.m.multiply(new THREE.Matrix4().makeRotationZ(h.swing || 0));
+    G.pendantMesh.setMatrixAt(i, t.m);
+    // 住户
+    const lean = lerp(0.2, 1.56, easeOutCubic(clamp(h.sleepVis, 0, 1))) + (h.sitting || 0) * 0.55;
+    t.m.copy(h.matrix);
+    t.m.multiply(new THREE.Matrix4().makeTranslation(H.bedX, H.bedTop + 0.06 + h.upper, H.bedZ + 0.2));
+    t.m.multiply(new THREE.Matrix4().makeRotationX(-lean));
+    G.residentMesh.setMatrixAt(i, t.m);
+  }
+  G.doorMesh.instanceMatrix.needsUpdate = true;
+  G.sashMesh.instanceMatrix.needsUpdate = true;
+  G.pendantMesh.instanceMatrix.needsUpdate = true;
+  G.residentMesh.instanceMatrix.needsUpdate = true;
+}
+
+// ---- 街道道具 ----
+function buildProps(bucket, rng) {
+  // 水井
+  const wx = -0.24, wz = 8.24;
+  bucket.add(cy(0.58, 0.64, 0.58, 12, wx, 0.29, wz, PAL.stone), PAL.stone, 0.045);
+  bucket.add(cy(0.64, 0.6, 0.1, 12, wx, 0.62, wz, '#41506A'), '#41506A', 0.02);
+  bucket.add(cy(0.44, 0.44, 0.03, 12, wx, 0.66, wz, '#1B2334'), '#1B2334', 0);
+  bucket.add(bx(0.1, 1.5, 0.1, wx - 0.4, 0.75, wz, PAL.wood), PAL.wood, 0.028);
+  bucket.add(bx(0.1, 1.5, 0.1, wx + 0.4, 0.75, wz, PAL.wood), PAL.wood, 0.028);
+  bucket.add(bx(1.0, 0.09, 0.09, wx, 1.46, wz, PAL.wood), PAL.wood, 0.022);
+  bucket.add(bx(0.9, 0.08, 0.78, wx, 1.62, wz, PAL.roofA), PAL.roofA, 0.03);
+  bucket.add(cy(0.02, 0.02, 0.36, 4, wx, 1.24, wz, '#8C93A6'), '#8C93A6', 0);
+  bucket.add(cy(0.13, 0.1, 0.18, 8, wx, 1.0, wz, PAL.woodLight), PAL.woodLight, 0.02);
+
+  // 三盏街灯（冷白，不占暖色）
+  for (const u of [-8.75, 1.75, 8.75]) {
+    const p = streetPoint(u, 2.35);
+    bucket.add(cy(0.045, 0.07, 1.68, 6, p.x, 0.84, p.z, '#39445A'), '#39445A', 0.028);
+    bucket.add(bx(0.3, 0.055, 0.055, p.x, 1.66, p.z, '#39445A'), '#39445A', 0.02);
+    bucket.add(bx(0.19, 0.22, 0.19, p.x, 1.55, p.z, PAL.metal), PAL.metal, 0.02);
+    G.glowBatch.add('street', sphere(0.09, 7, p.x, 1.54, p.z, '#A6BBDD'), '#A6BBDD');
+  }
+
+  // 篱笆
+  const fenceRun = (u0, u1, lat) => {
+    const step = 0.62;
+    for (let u = u0; u <= u1 + 0.01; u += step) {
+      const p = streetPoint(u, lat);
+      bucket.add(bx(0.08, 0.7, 0.08, p.x, 0.35, p.z, PAL.wood), PAL.wood, 0.022);
+    }
+    for (const yy of [0.28, 0.55]) {
+      const a = streetPoint(u0, lat), b = streetPoint(u1, lat);
+      const len = Math.hypot(b.x - a.x, b.z - a.z);
+      bucket.add(bx(0.055, 0.075, len + 0.1, (a.x + b.x) / 2, yy, (a.z + b.z) / 2, PAL.woodLight,
+        Math.atan2(b.x - a.x, b.z - a.z)), PAL.woodLight, 0.018);
+    }
+  };
+  fenceRun(-11.2, -9.0, 2.45);
+  fenceRun(9.0, 11.2, 2.45);
+
+  // 两棵树
+  const tree = (x, z, s) => {
+    bucket.add(cy(0.1 * s, 0.17 * s, 1.05 * s, 6, x, 0.52 * s, z, PAL.trunk), PAL.trunk, 0.03);
+    const blobs = [
+      [0, 1.42, 0, 0.78, PAL.leaf],
+      [-0.38, 1.18, 0.26, 0.52, PAL.leafDark],
+      [0.36, 1.24, -0.2, 0.5, PAL.leaf]
+    ];
+    for (const [dx, dy, dz, r, col] of blobs) {
+      const g = new THREE.IcosahedronGeometry(r * s, 0);
+      g.translate(x + dx * s, dy * s, z + dz * s);
+      bucket.add(g, col, 0.035);
+    }
+  };
+  tree(9.73, -3.27, 1.0);
+  tree(-3.21, 10.09, 0.86);
+
+  // 晾衣绳
+  const a = streetPoint(-2.2, 3.2), b = streetPoint(-0.6, 3.2);
+  for (const p of [a, b]) bucket.add(bx(0.07, 1.7, 0.07, p.x, 0.85, p.z, PAL.wood), PAL.wood, 0.022);
+  const mid = { x: (a.x + b.x) / 2, z: (a.z + b.z) / 2 };
+  const len = Math.hypot(b.x - a.x, b.z - a.z);
+  const yaw = Math.atan2(b.x - a.x, b.z - a.z);
+  bucket.add(bx(0.02, 0.02, len, mid.x, 1.56, mid.z, '#8C93A6', yaw), '#8C93A6', 0);
+  const cols = ['#B9B3C4', '#8E9AB4', '#C9BBA8'];
+  for (let i = 0; i < 3; i++) {
+    const k = 0.24 + i * 0.26;
+    const x = lerp(a.x, b.x, k), z = lerp(a.z, b.z, k);
+    bucket.add(bx(0.3, 0.34, 0.03, x, 1.37, z, cols[i], yaw), cols[i], 0.012);
+  }
+}
+
+function buildGrass(rng) {
+  const count = 150;
+  const g = new THREE.ConeGeometry(0.045, 0.17, 3);
+  g.translate(0, 0.085, 0);
+  const m = new THREE.MeshToonMaterial({ color: '#2F4058', gradientMap: G.toonTex });
+  const inst = new THREE.InstancedMesh(g, m, count);
+  inst.castShadow = false; inst.receiveShadow = false;
+  const mm = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3();
+  let placed = 0, guard = 0;
+  while (placed < count && guard++ < 2000) {
+    const a = rng.range(0, TAU), r = rng.range(5.4, 11.8);
+    const x = Math.cos(a) * r, z = Math.sin(a) * r;
+    const dLine = Math.abs((x - SC.x) * SN.x + (z - SC.z) * SN.z);
+    const along = Math.abs((x - SC.x) * SD.x + (z - SC.z) * SD.z);
+    if (dLine < 2.4 && along < 12.2) continue;
+    if (G.houses.some(h => Math.hypot(x - h.x, z - h.z) < 2.9)) continue;
+    const sc = rng.range(0.7, 1.5);
+    q.setFromEuler(new THREE.Euler(0, rng.range(0, TAU), rng.range(-0.1, 0.1)));
+    s.set(sc, sc, sc);
+    mm.compose(new THREE.Vector3(x, G.heightAt(x, z), z), q, s);
+    inst.setMatrixAt(placed++, mm);
+  }
+  inst.count = placed;
+  inst.instanceMatrix.needsUpdate = true;
+  G.world.add(inst);
+}
+
+// =====================================================================
+//  11. 主角 · 猫
+// =====================================================================
+function outlined(parts, thickness = 0.028) {
+  const grp = new THREE.Group();
+  const geo = mergeGeometries(parts, false);
+  const mesh = new THREE.Mesh(geo, G.toonMat);
+  mesh.castShadow = true; mesh.receiveShadow = true;
+  const outs = parts.map(p => {
+    const o = p.clone();
+    o.deleteAttribute('color');
+    expandGeo(o, thickness);
+    return o;
+  });
+  const out = new THREE.Mesh(mergeGeometries(outs, false), G.outlineMat);
+  out.renderOrder = -1;
+  out.castShadow = false; out.receiveShadow = false;
+  out.userData.isOutline = true;
+  grp.add(mesh, out);
+  return grp;
+}
+
+function buildCharacter() {
+  if (G.charGroup) { G.world.remove(G.charGroup); }
+  const root = new THREE.Group();
+
+  // 斗篷下摆 + 靴（不随塌肩摆动）
+  const lowerParts = [
+    cy(0.155, 0.30, 0.52, 9, 0, 0.27, 0, '#313D56'),
+    cy(0.30, 0.285, 0.05, 9, 0, 0.045, 0, '#1B2334'),
+    bx(0.095, 0.09, 0.2, -0.075, 0.06, 0.055, '#161D2C'),
+    bx(0.095, 0.09, 0.2, 0.075, 0.06, 0.055, '#161D2C')
+  ];
+  const lower = outlined(lowerParts, 0.034);
+  root.add(lower);
+
+  // 上身（倦意上来时前倾），几何以髋部 y=0.5 为原点
+  const upperParts = [
+    cylLike(0.14, 0.22, 0, 0.13, 0, '#2B3650'),
+    sphere(0.138, 10, 0, 0.35, 0.005, '#CBB49C'),
+    cy(0.012, 0.155, 0.17, 9, 0, 0.46, 0.005, '#333E56'),  // 尖顶帽
+    sphere(0.04, 7, 0, 0.545, 0.005, '#48566F'),
+    capsule(0.055, 0.12, -0.17, 0.12, 0.03, '#27314A'),
+    capsule(0.055, 0.12, 0.17, 0.12, 0.03, '#27314A'),
+    bx(0.29, 0.12, 0.19, 0, 0.0, 0.02, '#B08050')          // 围巾
+  ];
+  const upper = outlined(upperParts, 0.036);
+  upper.position.y = 0.5;
+  root.add(upper);
+
+  root.scale.setScalar(1.12);
+  G.upper = upper;
+  G.lower = lower;
+  root.position.set(G.player.pos.x, G.player.pos.y, G.player.pos.z);
+  G.world.add(root);
+  G.charGroup = root;
+  G.charUpper = upper;
+}
+
+function buildCat() {
+  if (G.cat?.group) G.world.remove(G.cat.group);
+  const parts = [
+    capsule(0.085, 0.15, 0, 0.16, 0, PAL.cat),
+    sphere(0.095, 9, 0, 0.30, 0.055, PAL.cat),
+    cy(0.005, 0.052, 0.075, 4, -0.055, 0.375, 0.055, PAL.cat, 0, -0.3),
+    cy(0.005, 0.052, 0.075, 4, 0.055, 0.375, 0.055, PAL.cat, 0, 0.3),
+    cy(0.022, 0.018, 0.3, 5, 0.03, 0.2, -0.15, PAL.cat, 1.0, 0),
+    sphere(0.028, 6, 0, 0.235, 0.135, '#E8DCCB'),
+    bx(0.07, 0.06, 0.08, -0.05, 0.045, 0.04, PAL.cat),
+    bx(0.07, 0.06, 0.08, 0.05, 0.045, 0.04, PAL.cat)
+  ];
+  const grp = outlined(parts, 0.022);
+  const st = G.catState;
+  const home = catHome();
+  grp.position.copy(home);
+  G.world.add(grp);
+  G.cat = { group: grp, pos: home.clone(), target: home.clone(), hop: 0 };
+}
+
+function catHome() {
+  return new THREE.Vector3(-0.24, 0.72, 8.24);
+}
+
+// =====================================================================
+//  12. 玩家移动 · 视线焦点
+// =====================================================================
+function standSpot(h, out = new THREE.Vector3()) {
+  if (h.tier === 2) {
+    out.set(-0.35, H.floor2, H.d / 2 + 0.36);
+  } else {
+    out.set(H.doorX, 0, H.d / 2 + 0.92);
+  }
+  out.applyMatrix4(h.matrix);
+  out.y = h.tier === 2 ? H.floor2 + h.groundY : G.heightAt(out.x, out.z);
+  return out;
+}
+
+function pathToHouse(h) {
+  const pts = [];
+  const u = projectStreet(h.x, h.z);
+  const s = streetPoint(u, 0.95);
+  pts.push({ x: s.x, y: G.heightAt(s.x, s.z), z: s.z });
+  if (h.tier === 2) {
+    const b = new THREE.Vector3(-H.w / 2 - 0.34, 0, H.d / 2 + 1.4).applyMatrix4(h.matrix);
+    pts.push({ x: b.x, y: G.heightAt(b.x, b.z), z: b.z });
+    const t = new THREE.Vector3(-H.w / 2 - 0.34, H.floor2, H.d / 2 + 0.72).applyMatrix4(h.matrix);
+    pts.push({ x: t.x, y: H.floor2 + h.groundY, z: t.z });
+  }
+  const st = standSpot(h);
+  pts.push({ x: st.x, y: st.y, z: st.z });
+  return pts;
+}
+
+function playerGo(pts) {
+  const p = G.player;
+  p.path = pts;
+  p.moving = true;
+}
+
+function updatePlayer(dt) {
+  const p = G.player;
+  if (p.path.length) {
+    const wp = p.path[0];
+    const dx = wp.x - p.pos.x, dz = wp.z - p.pos.z;
+    const d = Math.hypot(dx, dz);
+    const sp = SPEED * (1 - 0.4 * G.fatigue);
+    if (d < 0.055) {
+      p.pos.set(wp.x, wp.y, wp.z);
+      p.path.shift();
+      if (!p.path.length) {
+        p.moving = false;
+        p.onUpper = wp.y > 0.6;
+      }
+    } else {
+      const step = Math.min(d, sp * dt);
+      p.pos.x += dx / d * step;
+      p.pos.z += dz / d * step;
+      const targetY = wp.y;
+      p.pos.y = expDamp(p.pos.y, targetY, 0.09, dt);
+      p.facing += shortAngle(p.facing, Math.atan2(dx, dz)) * (1 - Math.exp(-dt / 0.075));
+      p.moving = true;
+      p.bob += dt * 10.5 * (sp / SPEED);
+    }
+  } else {
+    p.moving = false;
+    if (!p.onUpper) p.pos.y = expDamp(p.pos.y, G.heightAt(p.pos.x, p.pos.z), 0.06, dt);
+  }
+  if (G.charGroup) {
+    const bob = p.moving ? Math.sin(p.bob) * 0.028 : Math.sin(G.elapsed * 1.7) * 0.006;
+    G.charGroup.position.set(p.pos.x, p.pos.y + bob, p.pos.z);
+    G.charGroup.rotation.y = p.facing;
+    const slump = G.fatigue * 0.17;
+    if (G.charUpper) {
+      G.charUpper.rotation.x = slump;
+      G.charUpper.position.y = 0.5 - slump * 0.12;
+      G.charUpper.rotation.z = p.moving ? Math.sin(p.bob) * 0.035 : 0;
+    }
+  }
+  // 焦点
+  let best = null, bestD = NEAR_R;
+  for (const h of G.houses) {
+    const st = standSpot(h);
+    const dh = Math.hypot(st.x - p.pos.x, st.z - p.pos.z);
+    const dy = Math.abs(st.y - p.pos.y);
+    if (dh < bestD && dy < 1.35) { bestD = dh; best = h; }
+  }
+  G.focus = best;
+  if (best && !best.visited) {
+    best.visited = true;
+    best.doorTarget = 1;
+    if (!best.seen) { best.seen = true; toast(G.level.hint || '把这一户哄睡。'); }
+  }
+  if (!best) {
+    for (const h of G.houses) {
+      if (h.doorForced) continue;
+      if (h.doorTarget > 0.5 && !h.visited) h.doorTarget = 0;
+    }
+  } else if (!best.doorForced && !best.seenDoor) {
+    best.seenDoor = true;
+  }
+}
+
+// =====================================================================
+//  13. 交互锚点
+// =====================================================================
+const _v = new THREE.Vector3();
+
+function anchorLocal(h, kind) {
+  const up = h.upper;
+  if (kind === 'window') return new THREE.Vector3(H.winX + H.winW * 0.34, up + H.winY + 0.02, H.d / 2 + 0.2);
+  if (kind === 'lamp') {
+    const s = h.swing || 0;
+    return new THREE.Vector3(H.lampX + Math.sin(s) * 0.56, h.ceil - Math.cos(s) * 0.56, H.lampZ);
+  }
+  if (kind === 'lamp2') return new THREE.Vector3(H.bedX - 0.94, up + 0.86, H.bedZ - 0.4);
+  if (kind === 'blanket') {
+    if (h.coverVis > 0.66) return new THREE.Vector3(H.bedX, up + H.bedTop + 0.2, H.bedZ + 0.1);
+    return new THREE.Vector3(H.bedX - 0.58, up + H.bedTop + 0.12, H.bedZ + H.bedL / 2 - 0.05);
+  }
+  if (kind === 'door') return new THREE.Vector3(H.doorX + 0.22, up + 0.92, H.d / 2 + 0.22);
+  return new THREE.Vector3(0, 0, 0);
+}
+
+function refreshAnchors() {
+  G.anchors = [];
+  const f = G.focus;
+  if (f) {
+    const add = (kind, label) => {
+      const w = anchorLocal(f, kind).applyMatrix4(f.matrix);
+      G.anchors.push({ kind, house: f, world: w, label });
+    };
+    add('window', f.winClosed ? '拉开一条缝' : '拉上窗帘');
+    if (f.lampOn) add('lamp', '拉下灯绳');
+    if (f.lamp2 && f.lamp2On) add('lamp2', '熄掉小灯');
+    add('blanket', f.coverVis > 0.66 ? '抚平被子' : '把被子拉上来');
+    if (f.doorOpen > 0.12) add('door', '把门带上');
+  }
+  if (G.cat && G.catState.perched >= 0 && G.focus && G.catState.perched === G.focus.index) {
+    G.anchors.push({ kind: 'cat', house: null, world: G.cat.group.position.clone().add(new THREE.Vector3(0, 0.2, 0)), label: '把猫引开' });
+  }
+  // 屏幕坐标
+  const w = window.innerWidth, h = window.innerHeight;
+  for (const a of G.anchors) {
+    _v.copy(a.world).project(G.camera);
+    a.sx = (_v.x * 0.5 + 0.5) * w;
+    a.sy = (-_v.y * 0.5 + 0.5) * h;
+    a.vis = _v.z > -1 && _v.z < 1;
+  }
+  if (G.hover) G.hover = G.anchors.find(a => a.kind === G.hover.kind) || null;
+}
+
+function pickAnchor(x, y, r) {
+  let best = null, bd = r;
+  for (const a of G.anchors) {
+    if (!a.vis) continue;
+    const d = Math.hypot(a.sx - x, a.sy - y);
+    if (d < bd) { bd = d; best = a; }
+  }
+  return best;
+}
+
+// =====================================================================
+//  14. 每户状态推进
+// =====================================================================
+function sleepTargetOf(h) {
+  if (!h.winClosed) return 0;
+  const lit = h.lampOn || (h.lamp2 && h.lamp2On);
+  if (lit) return 0.33;
+  if (h.coverVis > 0.87) return (h.smoothDone || h.wrinkle < 0.3) ? 1 : 0.66;
+  return 0.66;
+}
+
+function glowHexFor(h) {
+  if (G.state === 'win') return PAL.warmDawn;
+  const lit = h.lampOn || (h.lamp2 && h.lamp2On);
+  if (!lit) return PAL.warm3;
+  if (h.lampOn && h.sleepVis < 0.22) return PAL.warm1;
+  return PAL.warm2;
+}
+
+function updateHouses(dt) {
+  const now = G.elapsed;
+  let lit = 0;
+  for (const h of G.houses) {
+    const drag = G.drag;
+    const isDrag = drag && drag.house === h;
+
+    // 窗：弹簧跟随，松手回弹
+    if (!(isDrag && drag.kind === 'window')) {
+      h.winSpring.update(dt);
+      h.winOpen = clamp(h.winSpring.value, 0, 1.34);
+    }
+    const minOpen = (G.level.crack && h.index === G.houses.length - 1) ? 0.085 : 0;
+    const closedNow = h.winOpen < 0.16 + minOpen;
+    if (closedNow !== h.winClosed) {
+      h.winClosed = closedNow;
+      if (closedNow) sfx('click');
+    }
+
+    // 门
+    if (!(isDrag && drag.kind === 'door')) {
+      h.doorSpring.update(dt);
+      h.doorOpen = clamp(h.doorSpring.value, 0, 1.2);
+    }
+
+    // 灯绳单摆
+    h.swingVel += -15.5 * Math.sin(h.swing) * dt;
+    h.swingVel *= Math.pow(0.88, dt * 8);   // damping 0.88 / 125ms
+    h.swing += h.swingVel * dt;
+    if (Math.abs(h.swing) > 0.62) { h.swing = sign(h.swing) * 0.62; h.swingVel *= -0.3; }
+    h.curtainLift = expDamp(h.curtainLift, 0, 1.1, dt);
+
+    // 被子
+    if (!(isDrag && (drag.kind === 'blanket' || drag.kind === 'smooth'))) {
+      h.coverSpring.update(dt);
+      h.coverVis = clamp(h.coverSpring.value, 0, 1);
+    }
+    if (h.lampOn && h.coverVis > 0.55) {
+      h.coverVis = 0.55;
+      h.cover = 0.55;
+      h.coverSpring.value = 0.55;
+      h.coverSpring.target = 0.55;
+      if (now - h.lastHint > 4) { h.lastHint = now; toast('灯还亮着，他坐起来了。'); }
+    }
+    h.sitting = expDamp(h.sitting, (h.lampOn && h.coverVis > 0.35) ? 1 : 0, 0.16, dt);
+
+    // 褶皱回弹
+    if (h.reboundAt && now > h.reboundAt) {
+      h.reboundAt = 0;
+      for (const w of h.wrinkles) w.a = Math.min(1.15, w.a * 1.3);
+      h.wrinkle = sumWrinkle(h);
+      h.wrinkleDirty = true;
+    }
+
+    // 入睡判定（失眠户要抚平两遍）
+    if (h.coverVis > 0.87 && h.wrinkle < 0.3 && h.winClosed && !h.lampOn) {
+      h.passTimer += dt;
+      if (h.passTimer > 1.15 && !h.smoothDone) {
+        h.passTimer = 0;
+        if (h.resident === 'insomniac' && h.smoothPass < 2) {
+          h.smoothPass++;
+          if (h.smoothPass < 2) {
+            h.wrinkles.forEach(w => { w.a = 0.55; });
+            h.wrinkle = 0.55;
+            h.wrinkleDirty = true;
+            toast('他翻了个身，被子又皱了。再抚一遍。');
+          }
+        } else {
+          h.smoothDone = true;
+        }
+      }
+    } else {
+      h.passTimer = 0;
+    }
+
+    // 情绪弹簧
+    h.sleep.set(sleepTargetOf(h));
+    h.sleep.update(dt);
+    h.sleepVis = clamp(h.sleep.value, 0, 1);
+    h.wake = expDamp(h.wake, 0, 0.5, dt);
+
+    if (h.lampOn || (h.lamp2 && h.lamp2On)) lit++;
+
+    // 窗光三档，0.8s 插值
+    G.tmp.c.set(glowHexFor(h));
+    const lr = h.glow.r, lg = h.glow.g, lb = h.glow.b;
+    h.glow.lerp(G.tmp.c, 1 - Math.exp(-dt / 0.28));
+    if (Math.abs(h.glow.r - lr) + Math.abs(h.glow.g - lg) + Math.abs(h.glow.b - lb) > 0.004) {
+      G.glowBatch.set(h.glowKey, '#' + h.glow.getHexString());
+      G.tmp.c2.copy(h.glow).multiplyScalar(0.19);
+      G.glowBatch.set('wash' + h.index, '#' + G.tmp.c2.getHexString());
+    }
+
+    // 屋顶淡出
+    const rt = (G.focus === h) ? 0.02 : 1;
+    h.roofOp = expDamp(h.roofOp, rt, rt < 0.5 ? 0.105 : 0.088, dt);
+    if (h.roof) {
+      h.roof.material.opacity = h.roofOp;
+      h.roofOutline.material.opacity = h.roofOp;
+      h.roof.visible = h.roofOp > 0.014;
+      h.roofOutline.visible = h.roofOp > 0.014 && G.outlineOn;
+      h.roof.material.depthWrite = h.roofOp > 0.985;
+      h.roof.castShadow = h.roofOp > 0.72;
+    }
+
+    if (h.blanket && (Math.abs(h.coverVis - h.blanketShown) > 0.0015 || h.wrinkleDirty)) {
+      updateBlanket(h);
+      h.blanketShown = h.coverVis;
+      h.wrinkleDirty = false;
+    }
+  }
+  G.litCount = lit;
+
+  // 起风
+  const wind = G.level.wind;
+  if (wind > 0) {
+    if (!G.wind.on && now > G.level.windAt) {
+      G.wind.on = true;
+      G.wind.next = now + 4;
+      toast('起风了。走之前把门带上。');
+      sfx('wind');
+    }
+    if (G.wind.on && now > G.wind.next) {
+      G.wind.next = now + 15 + G.miscRng.next() * 9;
+      const cands = G.houses.filter(h => h.doorOpen > 0.24 && h.sleepVis > 0.55);
+      if (cands.length) {
+        const h = cands[Math.floor(G.miscRng.next() * cands.length)];
+        h.lampOn = true;
+        if (h.lamp2) h.lamp2On = true;
+        h.curtainLift = 1;
+        h.swingVel += 0.5;
+        toast('风把窗帘掀起来了，灯又亮了。');
+        sfx('wind');
+      }
+    }
+  }
+
+  // 天亮了没
+  if (G.state === 'play' && G.houses.length && G.houses.every(h => h.sleepVis > 0.985)) {
+    winNight();
+  }
+}
+
+function sumWrinkle(h) {
+  let s = 0;
+  for (const w of h.wrinkles) s += w.a;
+  return s / h.wrinkles.length;
+}
+
+// =====================================================================
+//  15. 拖拽交互
+// =====================================================================
+function beginDrag(a, x, y) {
+  const h = a.house;
+  let kind = a.kind;
+  if (kind === 'cat') { distractCat(); return; }
+  if (kind === 'blanket' && h.coverVis > 0.66) kind = 'smooth';
+  G.drag = {
+    kind, house: h, sx: x, sy: y, lastX: x, lastY: y, lastT: performance.now(),
+    moved: 0, maxPull: 0, flipped: false,
+    winStart: h ? h.winOpen : 0,
+    doorStart: h ? h.doorOpen : 0,
+    coverStart: h ? h.cover : 0,
+    coverVel: 0,
+    samples: []
+  };
+  if (kind === 'smooth') { h.reboundAt = 0; }
+  if (kind === 'window') { h.winSpring.s = 620; h.winSpring.d = 44; }
+  sfx('touch');
+}
+
+function moveDrag(x, y, dt) {
+  const d = G.drag;
+  if (!d || !d.house) return;
+  const h = d.house;
+  const dx = x - d.sx, dy = y - d.sy;
+  d.moved = Math.max(d.moved, Math.hypot(dx, dy));
+
+  if (window.__lamp) window.__lamp.lastMove = { kind: d.kind, dx: Math.round(dx), dy: Math.round(dy), t: h.winTarget };
+  if (d.kind === 'window') {
+    // 8° 死区
+    const dead = 22;
+    const free = Math.max(0, Math.abs(dx) - dead);
+    const t = clamp(d.winStart + sign(dx) * free * DRAG_PX_RAD, 0, 1.32);
+    h.winOpen = t;
+    h.winSpring.value = t;
+    h.winSpring.target = t;
+    h.winTarget = t;
+  } else if (d.kind === 'lamp' || d.kind === 'lamp2') {
+    d.maxPull = Math.max(d.maxPull, dy);
+    h.swingVel += (x - d.lastX) * 0.006;
+    h.pull = clamp(dy / 90, 0, 1);
+    if (dy > 6) h.swingVel += 0.03;
+  } else if (d.kind === 'blanket') {
+    const t = clamp(d.coverStart + (-dy) / 185, 0, 1);
+    d.coverVel = (t - h.cover) / Math.max(dt, 0.008);
+    h.cover = t;
+    h.coverVis = t;
+    h.coverSpring.value = t;
+    h.coverSpring.target = t;
+    // 掀翻：0.18s 内拖速 > 400px/s
+    const now = performance.now();
+    d.samples.push({ t: now, y });
+    while (d.samples.length && now - d.samples[0].t > 180) d.samples.shift();
+    if (d.samples.length > 1 && dy < -8) {
+      const sp = Math.abs(y - d.samples[0].y) / Math.max(0.12, (now - d.samples[0].t) / 1000);
+      if (sp > 400) flipBlanket(h, d);
+    }
+  } else if (d.kind === 'smooth') {
+    smoothAt(h, x, y);
+  } else if (d.kind === 'door') {
+    const t = clamp(d.doorStart - dx * 0.0075, 0, 1.15);
+    h.doorOpen = t;
+    h.doorSpring.value = t;
+    h.doorSpring.target = t;
+    h.doorTarget = t;
+  }
+  d.lastX = x; d.lastY = y;
+}
+
+function flipBlanket(h, d) {
+  if (d.flipped) return;
+  d.flipped = true;
+  h.cover = Math.max(0, h.cover - 0.45);
+  h.coverVis = h.cover;
+  h.coverSpring.value = h.cover;
+  h.coverSpring.target = h.cover;
+  h.coverSpring.vel = -1.9;
+  h.wrinkles.forEach(w => { w.a = Math.min(1.2, w.a * 1.5); });
+  h.wrinkle = sumWrinkle(h);
+  h.wrinkleDirty = true;
+  h.reboundAt = 0;
+  sfx('cloth');
+  toast('拉太急了，被子掀过头了。');
+}
+
+function smoothAt(h, x, y) {
+  const w = window.innerWidth, hh = window.innerHeight;
+  G.ndc.set((x / w) * 2 - 1, -(y / hh) * 2 + 1);
+  G.ray.setFromCamera(G.ndc, G.camera);
+  const top = new THREE.Vector3();
+  h.blanket.getWorldPosition(top);
+  const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -top.y);
+  const hit = new THREE.Vector3();
+  if (!G.ray.ray.intersectPlane(plane, hit)) return;
+  const local = h.blanket.worldToLocal(hit);
+  const pxToWorld = (G.camera.top - G.camera.bottom) / G.camera.zoom / hh;
+  const R = SMOOTH_R * pxToWorld;
+  let touched = false;
+  for (const g of h.wrinkles) {
+    const dx = local.x - g.x, dz = local.z - g.z;
+    if (dx * dx + dz * dz < R * R) { g.a *= 0.8; touched = true; }
+  }
+  if (touched) {
+    h.wrinkle = sumWrinkle(h);
+    h.wrinkleDirty = true;
+    if (Math.random() < 0.06) sfx('cloth');
+  }
+}
+
+function snuffLamp(h, which) {
+  if (which === 'lamp') {
+    if (G.catState.perched === h.index && !G.catState.free) {
+      toast('猫蹲在灯绳上，拉不动。先把它引开。');
+      h.swingVel += 0.8;
+      sfx('touch');
+      return;
+    }
+    if (Math.abs(h.swing) > 0.15) {
+      toast('灯绳还在晃，等它静下来。');
+      return;
+    }
+    h.lampOn = false;
+    sfx('ding');
+    toast('灯芯灭了。');
+  } else {
+    if (h.lampOn) {
+      h.wake = 1;
+      h.sleep.value = Math.min(h.sleep.value, 0.28);
+      h.lamp2On = true;
+      h.swingVel += 0.5;
+      toast('他醒了——要先熄大灯。');
+      sfx('exhale');
+      return;
+    }
+    h.lamp2On = false;
+    sfx('ding');
+    toast('小灯也灭了。');
+  }
+}
+
+function endDrag(cancel = false) {
+  const d = G.drag;
+  if (!d) return;
+  const h = d.house;
+  if (window.__lamp) window.__lamp.lastEnd = { kind: d.kind, cancel };
+  if (h) {
+    if (d.kind === 'window') {
+      const minOpen = (G.level.crack && h.index === G.houses.length - 1) ? 0.085 : 0;
+      if (cancel) {
+        h.winTarget = d.winStart;
+      } else {
+        h.winTarget = h.winOpen < 0.34 ? minOpen : 1.32;
+      }
+      h.winSpring.target = h.winTarget;
+      h.winSpring.s = 300;
+      h.winSpring.d = 26;
+      if (!cancel && h.winTarget < 0.1) { sfx('click'); }
+    } else if (d.kind === 'door') {
+      h.doorTarget = cancel ? d.doorStart : (h.doorOpen < 0.52 ? 0 : 1.15);
+      h.doorSpring.target = h.doorTarget;
+      h.doorForced = h.doorTarget === 0;
+      if (!cancel) sfx('click');
+    } else if (d.kind === 'blanket' || d.kind === 'smooth') {
+      if (d.kind === 'blanket' && !cancel) {
+        h.coverSpring.value = h.cover;
+        h.coverSpring.vel = clamp(d.coverVel * 0.5, -2.5, 2.5);
+        h.coverSpring.target = h.cover;
+        if (h.cover > 0.6) h.reboundAt = G.elapsed + 0.4;
+        sfx('cloth');
+      }
+      if (cancel && d.kind === 'smooth') h.reboundAt = G.elapsed + 0.4;
+    } else if (d.kind === 'lamp' || d.kind === 'lamp2') {
+      h.pull = 0;
+      if (!cancel && d.maxPull > 46) {
+        if (Math.abs(h.swing) < 0.15) snuffLamp(h, d.kind === 'lamp2' ? 'lamp2' : 'lamp');
+        else toast('灯绳还在晃。');
+      }
+    }
+  }
+  G.drag = null;
+}
+
+// =====================================================================
+//  16. 猫
+// =====================================================================
+function distractCat() {
+  const st = G.catState;
+  if (st.free) return;
+  st.free = true;
+  st.perched = -1;
+  toast('猫跳去井边了。今晚不会再来踩灯绳。');
+  sfx('meow');
+}
+
+function updateCat(dt) {
+  if (!G.cat) return;
+  const st = G.catState;
+  let tx, ty, tz;
+  if (st.perched >= 0 && !st.free) {
+    const h = G.houses[st.perched];
+    const v = anchorLocal(h, 'lamp').applyMatrix4(h.matrix);
+    tx = v.x; ty = v.y + 0.05; tz = v.z;
+  } else {
+    const home = catHome();
+    tx = home.x; ty = home.y; tz = home.z;
+  }
+  const k = 1 - Math.exp(-dt / 0.42);
+  G.cat.pos.x += (tx - G.cat.pos.x) * k;
+  G.cat.pos.y += (ty - G.cat.pos.y) * k;
+  G.cat.pos.z += (tz - G.cat.pos.z) * k;
+  const hop = Math.abs(Math.sin(G.elapsed * 3.1)) * 0.018;
+  G.cat.group.position.set(G.cat.pos.x, G.cat.pos.y + hop, G.cat.pos.z);
+  G.cat.group.rotation.y = Math.sin(G.elapsed * 0.7) * 0.3 + Math.PI * 0.75;
+
+  if (!st.free && st.perched >= 0) {
+    const h = G.houses[st.perched];
+    if (!h.lampOn) {
+      h.catTimer += dt;
+      if (h.catTimer > 3.2) {
+        h.catTimer = 0;
+        h.lampOn = true;
+        h.swingVel += 1.2;
+        toast('猫踩了灯绳，灯又亮了。');
+        sfx('ding');
+      }
+    } else h.catTimer = 0;
+  }
+
+  if (!st.free && G.elapsed > st.next && G.level.cat) {
+    st.next = G.elapsed + 16;
+    const cands = G.houses.filter(h => !h.lampOn && h.sleepVis > 0.2);
+    if (cands.length) {
+      const h = cands[Math.floor(G.miscRng.next() * cands.length)];
+      h.lampOn = true;
+      h.swingVel += 0.9;
+      toast('猫溜去别的窗台，把灯踩亮了。');
+      sfx('ding');
+    }
+  }
+}
+
+// =====================================================================
+//  17. 胜负
+// =====================================================================
+function winNight() {
+  if (G.state !== 'play') return;
+  G.state = 'win';
+  G.dawnT = 0;
+  G.bannerShown = false;
+  G.controls.autoRotate = false;
+  if (G.rotateOn) { G.rotateOn = false; dom.btnRotate.classList.remove('on'); }
+  sfx('chord');
+  const used = G.duration - G.timeLeft;
+  let sub = `用时 ${fmtTime(used)}`;
+  if (G.endless) {
+    const best = loadBest();
+    if (!best || used < best) { saveBest(used); sub += ' · 新纪录'; }
+    else sub += ` · 最快 ${fmtTime(best)}`;
+  } else if (G.levelIdx < LEVELS.length - 1) {
+    sub += ' · 下一户在等你';
+  }
+  G.winSub = sub;
+}
+
+function loseNight() {
+  if (G.state !== 'play') return;
+  G.state = 'lose';
+  G.loseT = 0;
+  G.bannerShown = false;
+  G.controls.autoRotate = false;
+  if (G.rotateOn) { G.rotateOn = false; dom.btnRotate.classList.remove('on'); }
+  sfx('exhale');
+}
+
+function loadBest() {
+  try {
+    const v = Number(localStorage.getItem('last-lamp:best'));
+    return Number.isFinite(v) && v > 0 ? v : 0;
+  } catch (e) { return 0; }
+}
+function saveBest(v) {
+  try { localStorage.setItem('last-lamp:best', String(Math.round(v))); } catch (e) { /* ignore */ }
+}
+
+// =====================================================================
+//  18. 音频（WebAudio 合成，零外部请求）
+// =====================================================================
+function initAudio() {
+  if (G.audio) return;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return;
+  try {
+    const ctx = new AC();
+    const master = ctx.createGain();
+    master.gain.value = 0.7;
+    master.connect(ctx.destination);
+
+    const buf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < data.length; i++) {
+      const w = Math.random() * 2 - 1;
+      last = (last + 0.02 * w) / 1.02;
+      data[i] = last * 3.2;
+    }
+
+    // 呼吸（第二表达层）
+    const src = ctx.createBufferSource();
+    src.buffer = buf; src.loop = true;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass'; bp.frequency.value = 360; bp.Q.value = 0.55;
+    const swell = ctx.createGain(); swell.gain.value = 0.5;
+    const mix = ctx.createGain(); mix.gain.value = 0;
+    src.connect(bp); bp.connect(swell); swell.connect(mix); mix.connect(master);
+    const lfo = ctx.createOscillator();
+    lfo.type = 'sine'; lfo.frequency.value = 0.26;
+    const lfoGain = ctx.createGain(); lfoGain.gain.value = 0.5;
+    lfo.connect(lfoGain); lfoGain.connect(swell.gain);
+    src.start(); lfo.start();
+
+    // 风
+    const wsrc = ctx.createBufferSource();
+    wsrc.buffer = buf; wsrc.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 440;
+    const wg = ctx.createGain(); wg.gain.value = 0;
+    wsrc.connect(lp); lp.connect(wg); wg.connect(master); wsrc.start();
+
+    G.audio = { ctx, master, buf, mix, lfo, wind: wg };
+  } catch (e) {
+    G.audio = null;
+  }
+}
+
+function sfx(name) {
+  if (!G.soundOn || !G.audio) return;
+  const { ctx, master, buf } = G.audio;
+  if (ctx.state === 'suspended') { ctx.resume(); }
+  const t = ctx.currentTime;
+  const out = ctx.createGain();
+  out.connect(master);
+
+  const noiseBurst = (dur, type, freq, gain, q) => {
+    const s = ctx.createBufferSource();
+    s.buffer = buf;
+    s.loop = true;
+    const f = ctx.createBiquadFilter();
+    f.type = type; f.frequency.value = freq; f.Q.value = q || 1;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(gain, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(out);
+    s.start(t); s.stop(t + dur + 0.05);
+  };
+  const tone = (freq, dur, gain, type = 'sine', delay = 0) => {
+    const o = ctx.createOscillator();
+    o.type = type; o.frequency.value = freq;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t + delay);
+    g.gain.exponentialRampToValueAtTime(gain, t + delay + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + delay + dur);
+    o.connect(g); g.connect(out);
+    o.start(t + delay); o.stop(t + delay + dur + 0.05);
+  };
+
+  switch (name) {
+    case 'touch': noiseBurst(0.05, 'bandpass', 2100, 0.05, 2); break;
+    case 'click': noiseBurst(0.07, 'bandpass', 1500, 0.16, 1.6); tone(420, 0.07, 0.05, 'triangle'); break;
+    case 'ding':
+      tone(880, 0.7, 0.075); tone(1320, 0.55, 0.04); noiseBurst(0.5, 'highpass', 3000, 0.02, 0.7);
+      break;
+    case 'cloth': noiseBurst(0.26, 'lowpass', 900, 0.13, 0.8); break;
+    case 'step': noiseBurst(0.045, 'bandpass', 420 + Math.random() * 120, 0.045, 1.4); break;
+    case 'exhale': {
+      const s = ctx.createBufferSource(); s.buffer = buf; s.loop = true;
+      const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(700, t);
+      f.frequency.exponentialRampToValueAtTime(240, t + 0.8); f.Q.value = 0.7;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.11, t + 0.1);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.85);
+      s.connect(f); f.connect(g); g.connect(out);
+      s.start(t); s.stop(t + 1);
+      break;
+    }
+    case 'chord':
+      [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone(f, 2.2 - i * 0.15, 0.055, 'sine', i * 0.045));
+      break;
+    case 'wind': noiseBurst(1.5, 'lowpass', 620, 0.09, 0.5); break;
+    case 'meow': {
+      const o = ctx.createOscillator(); o.type = 'triangle';
+      o.frequency.setValueAtTime(520, t);
+      o.frequency.linearRampToValueAtTime(860, t + 0.13);
+      o.frequency.linearRampToValueAtTime(540, t + 0.4);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.09, t + 0.06);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.44);
+      const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1400;
+      o.connect(f); f.connect(g); g.connect(out);
+      o.start(t); o.stop(t + 0.5);
+      break;
+    }
+  }
+  setTimeout(() => { try { out.disconnect(); } catch (e) { /* ignore */ } }, 3000);
+}
+
+function updateAudio(dt) {
+  if (!G.audio) return;
+  const A = G.audio;
+  const now = A.ctx.currentTime;
+  let bestD = 999, bh = null;
+  for (const h of G.houses) {
+    const d = Math.hypot(h.x - G.player.pos.x, h.z - G.player.pos.z);
+    if (d < bestD) { bestD = d; bh = h; }
+  }
+  const period = bh ? lerp(3.2, 5.5, bh.sleepVis) : 5.5;
+  A.lfo.frequency.setTargetAtTime(1 / period, now, 0.25);
+  const asleep = G.houses.filter(h => h.sleepVis > 0.5).length;
+  const near = clamp(1 - bestD / 8.5, 0, 1);
+  const vol = G.soundOn ? (asleep > 0 ? 0.055 * near * clamp(asleep / 3, 0.25, 1) : 0.012 * near) : 0;
+  A.mix.gain.setTargetAtTime(vol, now, 0.3);
+  const all = G.houses.length && G.houses.every(h => h.sleepVis > 0.9);
+  const windVol = G.state === 'win' ? 0.055 : all ? 0.05 : (G.wind.on ? 0.03 : 0.009);
+  A.wind.gain.setTargetAtTime(G.soundOn ? windVol : 0, now, 0.6);
+  A.master.gain.setTargetAtTime(G.soundOn ? 0.7 : 0, now, 0.08);
+}
+
+// =====================================================================
+//  19. UI
+// =====================================================================
+function cacheDom() {
+  const ids = ['clock', 'litNum', 'litTot', 'timeLeft', 'lvlName', 'levelSel', 'toast', 'hot', 'hotLabel',
+    'banner', 'bannerText', 'bannerSub', 'btnNext', 'btnAgain', 'btnRestart', 'btnOutline', 'btnSound',
+    'btnRotate', 'btnHelp', 'help', 'helpBack', 'helpClose', 'fade', 'dawn', 'vig', 'ctrl', 'collapse',
+    'chipWin', 'chipLamp', 'chipBed', 'doorChip', 'fail', 'bar'];
+  for (const id of ids) dom[id] = $(id);
+}
+
+let toastTimer = 0;
+function toast(msg, ms = 2800) {
+  if (!dom.toast) return;
+  dom.toast.textContent = msg;
+  dom.toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => dom.toast.classList.remove('show'), ms);
+}
+
+function chip(el, ready, done) {
+  if (!el) return;
+  el.classList.toggle('ready', !!ready);
+  el.classList.toggle('done', !!done);
+  const tick = el.querySelector('.tick');
+  if (tick) tick.textContent = done ? '✓' : (ready ? '·' : '');
+}
+
+function updateChips() {
+  const f = G.focus;
+  const near = !!f;
+  chip(dom.chipWin, near && !f.winClosed, near && f.winClosed);
+  const lampsOff = near && !f.lampOn && !(f.lamp2 && f.lamp2On);
+  chip(dom.chipLamp, near && !lampsOff, lampsOff && f.lampOn === false);
+  const slept = near && f.sleepVis > 0.98;
+  chip(dom.chipBed, near && !slept, slept);
+  if (dom.doorChip) {
+    const show = near && f.doorOpen > 0.12;
+    dom.doorChip.style.display = show ? 'flex' : 'none';
+    chip(dom.doorChip, show, false);
+  }
+}
+
+function updateHot() {
+  if (!dom.hot) return;
+  let a = G.hover;
+  if (!a && G.focus) a = suggestedAnchor();
+  if (!a || !a.vis) {
+    dom.hot.classList.remove('show');
+    return;
+  }
+  dom.hot.classList.add('show');
+  dom.hot.style.transform = `translate(${a.sx}px, ${a.sy}px)`;
+  dom.hotLabel.textContent = a.label;
+  dom.hot.style.borderColor = a.kind === 'cat' ? 'rgba(160,186,226,.9)' : 'rgba(242,180,92,.9)';
+}
+
+function suggestedAnchor() {
+  const f = G.focus;
+  if (!f) return null;
+  const find = k => G.anchors.find(a => a.kind === k);
+  if (!f.winClosed) return find('window');
+  if (f.lampOn) return find('lamp');
+  if (f.lamp2 && f.lamp2On) return find('lamp2');
+  return find('blanket');
+}
+
+function updateHUD(force) {
+  if (!dom.clock) return;
+  dom.clock.textContent = G.state === 'win' ? '夜 05:20' : clockText(clamp(G.elapsed / Math.max(1, G.duration), 0, 1));
+  dom.litNum.textContent = G.litCount || 0;
+  dom.litTot.textContent = G.houses.length;
+  dom.timeLeft.textContent = fmtTime(G.timeLeft);
+  dom.timeLeft.classList.toggle('warn', G.timeLeft < 60);
+  dom.lvlName.textContent = G.level.name;
+  updateChips();
+}
+
+function buildLevelList() {
+  dom.levelSel.innerHTML = '';
+  LEVELS.forEach((l, i) => {
+    const o = document.createElement('option');
+    o.value = String(i);
+    o.textContent = `第 ${i + 1} 夜 · ${l.name}`;
+    dom.levelSel.appendChild(o);
+  });
+  const o = document.createElement('option');
+  o.value = 'endless';
+  o.textContent = '无尽夜 · 随机镇子';
+  dom.levelSel.appendChild(o);
+}
+
+function showBanner(kind) {
+  G.bannerShown = true;
+  dom.banner.classList.add('show');
+  if (kind === 'win') {
+    dom.bannerText.textContent = '全城都睡了。天亮了。';
+    dom.bannerSub.textContent = G.winSub || '';
+    dom.btnNext.style.display = '';
+    dom.btnNext.textContent = G.endless ? '再换一夜' : (G.levelIdx < LEVELS.length - 1 ? '下一夜' : '无尽夜');
+    dom.btnAgain.textContent = '再来一次';
+  } else {
+    dom.bannerText.textContent = '你也睡着了。灯还亮着。';
+    const left = G.houses.filter(h => h.sleepVis < 0.98).length;
+    dom.bannerSub.textContent = left ? `还差 ${left} 户。` : '差一点点。';
+    dom.btnNext.style.display = 'none';
+    dom.btnAgain.textContent = '再试一次';
+  }
+}
+
+function hideBanner() {
+  dom.banner.classList.remove('show');
+  G.bannerShown = false;
+}
+
+function applyOutlineVisibility() {
+  if (!G.world) return;
+  G.world.traverse(o => { if (o.userData.isOutline) o.visible = G.outlineOn; });
+  if (G.bodyOutline) G.bodyOutline.visible = G.outlineOn;
+  if (G.propOutline) G.propOutline.visible = G.outlineOn;
+  for (const h of G.houses) if (h.roofOutline) h.roofOutline.visible = G.outlineOn && h.roofOp > 0.014;
+}
+
+// =====================================================================
+//  20. 光 · 天色
+// =====================================================================
+const MOON_C = new THREE.Color(PAL.moon);
+const WARM_C = new THREE.Color('#F6C98B');
+const NIGHT_BG = new THREE.Color(PAL.bg);
+const DAWN_BG = new THREE.Color(PAL.bgDawn);
+
+function updateLights(dt) {
+  const n = G.houses.length || 1;
+  let avg = 0;
+  for (const h of G.houses) avg += h.sleepVis;
+  avg /= n;
+  const d = G.dawn;
+
+  G.sun.position.set(lerp(7.5, 11, avg), lerp(16, 9.5, avg), lerp(15, 17, avg));
+  G.sun.intensity = lerp(1.85, 1.3, avg) * lerp(1, 1.2, d);
+  G.sun.color.copy(MOON_C).lerp(WARM_C, d * 0.92);
+  G.hemi.intensity = lerp(1.15, 0.8, avg) + d * 0.5;
+  G.amb.intensity = lerp(0.56, 0.4, avg) + d * 0.35;
+  G.amb.color.copy(MOON_C).lerp(WARM_C, d * 0.5);
+
+  // 跟随玩家的唯一暖光
+  const p = G.player.pos;
+  G.playerLight.position.set(p.x, p.y + 1.15, p.z);
+  let near = 0;
+  if (G.focus) {
+    const w = anchorLocal(G.focus, 'window').applyMatrix4(G.focus.matrix);
+    const dist = Math.hypot(w.x - p.x, w.z - p.z);
+    near = clamp(1 - dist / 4.6, 0, 1);
+    G.playerLight.position.set(
+      lerp(p.x, w.x, 0.6), lerp(p.y + 1.1, w.y + 0.2, 0.75), lerp(p.z, w.z, 0.6)
+    );
+  }
+  G.playerLight.intensity = (0.4 + near * 5.2) * (1 - d * 0.55);
+
+  if (G.stars) G.stars.material.opacity = 0.5 * (1 - d);
+  G.scene.fog.density = lerp(0.0065, 0.0034, d);
+}
+
+function updateDawn() {
+  const d = G.dawn;
+  G.tmp.c.copy(NIGHT_BG).lerp(DAWN_BG, d * 0.78);
+  G.scene.background.copy(G.tmp.c);
+  G.scene.fog.color.copy(G.tmp.c);
+  dom.dawn.style.opacity = (d * 0.92).toFixed(3);
+  G.sunDisc.visible = d > 0.002;
+  G.sunDisc.position.y = lerp(-9.5, 5.4, d);
+  G.sunDisc.material.color.setRGB(lerp(0.96, 1.0, d), lerp(0.78, 0.86, d), lerp(0.5, 0.62, d));
+  G.ridge.material.color.setRGB(
+    lerp(0.094, 0.47, d), lerp(0.13, 0.35, d), lerp(0.2, 0.33, d)
+  );
+  G.controls.target.y = 1.0 + d * 0.75;
+}
+
+function updateVignette() {
+  let v = 0.16 + G.fatigue * 0.34;
+  if (G.state === 'lose') v += clamp(G.loseT / 2.4, 0, 1) * 0.26;
+  if (Math.abs(v - G.vignette) > 0.008) {
+    G.vignette = v;
+    if (dom.vig) dom.vig.style.setProperty('--vig', v.toFixed(3));
+  }
+}
+
+// =====================================================================
+//  21. 关卡
+// =====================================================================
+function startNight(level) {
+  G.level = level;
+  G.duration = level.time;
+  G.timeLeft = level.time;
+  G.elapsed = 0;
+  G.fatigue = 0;
+  G.state = 'play';
+  G.dawn = 0;
+  G.dawnT = 0;
+  G.loseT = 0;
+  G.bannerShown = false;
+  G.litCount = level.houses.length;
+  G.drag = null;
+  G.focus = null;
+  G.hover = null;
+  G.vignette = 0.16;
+  G.miscRng = new PRNG((G.seed * 31 + G.levelIdx * 17 + (G.endless ? 997 : 3)) >>> 0);
+  G.wind = { on: false, next: 0 };
+  G.catState = { free: false, next: 14, perched: -1, freeUntil: 0 };
+  G.enterT = 0;
+  G.enterSpring = new Spring(0.92, 130, 15);
+  G.enterSpring.set(1);
+  G.hudT = 0;
+
+  if (G.scene) {
+    G.scene.background.set(PAL.bg);
+    G.scene.fog.color.set(PAL.bg);
+    G.scene.fog.density = 0.0065;
+    G.controls.target.set(0, 1.0, 0);
+    G.controls.autoRotate = G.rotateOn;
+  }
+  if (dom.fade) dom.fade.style.opacity = '0';
+  if (dom.dawn) dom.dawn.style.opacity = '0';
+  if (dom.vig) dom.vig.style.setProperty('--vig', '0.16');
+  hideBanner();
+
+  buildTown();
+  frameTown();
+
+  if (G.level.cat) {
+    const idx = G.houses.findIndex(h => h.tier === 1);
+    G.catState.perched = idx >= 0 ? idx : 0;
+    G.catState.next = 16;
+  }
+  if (dom.levelSel) dom.levelSel.value = G.endless ? 'endless' : String(G.levelIdx);
+  updateHUD(true);
+  toast(G.level.hint || '把每一户都哄睡，天才会亮。', 3400);
+}
+
+function loadLevel(idx) {
+  G.endless = false;
+  G.levelIdx = clamp(idx, 0, LEVELS.length - 1);
+  startNight(LEVELS[G.levelIdx]);
+}
+
+function startEndless() {
+  G.endless = true;
+  G.nightKey = (G.nightKey || 0) + 1;
+  const rng = new PRNG(((G.seed * 9301 + G.nightKey * 7919) ^ 0x5bf03635) >>> 0);
+  const slots = [0, 1, 2, 3, 4, 5, 6];
+  for (let i = slots.length - 1; i > 0; i--) {
+    const j = Math.floor(rng.next() * (i + 1));
+    const t = slots[i]; slots[i] = slots[j]; slots[j] = t;
+  }
+  const n = 3 + Math.floor(rng.next() * 5);
+  const picked = slots.slice(0, n).sort((a, b) => a - b);
+  const pool = ['plain', 'plain', 'insomniac', 'child'];
+  const houses = picked.map((s, i) => ({
+    ...SLOT[s],
+    tier: rng.next() < 0.22 ? 2 : 1,
+    resident: i === 0 ? 'plain' : pool[Math.floor(rng.next() * pool.length)]
+  }));
+  G.levelIdx = 0;
+  startNight({
+    id: 'endless', name: '无尽夜', time: n * 60,
+    wind: rng.next() < 0.5 ? 1 : 0, windAt: 45,
+    cat: rng.next() < 0.35, crack: false,
+    hint: `随机的一夜：${n} 户。把每扇窗都哄睡。`,
+    houses
+  });
+}
+
+function nextNight() {
+  if (G.endless) { startEndless(); return; }
+  if (G.levelIdx < LEVELS.length - 1) loadLevel(G.levelIdx + 1);
+  else { G.endless = true; startEndless(); }
+}
+
+function restartNight() {
+  if (G.endless) { startEndless(); return; }
+  const keep = G.seed;
+  startNight(LEVELS[G.levelIdx]);
+  G.seed = keep;
+}
+
+function reseed() {
+  G.seed = Math.floor(Math.random() * 90000) + 1000;
+  if (G.endless) startEndless();
+  else startNight(LEVELS[G.levelIdx]);
+  toast(`换了一个镇子 · 种子 ${G.seed}`);
+}
+
+// =====================================================================
+//  22. 指针 · 键盘
+// =====================================================================
+function pointerPos(e) {
+  return { x: e.clientX, y: e.clientY };
+}
+
+function pickHouseAt(x, y) {
+  let best = null, bd = 64;
+  for (const h of G.houses) {
+    const st = standSpot(h);
+    const v = st.clone().project(G.camera);
+    const sx = (v.x * 0.5 + 0.5) * window.innerWidth;
+    const sy = (-v.y * 0.5 + 0.5) * window.innerHeight;
+    const d = Math.hypot(sx - x, sy - y);
+    if (d < bd) { bd = d; best = h; }
+  }
+  return best;
+}
+
+function groundPoint(x, y) {
+  G.ndc.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1);
+  G.ray.setFromCamera(G.ndc, G.camera);
+  const hits = G.ray.intersectObject(G.terrain, false);
+  if (!hits.length) return null;
+  const p = hits[0].point;
+  const along = clamp((p.x - SC.x) * SD.x + (p.z - SC.z) * SD.z, -11.2, 11.2);
+  const lat = clamp((p.x - SC.x) * SN.x + (p.z - SC.z) * SN.z, -1.65, 3.9);
+  return { x: SC.x + SD.x * along + SN.x * lat, z: SC.z + SD.z * along + SN.z * lat };
+}
+
+function onDown(e) {
+  if (G.state !== 'play') return;
+  if (!G.started) { G.started = true; initAudio(); }
+  if (G.audio && G.audio.ctx.state === 'suspended') G.audio.ctx.resume();
+  const { x, y } = pointerPos(e);
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  G.pointer.down = true;
+  G.pointer.sx = x; G.pointer.sy = y;
+  G.pointer.moved = 0;
+
+  refreshAnchors();
+  const a = pickAnchor(x, y, e.pointerType === 'touch' ? 52 : 38);
+  try { G.renderer.domElement.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+
+  if (window.__lamp) window.__lamp.lastPick = a ? { k: a.kind, h: a.house && a.house.index, sx: Math.round(a.sx), sy: Math.round(a.sy) } : null;
+  if (a) {
+    beginDrag(a, x, y);
+    G.hover = a;
+    clearTimeout(G.pressTimer);
+    G.pressTimer = setTimeout(() => {
+      if (G.drag && G.drag.moved < 9) {
+        endDrag(true);
+        toast('已取消这次拖拽。');
+      }
+    }, 760);
+    return;
+  }
+  const hp = pickHouseAt(x, y);
+  if (hp) { playerGo(pathToHouse(hp)); return; }
+  const gp = groundPoint(x, y);
+  if (gp) playerGo([{ x: gp.x, y: G.heightAt(gp.x, gp.z), z: gp.z }]);
+}
+
+function onMove(e) {
+  const { x, y } = pointerPos(e);
+  G.pointer.x = x; G.pointer.y = y;
+  if (G.drag) {
+    const dt = clamp((performance.now() - G.drag.lastT) / 1000, 0.006, 0.05);
+    moveDrag(x, y, dt);
+    G.drag.lastT = performance.now();
+    if (G.drag.moved > 9) clearTimeout(G.pressTimer);
+    return;
+  }
+  if (G.state !== 'play') return;
+  const a = pickAnchor(x, y, e.pointerType === 'touch' ? 56 : 40);
+  G.hover = a;
+}
+
+function onUp(e) {
+  G.pointer.down = false;
+  clearTimeout(G.pressTimer);
+  if (G.drag) endDrag(false);
+}
+
+function onKey(e) {
+  if (!G.started) { G.started = true; initAudio(); }
+  if (e.code === 'Space') {
+    e.preventDefault();
+    restartNight();
+  } else if (e.key === 'r' || e.key === 'R') {
+    reseed();
+  } else if (e.key === 'm' || e.key === 'M') {
+    toggleSound();
+  } else if (e.key === 'o' || e.key === 'O') {
+    toggleOutline();
+  } else if (e.key === 'Escape') {
+    if (dom.help.classList.contains('show')) closeHelp();
+    else if (G.drag) { endDrag(true); toast('已取消这次拖拽。'); }
+  }
+}
+
+function toggleSound() {
+  G.soundOn = !G.soundOn;
+  dom.btnSound.classList.toggle('on', G.soundOn);
+  if (G.audio) G.audio.master.gain.setTargetAtTime(G.soundOn ? 0.7 : 0, G.audio.ctx.currentTime, 0.06);
+  toast(G.soundOn ? '声音回来了。' : '安静了。');
+}
+
+function toggleOutline() {
+  G.outlineOn = !G.outlineOn;
+  dom.btnOutline.classList.toggle('on', G.outlineOn);
+  applyOutlineVisibility();
+  toast(G.outlineOn ? '描边开着。' : '描边关掉了。');
+}
+
+function openHelp() {
+  dom.help.classList.add('show');
+  dom.helpBack.classList.add('show');
+}
+function closeHelp() {
+  dom.help.classList.remove('show');
+  dom.helpBack.classList.remove('show');
+}
+
+function bindEvents() {
+  const c = G.renderer.domElement;
+  c.addEventListener('pointerdown', onDown);
+  c.addEventListener('pointermove', onMove);
+  c.addEventListener('pointerup', onUp);
+  c.addEventListener('pointercancel', onUp);
+  c.addEventListener('pointerleave', () => { G.hover = null; });
+  window.addEventListener('keydown', onKey);
+  window.addEventListener('pointerdown', () => {
+    if (!G.started) { G.started = true; initAudio(); }
+  });
+  window.addEventListener('blur', () => { if (G.drag) endDrag(true); });
+  document.addEventListener('visibilitychange', () => { G.last = performance.now(); });
+
+  dom.btnRestart.addEventListener('click', () => restartNight());
+  dom.btnAgain.addEventListener('click', () => restartNight());
+  dom.btnNext.addEventListener('click', () => nextNight());
+  dom.btnOutline.addEventListener('click', toggleOutline);
+  dom.btnSound.addEventListener('click', toggleSound);
+  dom.btnRotate.addEventListener('click', () => {
+    G.rotateOn = !G.rotateOn;
+    G.controls.autoRotate = G.rotateOn;
+    dom.btnRotate.classList.toggle('on', G.rotateOn);
+  });
+  dom.btnHelp.addEventListener('click', openHelp);
+  dom.helpClose.addEventListener('click', closeHelp);
+  dom.helpBack.addEventListener('click', closeHelp);
+  dom.collapse.addEventListener('click', () => dom.ctrl.classList.toggle('collapsed'));
+  dom.levelSel.addEventListener('change', () => {
+    if (dom.levelSel.value === 'endless') startEndless();
+    else loadLevel(Number(dom.levelSel.value));
+  });
+  dom.levelSel.addEventListener('pointerdown', e => e.stopPropagation());
+
+  // 工具栏：给出提示并脉冲对应目标
+  const pulse = kind => {
+    if (!G.focus) { toast('先走到一户人家旁边。'); return; }
+    const a = G.anchors.find(x => x.kind === kind) || suggestedAnchor();
+    G.hover = a || null;
+    const tips = {
+      win: '按住窗帘，往左下拖到底。',
+      lamp: '等灯绳不晃，按住绳球往下拽。',
+      bed: G.focus.coverVis > 0.66 ? '手掌贴在黑被面上，来回抚平褶皱。' : '按住被角，往上拖过肩膀。',
+      door: '按住门，往右推到底。'
+    };
+    toast(tips[kind] || '按住目标拖动。');
+  };
+  dom.chipWin.addEventListener('click', () => pulse('window'));
+  dom.chipLamp.addEventListener('click', () => pulse(G.focus && G.focus.lampOn ? 'lamp' : 'lamp2'));
+  dom.chipBed.addEventListener('click', () => pulse('blanket'));
+  dom.doorChip.addEventListener('click', () => pulse('door'));
+}
+
+// =====================================================================
+//  23. 主循环
+// =====================================================================
+function loop(now) {
+  requestAnimationFrame(loop);
+  const dtRaw = (now - G.last) / 1000;
+  G.last = now;
+  const dt = clamp(dtRaw || 0.016, 0.001, 0.05);
+  const t0 = performance.now();
+
+  // 入场：沙盘 0.92 → 1.0，一次轻落 + 回弹
+  if (G.enterT < 1.2 && G.world) {
+    G.enterT += dt;
+    G.enterSpring.update(dt);
+    const v = clamp(G.enterSpring.value, 0.9, 1.03);
+    G.world.scale.setScalar(v);
+    G.world.position.y = -0.32 * clamp((1 - v) * 9, 0, 1);
+    if (G.enterT > 1.0) {
+      G.world.scale.setScalar(1);
+      G.world.position.y = 0;
+      G.enterT = 2;
+    }
+  }
+
+  if (G.state === 'play') {
+    G.elapsed += dt;
+    G.timeLeft = Math.max(0, G.duration - G.elapsed);
+    G.fatigue = clamp(G.elapsed / Math.max(1, G.duration), 0, 1);
+    if (G.timeLeft <= 0) loseNight();
+  } else if (G.state === 'win') {
+    G.dawnT = Math.min(1, G.dawnT + dt / 3.5);
+    G.dawn = easeOutCubic(G.dawnT);
+    updateDawn();
+    if (G.dawnT >= 1 && !G.bannerShown) showBanner('win');
+  } else if (G.state === 'lose') {
+    G.loseT += dt;
+    if (G.loseT > 1.0) dom.fade.style.opacity = String(clamp((G.loseT - 1.0) / 1.4, 0, 1) * 0.85);
+    if (G.loseT > 2.4 && !G.bannerShown) showBanner('lose');
+  }
+
+  if (G.state === 'play' || G.state === 'win') {
+    updatePlayer(dt);
+    updateHouses(dt);
+    updateCat(dt);
+    updateInstanced();
+    refreshAnchors();
+    updateHot();
+  }
+  updateLights(dt);
+  updateVignette();
+
+  // 移动端跟随角色
+  if (G.mobile && G.controls) {
+    G.controls.target.x = expDamp(G.controls.target.x, clamp(G.player.pos.x, -5.5, 5.5), 0.55, dt);
+    G.controls.target.z = expDamp(G.controls.target.z, clamp(G.player.pos.z, -5.5, 5.5), 0.55, dt);
+  }
+
+  G.hudT = (G.hudT || 0) + dt;
+  if (G.hudT > 0.1) { G.hudT = 0; updateHUD(); }
+  updateAudio(dt);
+  G.controls.update();
+  G.renderer.render(G.scene, G.camera);
+
+  G.calls = G.renderer.info.render.calls;
+  const ms = performance.now() - t0;
+  G.frameMs = G.frameMs ? G.frameMs * 0.92 + ms * 0.08 : ms;
+  if (G.debug) {
+    G.fps = G.fps ? G.fps * 0.9 + (1 / dt) * 0.1 : 1 / dt;
+    G.dbg.textContent = `${Math.round(G.fps)} fps · ${G.calls} calls · ${G.frameMs.toFixed(2)} ms`;
+  }
+}
+
+// =====================================================================
+//  24. 启动
+// =====================================================================
+function boot() {
+  cacheDom();
+  if (!initThree()) return;
+  resize();
+  buildLevelList();
+  bindEvents();
+  G.seed = 4308;
+  G.last = performance.now();
+  startNight(LEVELS[0]);
+
+  if (location.search.includes('debug')) {
+    G.debug = true;
+    const d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:10px;bottom:78px;z-index:60;background:#0A0E18;color:#9FE0C0;font:11px/1.4 ui-monospace,monospace;padding:4px 7px;border-radius:5px;opacity:.8';
+    document.body.appendChild(d);
+    G.dbg = d;
+    window.__lamp = {
+      G, startNight, loadLevel, LEVELS, playerGo, pathToHouse, standSpot,
+      anchorLocal, beginDrag, moveDrag, endDrag, updateHUD
+    };
+  }
+  requestAnimationFrame(loop);
+  setTimeout(() => { if (G.state === 'play') toast('点地面走路。走到窗边，把这座镇子哄睡。', 3600); }, 2400);
+}
+
+boot();
+
+</script>
+</body>
+</html>
