@@ -270,11 +270,11 @@ import {
 const PAL = {
   bg:        '#101728',
   bgDawn:    '#F2C089',
-  grass:     '#4A5D79',
-  soil:      '#3A4A64',
-  rim:       '#2E3E59',
-  rock:      '#212B40',
-  street:    '#27334A',
+  grass:     '#4B6082',
+  soil:      '#41536F',
+  rim:       '#41567A',
+  rock:      '#313F5D',
+  street:    '#2F3C54',
   roofA:     '#41526F',
   roofB:     '#4C5F82',
   wall:      '#57647D',
@@ -296,7 +296,7 @@ const PAL = {
   leaf:      '#2C4749',
   leafDark:  '#243C40',
   trunk:     '#4A3B44',
-  stone:     '#4A566D',
+  stone:     '#525F79',
   metal:     '#3C4457'
 };
 
@@ -409,6 +409,7 @@ const G = {
   outlineOn: true, soundOn: true, rotateOn: false, started: false,
   audio: null, showFail: false, debug: false,
   calls: 0, frameMs: 0, fps: 0, best: 0,
+  frameCx: 0, frameCz: 0, followMax: 5.5,
   ray: null, ndc: new THREE.Vector2(),
   tmp: { v1: new THREE.Vector3(), v2: new THREE.Vector3(), v3: new THREE.Vector3(),
          q: new THREE.Quaternion(), m: new THREE.Matrix4(), m2: new THREE.Matrix4(),
@@ -616,6 +617,7 @@ function initThree() {
 
   const aspect = window.innerWidth / window.innerHeight;
   const size = viewSizeFor(aspect);
+  G.viewSize = size;
   G.camera = new THREE.OrthographicCamera(-size * aspect / 2, size * aspect / 2, size / 2, -size / 2, 0.5, 300);
   placeCamera();
 
@@ -647,9 +649,9 @@ function initThree() {
   G.sun.target.position.set(0, 0, 0);
   G.scene.add(G.sun, G.sun.target);
 
-  G.hemi = new THREE.HemisphereLight(0x5C7196, 0x1A2334, 1.15);
+  G.hemi = new THREE.HemisphereLight(0x667CA2, 0x223049, 1.26);
   G.scene.add(G.hemi);
-  G.amb = new THREE.AmbientLight(0x4E6189, 0.56);
+  G.amb = new THREE.AmbientLight(0x53688F, 0.68);
   G.scene.add(G.amb);
 
   G.playerLight = new THREE.PointLight(PAL.warm1, 0, 5.2, 2);
@@ -681,17 +683,20 @@ function placeCamera() {
 
 function resize() {
   const w = window.innerWidth, h = window.innerHeight;
-  applyFrustum();
   G.renderer.setSize(w, h);
   G.mobile = w / h < 1.12;
-  if (G.controls) G.controls.minZoom = G.mobile ? 0.5 : 0.72;
+  if (G.controls) {
+    G.controls.minZoom = G.mobile ? 0.5 : 0.72;
+    // 视口一变，整座镇子的取景就得按新宽高比重算
+    if (G.houses.length) fitCameraToTown(false);
+    else applyFrustum();
+  }
 }
 
 function applyFrustum() {
   const w = window.innerWidth, h = window.innerHeight;
-  const aspect = w / h;
-  let size = G.viewSize || 15.4;
-  if (aspect < 1) size = Math.max(size, Math.min(8.4 / aspect, 27));
+  const aspect = w / Math.max(1, h);
+  const size = G.viewSize || 15.4;
   G.camera.left = -size * aspect / 2;
   G.camera.right = size * aspect / 2;
   G.camera.top = size / 2;
@@ -699,48 +704,72 @@ function applyFrustum() {
   G.camera.updateProjectionMatrix();
 }
 
-function frameTown() {
-  if (!G.houses.length) return;
-  const us = G.houses.map(h => projectStreet(h.x, h.z));
-  const pts = G.houses.map(h => standSpot(h));
-  for (const h of G.houses) pts.push(new THREE.Vector3(h.x, (h.tier === 2 ? 4.6 : 3.4), h.z));
-  const sA = streetPoint(Math.min(...us) - 3.6, 0.8);
-  const sB = streetPoint(Math.max(...us) + 3.6, 0.8);
-  pts.push(new THREE.Vector3(sA.x, 0.05, sA.z));
-  pts.push(new THREE.Vector3(sB.x, 0.05, sB.z));
-
-  const c = new THREE.Vector3();
-  for (const p of pts) c.add(p);
-  c.multiplyScalar(1 / pts.length);
-  c.y = 0.85;
-
-  const delta = c.clone().sub(G.controls.target);
-  G.camera.position.add(delta);
-  G.controls.target.copy(c);
-  G.camera.lookAt(c);
-  G.camera.updateMatrixWorld(true);
-
-  const inv = new THREE.Matrix4().copy(G.camera.matrixWorld).invert();
-  let minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
-  for (const p of pts) {
-    const v = p.clone().applyMatrix4(inv);
-    minX = Math.min(minX, v.x); maxX = Math.max(maxX, v.x);
-    minY = Math.min(minY, v.y); maxY = Math.max(maxY, v.y);
+// 取景用的世界点：岛缘一圈 + 每户最高处的外轮廓角点
+function townFramePoints() {
+  const pts = [];
+  const N = 48;
+  for (let i = 0; i < N; i++) {
+    const a = (i / N) * TAU;
+    const x = Math.cos(a) * (WORLD_R + 0.25), z = Math.sin(a) * (WORLD_R + 0.25);
+    pts.push(new THREE.Vector3(x, G.heightAt ? G.heightAt(x, z) : -0.6, z));
   }
-  const aspect = window.innerWidth / window.innerHeight;
-  const needW = (maxX - minX) + 3.4;
-  const needH = (maxY - minY) + 3.6;
-  G.viewSize = clamp(Math.max(needH, needW / Math.max(0.9, aspect)), 10.2, 21.5);
+  for (const h of G.houses) {
+    const rise = h.tier === 2 ? 1.02 : 0.92;
+    const wallH = (h.tier === 2 ? H.wall2 : H.wall1) + 0.34;
+    const top = wallH + rise + 0.12;
+    const cs = Math.cos(h.rot), sn = Math.sin(h.rot);
+    for (const sx of [-1, 1]) {
+      for (const sz of [-1, 1]) {
+        const lx = sx * (H.w + 0.3) / 2, lz = sz * (H.d + 0.3) / 2;
+        pts.push(new THREE.Vector3(h.x + lx * cs + lz * sn, top, h.z - lx * sn + lz * cs));
+      }
+    }
+  }
+  return pts;
+}
 
-  // 让包围盒在画面里居中
-  const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
-  const rot = new THREE.Matrix4().extractRotation(G.camera.matrixWorld);
-  const shift = new THREE.Vector3(cx, cy, 0).applyMatrix4(rot);
-  G.controls.target.add(shift);
-  G.camera.position.add(shift);
+// 正交机位按包围盒自适应：包围盒在当前视口宽高比下装进画面，四周留 10% 白
+// resetZoom 只在换夜 / 换种子时清掉用户的手动缩放；平时不覆盖用户的旋转与缩放
+function fitCameraToTown(resetZoom) {
+  if (!G.camera || !G.controls || !G.houses || !G.houses.length) { applyFrustum(); return; }
+  const cam = G.camera, ctl = G.controls;
+  if (resetZoom) cam.zoom = 1;
+
+  cam.lookAt(ctl.target);
+  cam.updateMatrixWorld(true);
+  const inv = new THREE.Matrix4().copy(cam.matrixWorld).invert();
+  const v = new THREE.Vector3();
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const p of townFramePoints()) {
+    v.copy(p).applyMatrix4(inv);
+    if (v.x < minX) minX = v.x;
+    if (v.x > maxX) maxX = v.x;
+    if (v.y < minY) minY = v.y;
+    if (v.y > maxY) maxY = v.y;
+  }
+
+  const aspect = Math.max(0.3, window.innerWidth / Math.max(1, window.innerHeight));
+  const needW = (maxX - minX) * 1.1;
+  const needH = (maxY - minY) * 1.1;
+  G.viewSize = clamp(Math.max(needH, needW / aspect), 8, 96);
+
+  // 包围盒中心对到画面中心：正交投影只平移，不改朝向
+  const rot = new THREE.Matrix4().extractRotation(cam.matrixWorld);
+  v.set((minX + maxX) / 2, (minY + maxY) / 2, 0).applyMatrix4(rot);
+  cam.position.add(v);
+  ctl.target.add(v);
+  cam.lookAt(ctl.target);
+  cam.updateMatrixWorld(true);
+
+  // 手机端跟随镜头的最大偏移：不许越过留白把镇子挤出画面
+  const slackX = (G.viewSize * aspect - (maxX - minX)) / 2;
+  const padWorld = Math.max(maxX - minX, maxY - minY) * 0.06;
+  G.followMax = clamp(slackX - padWorld, 0, 5.5);
+  G.frameCx = ctl.target.x;
+  G.frameCz = ctl.target.z;
 
   applyFrustum();
-  G.controls.update();
+  ctl.update();
 }
 
 function buildSky() {
@@ -868,7 +897,7 @@ function buildTerrain(bucket) {
     const slope = nor.getY(t);
     const nv = G.perlin(cx * 1.6 + 11, cz * 1.6 - 5);
     c.copy(grass).lerp(soil, smoothstep(0.94, 0.6, slope) * 0.9);
-    c.multiplyScalar(0.93 + 0.12 * nv);
+    c.multiplyScalar(0.91 + 0.15 * nv);
     c.lerp(rim, smoothstep(10.9, 12.5, Math.hypot(cx, cz)) * 0.9);
     c.offsetHSL(0, 0, clamp(cy_ * 0.02, -0.02, 0.02));
     for (let k = 0; k < 3; k++) {
@@ -904,7 +933,7 @@ function buildStreet(bucket) {
     const u1 = -STREET_LEN / 2 + ((i + 1) / N) * STREET_LEN;
     const a = streetPoint(u0, -half), b = streetPoint(u0, half);
     const c = streetPoint(u1, half), d = streetPoint(u1, -half);
-    const shade = 0.92 + 0.1 * G.perlin(u0 * 1.3, 4.4);
+    const shade = 0.89 + 0.16 * G.perlin(u0 * 1.3, 4.4);
     const col = new THREE.Color(PAL.street).multiplyScalar(shade).getHexString();
     bucket.add(triG([a.x, 0.045, a.z], [b.x, 0.045, b.z], [c.x, 0.045, c.z], '#' + col), '#' + col);
     bucket.add(triG([a.x, 0.045, a.z], [c.x, 0.045, c.z], [d.x, 0.045, d.z], '#' + col), '#' + col);
@@ -2461,8 +2490,8 @@ function updateLights(dt) {
   G.sun.position.set(lerp(7.5, 11, avg), lerp(16, 9.5, avg), lerp(15, 17, avg));
   G.sun.intensity = lerp(1.85, 1.3, avg) * lerp(1, 1.2, d);
   G.sun.color.copy(MOON_C).lerp(WARM_C, d * 0.92);
-  G.hemi.intensity = lerp(1.15, 0.8, avg) + d * 0.5;
-  G.amb.intensity = lerp(0.56, 0.4, avg) + d * 0.35;
+  G.hemi.intensity = lerp(1.26, 0.9, avg) + d * 0.5;
+  G.amb.intensity = lerp(0.68, 0.48, avg) + d * 0.35;
   G.amb.color.copy(MOON_C).lerp(WARM_C, d * 0.5);
 
   // 跟随玩家的唯一暖光
@@ -2547,7 +2576,7 @@ function startNight(level) {
   hideBanner();
 
   buildTown();
-  frameTown();
+  fitCameraToTown(true);
 
   if (G.level.cat) {
     const idx = G.houses.findIndex(h => h.tier === 1);
@@ -2841,10 +2870,14 @@ function loop(now) {
   updateLights(dt);
   updateVignette();
 
-  // 移动端跟随角色
+  // 移动端跟随角色：fit 视图下偏移不超过留白，免得把镇子挤出画面
   if (G.mobile && G.controls) {
-    G.controls.target.x = expDamp(G.controls.target.x, clamp(G.player.pos.x, -5.5, 5.5), 0.55, dt);
-    G.controls.target.z = expDamp(G.controls.target.z, clamp(G.player.pos.z, -5.5, 5.5), 0.55, dt);
+    const fitted = G.followMax != null && (!G.camera || G.camera.zoom <= 1.02);
+    const fm = fitted ? G.followMax : 5.5;
+    const fx = fitted ? (G.frameCx || 0) : 0;
+    const fz = fitted ? (G.frameCz || 0) : 0;
+    G.controls.target.x = expDamp(G.controls.target.x, fx + clamp(G.player.pos.x - fx, -fm, fm), 0.55, dt);
+    G.controls.target.z = expDamp(G.controls.target.z, fz + clamp(G.player.pos.z - fz, -fm, fm), 0.55, dt);
   }
 
   G.hudT = (G.hudT || 0) + dt;
