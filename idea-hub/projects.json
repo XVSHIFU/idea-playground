@@ -399,5 +399,32 @@
     "identity": "投掷力学",
     "enabled": true,
     "publicDirectories": []
+  },
+  {
+    "id": "last-cast",
+    "name": "最后一竿",
+    "category": "情感游戏",
+    "description": "在涨水的老屋前移船垂钓，让惦记的旧物真正落进船里。",
+    "hint": "按住窗里的旧物瞄准，松手抛钩；挂住后再点击收竿。",
+    "label": "垂钓 · 旧物 · 不舍",
+    "color": "#46545d",
+    "directory": "../last-cast",
+    "port": 4308,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "app.js",
+      "shared.js",
+      "physics.js"
+    ],
+    "files": [
+      "index.html",
+      "app.js",
+      "shared.js",
+      "physics.js"
+    ],
+    "identity": "最后一竿",
+    "enabled": true,
+    "publicDirectories": []
   }
 ]

@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#252c31" />
+    <title>最后一竿 · The Last Cast</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --paper: #d3c9b2;
+        --ink: #15191c;
+        --red: #b97758;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #252c31;
+        color: var(--paper);
+        font: 14px system-ui;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+      }
+      button,
+      select {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      button {
+        min-height: 44px;
+        border: 1px solid #15191c;
+        background: #d3c9b2;
+        color: #252c31;
+        padding: 9px 15px;
+        border-radius: 4px;
+        box-shadow: 3px 3px 0 #15191c;
+        transition:
+          background 0.22s cubic-bezier(0.23, 1, 0.32, 1),
+          transform 0.22s;
+      }
+      button:hover {
+        background: #e9dfca;
+      }
+      button:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 #15191c;
+      }
+      button:disabled {
+        opacity: 0.38;
+        cursor: default;
+      }
+      .accent,
+      button[aria-pressed="true"] {
+        background: var(--red);
+      }
+      button:focus-visible,
+      select:focus-visible {
+        outline: 2px solid #f4ead5;
+        outline-offset: 3px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      #view {
+        position: absolute;
+        inset: 0;
+      }
+      .brand {
+        position: absolute;
+        top: 36px;
+        left: 40px;
+        pointer-events: none;
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.26em;
+        opacity: 0.65;
+      }
+      .brand h1 {
+        font-size: clamp(25px, 3.2vw, 42px);
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        margin: 9px 0;
+      }
+      .brand p {
+        font-size: 12px;
+        letter-spacing: 0.15em;
+        opacity: 0.7;
+      }
+      .topright {
+        position: absolute;
+        right: 32px;
+        top: 36px;
+        text-align: right;
+      }
+      .timer {
+        font-size: 34px;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.08em;
+        margin: 7px 0;
+      }
+      .topright small {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+      }
+      .saved {
+        font-size: 20px;
+        min-height: 30px;
+        letter-spacing: 8px;
+      }
+      .tools {
+        position: absolute;
+        left: 32px;
+        top: 185px;
+      }
+      #menu {
+        margin-top: 12px;
+        background: #d3c9b2;
+        color: #252c31;
+        border: 1px solid var(--ink);
+        box-shadow: 5px 5px 0 var(--ink);
+        padding: 16px;
+        width: 245px;
+        border-radius: 4px;
+      }
+      #menu button {
+        box-shadow: none;
+        text-align: left;
+        width: 100%;
+        background: transparent;
+        border-color: #a89f8e;
+        margin: 3px 0;
+      }
+      #menu label {
+        display: block;
+        margin: 8px 0;
+      }
+      select {
+        background: #d3c9b2;
+        color: #252c31;
+        width: 100%;
+        padding: 12px 5px;
+        border: 1px solid #938d80;
+      }
+      #seed {
+        font: 11px ui-monospace;
+        word-break: break-all;
+      }
+      .toolbar {
+        position: absolute;
+        bottom: max(24px, env(safe-area-inset-bottom));
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        max-width: 95vw;
+        white-space: nowrap;
+        padding: 4px 6px 8px;
+        overflow: auto;
+      }
+      .toolbar button {
+        min-width: 80px;
+      }
+      .caption {
+        position: absolute;
+        bottom: 104px;
+        text-align: center;
+        width: 100%;
+        pointer-events: none;
+        letter-spacing: 0.1em;
+        font-size: 13px;
+        text-shadow: 0 2px 8px #15191c;
+      }
+      #toast {
+        position: absolute;
+        top: 105px;
+        left: 50%;
+        transform: translateX(-50%);
+        pointer-events: none;
+        background: #252c31db;
+        padding: 9px 16px;
+        border-radius: 3px;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.2s;
+        max-width: 75vw;
+      }
+      .sheet {
+        position: absolute;
+        bottom: 115px;
+        left: 38px;
+        width: 310px;
+        background: #d3c9b2;
+        color: #252c31;
+        border: 1px solid #15191c;
+        box-shadow: 6px 6px 0 #15191c;
+        padding: 23px;
+        border-radius: 5px;
+      }
+      .sheet h2 {
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        margin: 8px 0 14px;
+      }
+      .sheet p {
+        line-height: 1.9;
+        font-size: 13px;
+      }
+      .sheet .eyebrow {
+        font-size: 10px;
+      }
+      .sheet button {
+        margin: 5px 8px 0 0;
+      }
+      .sheet .primary {
+        width: 100%;
+        background: #b97758;
+      }
+      .line {
+        height: 1px;
+        background: #aaa18e;
+        margin: 16px 0;
+      }
+      #overlay {
+        position: absolute;
+        inset: 0;
+        background: #15191c70;
+        display: grid;
+        place-items: center;
+        backdrop-filter: blur(3px);
+      }
+      #overlay .sheet {
+        position: static;
+        width: min(450px, 90vw);
+        max-height: 85vh;
+        overflow: auto;
+      }
+      #joystick {
+        position: absolute;
+        bottom: 105px;
+        left: 25px;
+        width: 110px;
+        height: 110px;
+        border: 1px solid #d3c9b267;
+        border-radius: 50%;
+        touch-action: none;
+        background: #252c3155;
+      }
+      #stick {
+        position: absolute;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        left: 32px;
+        top: 32px;
+        background: #b97758aa;
+        pointer-events: none;
+      }
+      .corner {
+        position: absolute;
+        bottom: 32px;
+        right: 32px;
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        opacity: 0.4;
+        pointer-events: none;
+      }
+      #error {
+        position: absolute;
+        inset: 25% 15%;
+        background: #d3c9b2;
+        color: #252c31;
+        padding: 30px;
+        border-radius: 6px;
+        z-index: 20;
+      }
+      body.hidehud .hud {
+        visibility: hidden;
+      }
+      #showHUD {
+        display: none;
+        position: absolute;
+        left: 16px;
+        bottom: 16px;
+      }
+      body.hidehud #showHUD {
+        display: block;
+      }
+      @media (max-width: 650px) {
+        .brand {
+          left: 20px;
+          top: 20px;
+        }
+        .brand h1 {
+          font-size: 26px;
+        }
+        .brand p {
+          display: none;
+        }
+        .topright {
+          right: 16px;
+          top: 24px;
+        }
+        .timer {
+          font-size: 25px;
+        }
+        .topright small {
+          font-size: 10px;
+        }
+        .tools {
+          left: 16px;
+          top: 100px;
+        }
+        .sheet {
+          left: 16px;
+          bottom: 110px;
+          width: calc(100% - 32px);
+          max-width: 310px;
+          padding: 17px;
+        }
+        .sheet h2 {
+          font-size: 22px;
+        }
+        .sheet p {
+          margin: 8px 0;
+          font-size: 12px;
+        }
+        .toolbar {
+          bottom: max(14px, env(safe-area-inset-bottom));
+          gap: 5px;
+        }
+        .toolbar button {
+          padding: 9px 12px;
+          min-width: 66px;
+          font-size: 12px;
+        }
+        .caption {
+          bottom: 85px;
+          font-size: 11px;
+          padding: 0 15px;
+        }
+        .corner {
+          display: none;
+        }
+        #toast {
+          top: 170px;
+        }
+        #menu {
+          max-height: 55vh;
+          overflow: auto;
+        }
+        .saved {
+          font-size: 15px;
+        }
+        .eyebrow {
+          font-size: 8px;
+        }
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="view"></div>
+    <header class="brand hud">
+      <div class="eyebrow">A HOUSE / A BOAT / ONE LAST THING</div>
+      <h1>最后一竿</h1>
+      <p>THE LAST CAST · 再带走这一件</p>
+    </header>
+    <div class="topright hud">
+      <small id="chapter"></small>
+      <div class="timer" id="timer">01:30</div>
+      <div class="saved" id="saved"></div>
+      <small id="goal"></small>
+    </div>
+    <div class="tools hud">
+      <button id="menuToggle" aria-expanded="false">☰ 航行手记</button>
+      <section id="menu" hidden>
+        <label
+          >十二扇旧窗<select id="level" aria-label="选择关卡"></select></label
+        ><button id="mode">漂来的旧日</button
+        ><button id="retry">重试这一竿 · Space</button
+        ><button id="random">换个种子 · R</button
+        ><button id="sound">声音：开 · M</button
+        ><button id="outline">描边：开</button
+        ><button id="home">回正视角</button
+        ><button id="orbit">慢速自转：关</button
+        ><button id="pause">暂停 · P</button><button id="help">操作说明</button
+        ><button id="hud">隐藏界面 · H 恢复</button
+        ><button id="copy"><span id="seed"></span> · 复制</button>
+      </section>
+    </div>
+    <div class="sheet hud" id="intro">
+      <div class="eyebrow" id="introKicker">CHAPTER 01 / 窗边那匹马</div>
+      <h2>再带走这一件。</h2>
+      <p id="story">那匹木马，还在窗边。</p>
+      <div class="line"></div>
+      <p>
+        按住旧物瞄准，松手抛钩。<br />挂住后再点击一次，将它拉向小船。<br />让它真正落稳，才算带回。
+      </p>
+      <button class="primary" id="start">开始这一竿 ↗</button>
+    </div>
+    <div class="caption hud" id="caption">旧屋还在，窗里的声音也还在。</div>
+    <div id="toast" role="status"></div>
+    <nav class="toolbar hud">
+      <button id="fish" aria-pressed="true">♧ 垂钓</button
+      ><button id="move" aria-pressed="false">⌁ 移船</button
+      ><button id="reel" class="accent" hidden>收竿</button
+      ><button id="cancel" hidden>回钩</button
+      ><button id="pauseBottom">Ⅱ</button>
+    </nav>
+    <div id="joystick" class="hud" hidden><div id="stick"></div></div>
+    <div class="corner">NINETY SECONDS, A LIFETIME.</div>
+    <div id="overlay" hidden>
+      <section class="sheet" role="dialog" aria-modal="true">
+        <div class="eyebrow" id="modalKicker"></div>
+        <h2 id="modalTitle"></h2>
+        <p id="modalText"></p>
+        <div id="modalActions"></div>
+      </section>
+    </div>
+    <button id="showHUD">显示界面</button>
+    <div id="error" hidden></div>
+    <script>
+      window.lastCastError = function (e) {
+        const d = document.getElementById("error");
+        d.hidden = false;
+        d.textContent =
+          "暂时无法打开最后一竿。请检查网络与 WebGL 支持后刷新。详情：" +
+          (e.message || e);
+      };
+      window.addEventListener("error", (e) => lastCastError(e.error || e));
+      window.addEventListener("unhandledrejection", (e) =>
+        lastCastError(e.reason),
+      );
+    </script>
+    <script type="module">
+      import("./app.js").catch(window.lastCastError);
+    </script>
+  </body>
+</html>
