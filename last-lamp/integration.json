@@ -7,7 +7,7 @@
   "label": "Three.js · 深夜哄睡",
   "color": "#101728",
   "directory": "../last-lamp",
-  "port": 4308,
+  "port": 4309,
   "entry": "index.html",
   "required": [
     "index.html",
