@@ -449,5 +449,27 @@
     "identity": "熄灯人",
     "enabled": true,
     "publicDirectories": []
+  },
+  {
+    "id": "click-collapse",
+    "name": "咔哒，塌啦",
+    "category": "物理小游戏",
+    "description": "你拆掉由 MC 脚手架转译的榫木支架，边拆边接，把小陶兽完整送进软垫，获得精准拆解的痛快。",
+    "hint": "点一颗红榫钉，再试着托住带把手的木板",
+    "label": "拆除 · 即时物理",
+    "color": "#18332D",
+    "directory": "../click-collapse",
+    "port": 4310,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "shared.js"
+    ],
+    "files": [
+      "index.html",
+      "shared.js"
+    ],
+    "identity": "咔哒，塌啦",
+    "enabled": true
   }
 ]
