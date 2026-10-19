@@ -123,7 +123,7 @@ export class Simulation {
  }
  step(){
   this.events.length=0;this.padImpact=0;
-  if(this.pending.length){for(const id of this.pending){const j=this.joints.find(j=>j.id===id);if(j.active){j.active=false;j.cutAt=this.time;this.world.removeConstraint(j.constraint);this.removals++;this.events.push({type:'cut',id})}}this.pending.length=0;this.updateSupport()}
+  if(this.pending.length){for(const id of this.pending){const j=this.joints.find(j=>j.id===id);if(j.active){j.active=false;j.cutAt=this.time;this.world.removeConstraint(j.constraint);this.removals++;this.events.push({type:'cut',id})}}this.pending.length=0;this.updateSupport();for(const body of this.world.bodies)if(body.type===C.Body.DYNAMIC)body.wakeUp()}
   this.pull();
   // Capture velocities before solver impulses; never read post-solver speed for breakage.
   for(const b of this.world.bodies){let s=this.pre.get(b.id);if(!s){s={v:new C.Vec3(),w:new C.Vec3()};this.pre.set(b.id,s)}s.v.copy(b.velocity);s.w.copy(b.angularVelocity)}

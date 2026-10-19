@@ -18,3 +18,5 @@ const heavy=new Simulation(makeLevel(10));for(const j of heavy.joints)if(j.remov
 // Same initial seed and input produce same major trajectory in this engine.
 const l=makeLevel(20);assert.deepEqual(replay(l,l.routes[0]),replay(l,l.routes[0]));
 console.log(`${passed} route/rotation replays passed; atomic cut, retained hinge, finite hand, release continuity, heavy-hit failure, same-seed repeat passed.`);
+
+const idle=makeLevel(0);const delayed={actions:idle.routes[0].actions.map(a=>({...a,step:a.step+600}))};assert.equal(replay(idle,delayed,2400).snapshot.result,'success');console.log('Long idle before first cut passed.');
