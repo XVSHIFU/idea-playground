@@ -20,3 +20,13 @@ const l=makeLevel(20);assert.deepEqual(replay(l,l.routes[0]),replay(l,l.routes[0
 console.log(`${passed} route/rotation replays passed; atomic cut, retained hinge, finite hand, release continuity, heavy-hit failure, same-seed repeat passed.`);
 
 const idle=makeLevel(0);const delayed={actions:idle.routes[0].actions.map(a=>({...a,step:a.step+600}))};assert.equal(replay(idle,delayed,2400).snapshot.result,'success');console.log('Long idle before first cut passed.');
+// A handle must change the trajectory, not just show a hand. Compare identical
+// cut timing with and without the grab in all twelve later levels.
+for(let i=12;i<24;i++){
+ const level=makeLevel(i),route=level.routes[1];
+ const plain=replay(level,{actions:route.actions.filter(a=>a.type==='cut')}),held=replay(level,route);
+ const delta=Math.max(...plain.trace.slice(0,held.trace.length).map((p,k)=>Math.hypot(...p.map((v,j)=>v-held.trace[k][j]))));
+ assert.ok(held.grabbed&&delta>.08,`Handle must materially change level ${i+1}`);
+}
+const free=new Simulation(makeLevel(12));free.cut('pivotL');free.cut('pinA');free.step();assert.ok(free.grab('tray'));assert.equal(free.world.constraints.some(c=>c.bodyA===free.byId.get('tray')||c.bodyB===free.byId.get('tray')),false);
+console.log('All 12 later levels have measurable handle influence; a fully detached board can be grabbed.');

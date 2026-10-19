@@ -16,7 +16,7 @@
 <script type="module">
 const loading=document.querySelector('#loading'),loadText=document.querySelector('#loadText');
 try {
-const [T,{OrbitControls},{RoundedBoxGeometry},{mergeGeometries,mergeVertices},P]=await Promise.all([import('three'),import('three/addons/controls/OrbitControls.js'),import('three/addons/geometries/RoundedBoxGeometry.js'),import('three/addons/utils/BufferGeometryUtils.js'),import('./shared.js?v=20261019-3')]);
+const [T,{OrbitControls},{RoundedBoxGeometry},{mergeGeometries,mergeVertices},P]=await Promise.all([import('three'),import('three/addons/controls/OrbitControls.js'),import('three/addons/geometries/RoundedBoxGeometry.js'),import('three/addons/utils/BufferGeometryUtils.js'),import('./shared.js?v=20261019-4')]);
 const {Simulation,makeLevel,NAMES,DT,Spring,clamp,PRNG}=P;
 const $=id=>document.getElementById(id),canvas=$('game'),mobile=matchMedia('(pointer:coarse)').matches;
 const colors={bg:'#18332D',table:'#345247',wood:'#C7A477',clay:'#F1E6D2',pad:'#B8C2A5',pin:'#B96049',ink:'#17211D',cap:'#69513D'};
