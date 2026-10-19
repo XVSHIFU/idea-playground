@@ -75,7 +75,9 @@ export function makeLevel(index=0,seed=1000+index){
  }
  const cushion={p:cfg.single?[1.85,.16,0]:[0,.16,0],half:cfg.single?[1,.16,1.1]:[1.1,.16,1.1],inner:cfg.single?[.78,.86]:[.86,.86],clearance:1.0};
  const beast=convert([offset,y+.47,0]);
+ if(index>=12){const pivot=joints.find(j=>j.id==='pivotL');pivot.removable=true;pivot.pinOffset=convert([0,0,.82]);}
  for(const d of parts)if(d.handle)d.handleLocal=[-d.size[0]*.27,.24,d.size[2]*.48];
+ if(index===12)parts.find(d=>d.id==='tray').handleLocal=[1.1,.24,.6];
  const level={id:index+1,name:NAMES[index],seed:seed>>>0,parts,joints,beast,cushion,range:{min:[-4,.3,-4],max:[4,5.2,4]},note:NOTES[index],routes:WITNESSES[index]};
  // Only rigid quarter-turns of verified structures, not unconstrained random towers.
  const turns=(seed>=1000&&seed<1024)?0:Math.floor(seed/24)%4;
@@ -102,7 +104,7 @@ export class Simulation {
   this.joints=level.joints.map(d=>{
    const a=this.byId.get(d.a),b=this.byId.get(d.b),pa=a.pointToLocalFrame(V(d.p)),pb=b.pointToLocalFrame(V(d.p));
    const constraint=d.type==='hinge'?new C.HingeConstraint(a,b,{pivotA:pa,pivotB:pb,axisA:a.vectorToLocalFrame(V(d.axis)),axisB:b.vectorToLocalFrame(V(d.axis)),collideConnected:false,maxForce:1e5}):new C.LockConstraint(a,b,{maxForce:1e5});
-   this.world.addConstraint(constraint);return {...d,aBody:a,bBody:b,local:pb,constraint,active:true,cutAt:-1};
+   this.world.addConstraint(constraint);return {...d,aBody:a,bBody:b,local:d.pinOffset?pb.vadd(V(d.pinOffset)):pb,constraint,active:true,cutAt:-1};
   });
   this.updateSupport();this.pre=new Map();this.tmp={point:new C.Vec3(),vel:new C.Vec3(),delta:new C.Vec3(),force:new C.Vec3(),offset:new C.Vec3()};
  }
