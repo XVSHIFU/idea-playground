@@ -1,0 +1,23 @@
+{
+  "id": "coming-through",
+  "name": "借过一下",
+  "category": "物理小游戏",
+  "description": "你牵起 MC 拴绳，把圆鼓鼓的小牛拉过立体晾衣场，在拉一拉、松一松的即时碰撞中获得一起玩闹的快乐。",
+  "hint": "抓住绳结拖一拖，卡住就松手换个角度",
+  "label": "牵引 · 陪伴玩闹",
+  "color": "#F2EADB",
+  "directory": "../coming-through",
+  "port": 4311,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "shared.js"
+  ],
+  "files": [
+    "index.html",
+    "shared.js"
+  ],
+  "identity": "借过一下",
+  "enabled": true,
+  "publicDirectories": []
+}
