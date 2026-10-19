@@ -1,0 +1,1185 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
+    <meta name="theme-color" content="#F2EADB" />
+    <title>借过一下 · Coming Through</title>
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        color: #29312b;
+        background: #f2eadb;
+        font-family: ui-rounded, "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+        touch-action: none;
+        width: 100vw;
+        height: 100dvh;
+      }
+      button,
+      select,
+      input {
+        font: inherit;
+        color: inherit;
+      }
+      button,
+      select {
+        background: #f9f4e9;
+        border: 2px solid #29312b;
+        border-radius: 9px;
+        padding: 10px 14px;
+        min-height: 44px;
+        cursor: pointer;
+        box-shadow: 2px 3px 0 #29312b;
+        transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      button:active {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+      }
+      button:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+      .panel {
+        position: fixed;
+        top: 24px;
+        left: 28px;
+        width: 250px;
+        padding: 18px;
+        background: #f2eadbed;
+        border: 2px solid #29312b;
+        border-radius: 12px;
+        box-shadow: 4px 5px 0 #29312b;
+      }
+      h1 {
+        font-size: 29px;
+        letter-spacing: -1px;
+        margin: 5px 0 2px;
+        font-weight: 900;
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 2.5px;
+        font-weight: 700;
+      }
+      .subtitle {
+        font-size: 12px;
+        margin: 8px 0 17px;
+        color: #66705c;
+      }
+      summary {
+        cursor: pointer;
+        font-size: 12px;
+        list-style: none;
+        margin-top: 12px;
+      }
+      summary::after {
+        content: " ＋";
+      }
+      details[open] summary::after {
+        content: " −";
+      }
+      select {
+        width: 100%;
+        font-size: 12px;
+        margin: 12px 0 9px;
+        padding: 8px;
+      }
+      .toggles {
+        display: flex;
+        gap: 12px;
+        font-size: 12px;
+        flex-wrap: wrap;
+      }
+      .toggles label {
+        display: flex;
+        align-items: center;
+        min-height: 32px;
+        gap: 3px;
+      }
+      input[type="checkbox"] {
+        accent-color: #b96c54;
+      }
+      .seed {
+        font-size: 10px;
+        letter-spacing: 1px;
+        color: #777d6d;
+        margin-top: 12px;
+      }
+      .status {
+        position: fixed;
+        right: 28px;
+        top: 28px;
+        text-align: right;
+        pointer-events: none;
+      }
+      .status strong {
+        display: block;
+        font-size: 20px;
+        margin-top: 8px;
+      }
+      .status small {
+        font-size: 11px;
+        letter-spacing: 2px;
+      }
+      .status span {
+        display: block;
+        font-size: 11px;
+        margin-top: 9px;
+        color: #747c69;
+      }
+      .bottom {
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        white-space: nowrap;
+      }
+      .primary {
+        background: #b96c54;
+        color: #fff8ec;
+      }
+      .hint {
+        position: fixed;
+        bottom: 92px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        line-height: 1.7;
+        text-align: center;
+        max-width: 80vw;
+        pointer-events: none;
+        color: #626b5c;
+      }
+      .height {
+        position: fixed;
+        right: 24px;
+        top: 42%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 7px;
+        border: 2px solid #29312b;
+        border-radius: 25px;
+        background: #f9f4e9df;
+        font-size: 11px;
+        touch-action: none;
+        user-select: none;
+      }
+      .height input {
+        writing-mode: vertical-lr;
+        direction: rtl;
+        width: 38px;
+        height: 150px;
+        accent-color: #b96c54;
+        touch-action: none;
+      }
+      .height.dim {
+        opacity: 0.45;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        top: 24px;
+        transform: translate(-50%, -120px);
+        background: #d9ddc7;
+        border: 2px solid #29312b;
+        border-radius: 10px;
+        padding: 14px 22px;
+        font-size: 17px;
+        font-weight: 700;
+        transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+        pointer-events: none;
+      }
+      .toast.show {
+        transform: translate(-50%, 0);
+      }
+      #grab {
+        position: fixed;
+        width: 58px;
+        height: 58px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        box-shadow: none;
+        background: transparent;
+        touch-action: none;
+        cursor: grab;
+        z-index: 2;
+      }
+      #grab:focus-visible {
+        outline: 3px dashed #b96c54;
+      }
+      #grab.held {
+        cursor: grabbing;
+      }
+      #grab span {
+        position: absolute;
+        left: 50%;
+        top: 54px;
+        transform: translateX(-50%);
+        font-size: 11px;
+        white-space: nowrap;
+        pointer-events: none;
+        color: #9d5945;
+        background: #f2eadbcc;
+        padding: 3px 6px;
+        border-radius: 5px;
+      }
+      #error {
+        position: fixed;
+        left: 50%;
+        top: 48%;
+        transform: translate(-50%, -50%);
+        padding: 24px;
+        background: #f9f4e9;
+        border: 2px solid #29312b;
+        border-radius: 12px;
+        max-width: 460px;
+        z-index: 9;
+      }
+      #error[hidden] {
+        display: none;
+      }
+      .corner {
+        position: fixed;
+        left: 28px;
+        bottom: 28px;
+        font-size: 10px;
+        letter-spacing: 2px;
+        line-height: 1.8;
+        color: #737c69;
+        pointer-events: none;
+      }
+      @media (max-width: 650px) {
+        .panel {
+          top: 14px;
+          left: 14px;
+          width: 170px;
+          padding: 12px;
+        }
+        h1 {
+          font-size: 24px;
+        }
+        .eyebrow {
+          font-size: 8px;
+          letter-spacing: 1.5px;
+        }
+        .subtitle {
+          display: none;
+        }
+        summary {
+          margin-top: 6px;
+        }
+        .status {
+          top: 20px;
+          right: 14px;
+        }
+        .status strong {
+          font-size: 15px;
+        }
+        .status small {
+          font-size: 9px;
+        }
+        .status span {
+          font-size: 10px;
+        }
+        .bottom {
+          bottom: 20px;
+          gap: 8px;
+        }
+        .bottom button {
+          font-size: 12px;
+          padding: 10px 12px;
+        }
+        .hint {
+          bottom: 82px;
+          width: 80vw;
+          font-size: 11px;
+        }
+        .height {
+          right: 12px;
+          top: 43%;
+          padding: 10px 4px;
+        }
+        .height input {
+          height: 120px;
+          width: 36px;
+        }
+        .corner {
+          display: none;
+        }
+        .toast {
+          top: 160px;
+          width: max-content;
+          font-size: 14px;
+        }
+        .toast:not(.show) {
+          transform: translate(-50%, -300px);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+          "cannon-es": "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="view" aria-label="小牛与绳索的三维晾衣场"></canvas>
+    <section class="panel">
+      <div class="eyebrow">A LITTLE ROOM FOR TWO</div>
+      <h1>借过一下<span style="color: #b96c54">。</span></h1>
+      <p class="subtitle">拉一拉，松一松，就过去了。</p>
+      <details id="settings">
+        <summary>选关与小设置</summary>
+        <select id="level" aria-label="选择关卡"></select>
+        <div class="toggles">
+          <label><input id="sound" type="checkbox" checked />声音</label
+          ><label><input id="outline" type="checkbox" checked />描边</label
+          ><label><input id="observe" type="checkbox" checked />观察</label
+          ><label><input id="rotate" type="checkbox" />慢转</label>
+        </div>
+        <div class="seed" id="seed"></div>
+      </details>
+    </section>
+    <section class="status">
+      <small id="chapter">01 / 24</small><strong id="levelName">先走两步</strong
+      ><span id="progress">给它让一点路。</span>
+    </section>
+    <div class="toast" id="toast" role="status">好，过去了。</div>
+    <button id="grab" aria-label="抓住绳结，拖动牵拉">
+      <span>抓住我 · 拖一拖</span>
+    </button>
+    <label class="height dim" id="heightBox"
+      >提绳<input
+        id="height"
+        type="range"
+        min="0.22"
+        max="2.85"
+        step="0.01"
+        value="0.4"
+        aria-label="绳头高度"
+      />↓</label
+    >
+    <div class="hint" id="hint">
+      抓住绳结拖；卡住就松手，提高手还能绕过横杆。<br />抓绳时滚轮 / Q E
+      提绳，松手放开。
+    </div>
+    <nav class="bottom">
+      <button id="retry">重试 ↺</button><button id="random">今天走哪边</button
+      ><button id="next" class="primary" disabled>下一段 →</button>
+    </nav>
+    <div class="corner">COMING THROUGH<br />牵引 / 陪伴玩闹</div>
+    <div id="error" hidden role="alert"></div>
+    <script>
+      window.addEventListener("error", (e) => {
+        if (e.message && !window.__ready) {
+          const d = document.querySelector("#error");
+          d.hidden = false;
+          d.textContent = "画面没有成功加载，请检查网络后刷新。" + e.message;
+        }
+      });
+      setTimeout(() => {
+        if (!window.__ready) {
+          const d = document.querySelector("#error");
+          d.hidden = false;
+          d.textContent =
+            "正在加载 3D 画面。如长时间未出现，请检查 CDN 网络连接后刷新。";
+        }
+      }, 12000);
+    </script>
+    <script type="module">
+      import * as THREE from "three";
+      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+      import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+      import {
+        DT,
+        N,
+        ROPE_R,
+        Simulation,
+        level,
+        seeded,
+        names,
+        anatomy,
+        makeToonGradient,
+        outlineGeometry,
+      } from "./shared.js";
+      const $ = (s) => document.querySelector(s),
+        canvas = $("#view");
+      try {
+        const renderer = new THREE.WebGLRenderer({
+          canvas,
+          antialias: true,
+          alpha: false,
+          powerPreference: "high-performance",
+        });
+        renderer.setPixelRatio(
+          Math.min(devicePixelRatio, innerWidth < 650 ? 1.4 : 1.8),
+        );
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFShadowMap;
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.info.autoReset = false;
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color("#F2EADB");
+        const camera = new THREE.OrthographicCamera(-6, 6, 4, -4, 0.1, 60);
+        const controls = new OrbitControls(camera, canvas);
+        controls.target.set(0.3, 0.7, 0);
+        controls.enablePan = false;
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.12;
+        controls.minPolarAngle = Math.PI / 4;
+        controls.maxPolarAngle = Math.PI * 0.4;
+        controls.minZoom = 0.65;
+        controls.maxZoom = 1.6;
+        controls.mouseButtons = {
+          LEFT: null,
+          MIDDLE: null,
+          RIGHT: THREE.MOUSE.ROTATE,
+        };
+        controls.touches = { ONE: null, TWO: THREE.TOUCH.DOLLY_ROTATE };
+        controls.enabled = true;
+        controls.autoRotateSpeed = 0.12;
+        const ambient = new THREE.AmbientLight(0xfff5df, 0.5);
+        scene.add(ambient);
+        const sun = new THREE.DirectionalLight(0xfff5df, 1.6);
+        sun.position.set(-3, 9, 5);
+        sun.castShadow = true;
+        sun.shadow.mapSize.set(
+          innerWidth < 650 ? 1024 : 2048,
+          innerWidth < 650 ? 1024 : 2048,
+        );
+        Object.assign(sun.shadow.camera, {
+          left: -8,
+          right: 8,
+          top: 6,
+          bottom: -6,
+          near: 1,
+          far: 25,
+        });
+        sun.shadow.bias = -0.0005;
+        sun.shadow.normalBias = 0.025;
+        scene.add(sun);
+        const gradient = makeToonGradient(),
+          colors = {
+            cream: "#F5EEDD",
+            pink: "#D4A797",
+            dark: "#454A43",
+            horn: "#e1cda4",
+            wood: "#CAB695",
+            red: "#B96C54",
+            ground: "#D9DDC7",
+            rope: "#dbcaa3",
+            cloth: "#eee8d9",
+            white: "#fffaf0",
+          };
+        const mats = {};
+        for (const [k, c] of Object.entries(colors))
+          mats[k] = new THREE.MeshToonMaterial({
+            color: c,
+            gradientMap: gradient,
+          });
+        const ink = new THREE.MeshBasicMaterial({
+          color: "#29312B",
+          side: THREE.BackSide,
+        });
+        const shells = [];
+        function mesh(g, mat, parent = scene, shell = true, shadow = true) {
+          if (mat === "wood" || mat === "ground") g.computeVertexNormals();
+          const m = new THREE.Mesh(g, mats[mat]);
+          m.castShadow = shadow;
+          m.receiveShadow = true;
+          parent.add(m);
+          if (shell) {
+            const o = new THREE.Mesh(outlineGeometry(g, 0.015), ink);
+            m.add(o);
+            shells.push(o);
+          }
+          return m;
+        }
+        function ball(c, s) {
+          const g = new THREE.SphereGeometry(1, 16, 10);
+          g.scale(...s);
+          g.translate(...c);
+          return g;
+        }
+        function rod(a, b, r) {
+          const av = new THREE.Vector3(...a),
+            bv = new THREE.Vector3(...b),
+            d = bv.clone().sub(av),
+            g = new THREE.CylinderGeometry(r, r, d.length(), 10, 1);
+          g.applyQuaternion(
+            new THREE.Quaternion().setFromUnitVectors(
+              new THREE.Vector3(0, 1, 0),
+              d.normalize(),
+            ),
+          );
+          g.translate(...av.add(bv).multiplyScalar(0.5).toArray());
+          return g;
+        }
+        function merged(gs) {
+          const g = mergeGeometries(
+            gs.map((g) => (g.index ? g.toNonIndexed() : g)),
+          );
+          gs.forEach((g) => g.dispose());
+          return g;
+        }
+        const floorShape = new THREE.Shape();
+        floorShape.moveTo(-5.8, -3.6);
+        floorShape.lineTo(6.6, -3.6);
+        floorShape.quadraticCurveTo(7, -3.6, 7, -3.2);
+        floorShape.lineTo(7, 3.2);
+        floorShape.quadraticCurveTo(7, 3.6, 6.6, 3.6);
+        floorShape.lineTo(-5.8, 3.6);
+        floorShape.quadraticCurveTo(-6.2, 3.6, -6.2, 3.2);
+        floorShape.lineTo(-6.2, -3.2);
+        floorShape.quadraticCurveTo(-6.2, -3.6, -5.8, -3.6);
+        const fg = new THREE.ExtrudeGeometry(floorShape, {
+          depth: 0.24,
+          bevelEnabled: true,
+          bevelSize: 0.12,
+          bevelThickness: 0.08,
+          bevelSegments: 2,
+          steps: 1,
+          curveSegments: 6,
+        });
+        fg.rotateX(-Math.PI / 2);
+        fg.translate(0, -0.33, 0);
+        fg.computeVertexNormals();
+        mesh(fg, "ground", scene, true, false);
+        // A tiny stitched exit line is geometry, not a texture.
+        const stitches = [];
+        for (let z = -2.8; z < 2.9; z += 0.28)
+          stitches.push(rod([1.15, 0.018, z], [1.15, 0.018, z + 0.12], 0.012));
+        mesh(merged(stitches), "cream", scene, false, false);
+        const cowGroup = new THREE.Group();
+        scene.add(cowGroup);
+        const grouped = {};
+        for (const a of anatomy) (grouped[a.color] ??= []).push(ball(a.c, a.s));
+        for (const [color, gs] of Object.entries(grouped))
+          mesh(merged(gs), color, cowGroup, true, color !== "dark");
+        const noseTip = mesh(
+          ball([0, 0, 0], [0.065, 0.16, 0.27]),
+          "pink",
+          cowGroup,
+          false,
+          false,
+        );
+        noseTip.position.set(1.015, 0.2, 0);
+        const features = [];
+        for (const k of [-1, 1]) {
+          features.push(ball([0.66, 0.47, k * 0.26], [0.045, 0.055, 0.035]));
+          features.push(ball([0.98, 0.25, k * 0.13], [0.025, 0.028, 0.04]));
+        }
+        mesh(merged(features), "dark", cowGroup, false, false);
+        const gleams = [];
+        for (const k of [-1, 1])
+          gleams.push(ball([0.677, 0.49, k * 0.282], [0.012, 0.016, 0.012]));
+        mesh(merged(gleams), "white", cowGroup, false, false);
+        const spots = [
+          ball([-0.32, 0.42, 0.365], [0.27, 0.24, 0.07]),
+          ball([-0.35, 0.46, -0.35], [0.23, 0.2, 0.08]),
+          ball([0.06, 0.63, -0.06], [0.25, 0.08, 0.22]),
+        ];
+        mesh(merged(spots), "dark", cowGroup, false, false);
+        const strap = new THREE.TorusGeometry(0.445, 0.047, 6, 32);
+        strap.rotateY(Math.PI / 2);
+        strap.scale(1, 1.12, 1);
+        strap.translate(0.3, 0.2, 0);
+        mesh(strap, "red", cowGroup, true, false);
+        const ring = new THREE.TorusGeometry(0.085, 0.025, 6, 12);
+        ring.rotateY(Math.PI / 2);
+        ring.translate(0.57, 0.16, 0);
+        mesh(ring, "horn", cowGroup, false, false);
+        const ears = [];
+        for (const k of [-1, 1]) {
+          const e = new THREE.Group();
+          e.position.set(0.39, 0.55, k * 0.34);
+          cowGroup.add(e);
+          mesh(
+            ball([0, 0, k * 0.13], [0.17, 0.065, 0.21]),
+            "cream",
+            e,
+            true,
+            false,
+          );
+          ears.push(e);
+        }
+        const tail = mesh(
+          rod([-0.75, 0.28, 0], [-0.96, 0.25, 0.14], 0.035),
+          "cream",
+          cowGroup,
+          false,
+          false,
+        );
+        const knot = new THREE.Group();
+        scene.add(knot);
+        mesh(ball([0, 0, 0], [0.12, 0.105, 0.12]), "red", knot, true, true);
+        const flagGeo = new THREE.BufferGeometry();
+        flagGeo.setAttribute(
+          "position",
+          new THREE.Float32BufferAttribute(
+            [
+              0, 0.06, 0, 0.36, 0.16, 0, 0.29, -0.05, 0, 0, 0.06, 0, 0.29,
+              -0.05, 0, 0, -0.06, 0,
+            ],
+            3,
+          ),
+        );
+        flagGeo.computeVertexNormals();
+        const flagMat = mats.red.clone();
+        flagMat.side = THREE.DoubleSide;
+        const flag = new THREE.Mesh(flagGeo, flagMat);
+        knot.add(flag);
+        const ropeGeom = new THREE.CylinderGeometry(1, 1, 1, 7, 1),
+          rope = new THREE.InstancedMesh(ropeGeom, mats.rope, N);
+        rope.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        rope.castShadow = true;
+        scene.add(rope);
+        const ropeJoints = new THREE.InstancedMesh(
+          new THREE.SphereGeometry(ROPE_R, 7, 5),
+          mats.rope,
+          N + 1,
+        );
+        ropeJoints.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        scene.add(ropeJoints);
+        const shadowGeo = new THREE.CircleGeometry(0.14, 24);
+        shadowGeo.rotateX(-Math.PI / 2);
+        const mark = new THREE.Mesh(
+          shadowGeo,
+          new THREE.MeshBasicMaterial({
+            color: "#b96c54",
+            transparent: true,
+            opacity: 0.28,
+            depthWrite: false,
+          }),
+        );
+        scene.add(mark);
+        const stemGeo = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(),
+          new THREE.Vector3(),
+        ]);
+        const stem = new THREE.Line(
+          stemGeo,
+          new THREE.LineBasicMaterial({
+            color: "#b96c54",
+            transparent: true,
+            opacity: 0.45,
+          }),
+        );
+        scene.add(stem);
+        let stage = new THREE.Group();
+        scene.add(stage);
+        let cloth;
+        let sim,
+          index = 0,
+          isSeed = false,
+          activeLevel,
+          wonShown = false,
+          contactClock = 0,
+          outlineOn = true;
+        const save = { completed: {}, seed: 101, index: 0 };
+        try {
+          Object.assign(
+            save,
+            JSON.parse(localStorage.getItem("coming-through:save") || "{}"),
+          );
+        } catch {}
+        function persist() {
+          try {
+            localStorage.setItem("coming-through:save", JSON.stringify(save));
+          } catch {}
+        }
+        function cameraReset() {
+          camera.position.set(7.2, 5.1, 8.5);
+          camera.zoom = innerWidth < 650 ? 0.9 : 1.08;
+          controls.target.set(0.35, 0.6, 0);
+          camera.lookAt(controls.target);
+          camera.updateProjectionMatrix();
+          controls.update();
+        }
+        function disposeStage() {
+          for (let i = shells.length - 1; i >= 0; i--) {
+            let o = shells[i];
+            while (o && o !== stage) o = o.parent;
+            if (o === stage) shells.splice(i, 1);
+          }
+          stage.traverse((o) => {
+            if (o.geometry) o.geometry.dispose();
+          });
+          scene.remove(stage);
+          stage = new THREE.Group();
+          scene.add(stage);
+        }
+        function makeStage(l) {
+          disposeStage();
+          mesh(
+            merged(
+              l.gate.flatMap((o) => [
+                rod(o.a, o.b, o.r),
+                ball(o.a, [o.r, o.r, o.r]),
+              ]),
+            ),
+            "wood",
+            stage,
+            true,
+            true,
+          );
+          if (l.rods.length) {
+            const gs = [];
+            for (const o of l.rods) {
+              gs.push(
+                rod(o.a, o.b, o.r),
+                ball(o.a, [o.r, o.r, o.r]),
+                ball(o.b, [o.r, o.r, o.r]),
+              );
+            }
+            mesh(merged(gs), "wood", stage, true, true);
+          }
+          cloth = new THREE.Group();
+          cloth.position.set(0.35, 1.85, 2.0);
+          stage.add(cloth);
+          const g = new THREE.PlaneGeometry(0.65, 0.9, 3, 3);
+          g.translate(0, -0.45, 0);
+          const m = new THREE.Mesh(g, mats.cloth);
+          m.material.side = THREE.DoubleSide;
+          m.castShadow = true;
+          cloth.add(m);
+          mesh(
+            rod([-0.05, 1.87, 2], [0.75, 1.87, 2], 0.04),
+            "wood",
+            stage,
+            false,
+            false,
+          );
+          shells.forEach((o) => (o.visible = outlineOn));
+        }
+        function load(l) {
+          releaseAll();
+          activeLevel = l;
+          sim = new Simulation(l);
+          wonShown = false;
+          $("#toast").classList.remove("show");
+          $("#next").disabled = true;
+          makeStage(l);
+          cameraReset();
+          $("#chapter").textContent = isSeed
+            ? "TODAY’S LITTLE DETOUR"
+            : `${String(l.id).padStart(2, "0")} / 24`;
+          $("#levelName").textContent = l.name;
+          $("#seed").textContent =
+            `SEED ${l.seed} · ${l.mirror < 0 ? "镜像" : "原向"}`;
+          $("#level").value = l.id - 1;
+          save.index = l.id - 1;
+          save.seed = l.seed;
+          persist();
+          $("#progress").textContent =
+            `已走过 ${Object.keys(save.completed).length} 段`;
+          $("#grab span").hidden = false;
+          $("#height").value = sim.end.position.y;
+        }
+        names.forEach((n, i) =>
+          $("#level").add(
+            new Option(`${String(i + 1).padStart(2, "0")} · ${n}`, i),
+          ),
+        );
+        $("#level").onchange = (e) => {
+          index = +e.target.value;
+          isSeed = false;
+          load(level(index));
+        };
+        $("#retry").onclick = () => load(activeLevel);
+        $("#next").onclick = () => {
+          index = activeLevel.id % 24;
+          isSeed = false;
+          load(level(index));
+        };
+        $("#random").onclick = () => {
+          isSeed = true;
+          const s = Date.now() >>> 0;
+          load(seeded(s));
+        };
+        $("#sound").onchange = () => {};
+        $("#outline").onchange = (e) => {
+          outlineOn = e.target.checked;
+          shells.forEach((o) => (o.visible = outlineOn));
+        };
+        $("#observe").onchange = () => {
+          controls.enabled = $("#observe").checked && !sim.grabbed;
+        };
+        $("#rotate").onchange = (e) => {
+          controls.autoRotate = e.target.checked && !sim.grabbed;
+          controls.enabled = controls.autoRotate || $("#observe").checked;
+        };
+        let audio;
+        function initAudio() {
+          if (!$("#sound").checked) return;
+          try {
+            audio ??= new (window.AudioContext || window.webkitAudioContext)();
+            if (audio.state === "suspended") audio.resume().catch(() => {});
+          } catch {}
+        }
+        let lastTone = 0,
+          lastFootfall = 0;
+        function tone(freq, vol = 0.03, dur = 0.09, type = "sine") {
+          if (
+            !audio ||
+            !$("#sound").checked ||
+            audio.state !== "running" ||
+            audio.currentTime - lastTone < 0.09
+          )
+            return;
+          try {
+            lastTone = audio.currentTime;
+            const o = audio.createOscillator(),
+              g = audio.createGain();
+            o.type = type;
+            o.frequency.setValueAtTime(freq, audio.currentTime);
+            o.frequency.exponentialRampToValueAtTime(
+              freq * 0.65,
+              audio.currentTime + dur,
+            );
+            g.gain.setValueAtTime(vol, audio.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + dur);
+            o.connect(g);
+            g.connect(audio.destination);
+            o.start();
+            o.stop(audio.currentTime + dur);
+            o.onended = () => {
+              o.disconnect();
+              g.disconnect();
+            };
+          } catch {}
+        }
+        document.addEventListener("pointerdown", initAudio, { passive: true });
+        const ray = new THREE.Raycaster(),
+          ndc = new THREE.Vector2(),
+          plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0),
+          hit = new THREE.Vector3(),
+          offset = new THREE.Vector3();
+        let mainPointer = null,
+          heightPointer = null,
+          dragHeight = 0.4;
+        const grabbed = $("#grab");
+        function rayPoint(e, y) {
+          ndc.set(
+            (e.clientX / innerWidth) * 2 - 1,
+            1 - (e.clientY / innerHeight) * 2,
+          );
+          ray.setFromCamera(ndc, camera);
+          plane.constant = -y;
+          return ray.ray.intersectPlane(plane, hit);
+        }
+        function releaseAll() {
+          if (typeof sim !== "undefined" && sim) sim.release();
+          const oldMain = mainPointer,
+            oldHeight = heightPointer;
+          mainPointer = heightPointer = null;
+          for (const [el, id] of [
+            [grabbed, oldMain],
+            [$("#height"), oldHeight],
+          ])
+            if (id !== null && el?.hasPointerCapture(id))
+              el.releasePointerCapture(id);
+          grabbed?.classList.remove("held");
+          $("#heightBox").classList.add("dim");
+          controls.enabled = $("#observe").checked || $("#rotate").checked;
+          controls.autoRotate = $("#rotate").checked;
+        }
+        grabbed.addEventListener("pointerdown", (e) => {
+          if (e.button !== 0 || mainPointer !== null) return;
+          e.preventDefault();
+          e.stopPropagation();
+          mainPointer = e.pointerId;
+          grabbed.setPointerCapture(mainPointer);
+          sim.grab();
+          dragHeight = sim.end.position.y;
+          const p = rayPoint(e, dragHeight);
+          offset.set(
+            sim.end.position.x - (p?.x ?? sim.end.position.x),
+            0,
+            sim.end.position.z - (p?.z ?? sim.end.position.z),
+          );
+          controls.enabled = false;
+          controls.autoRotate = false;
+          grabbed.classList.add("held");
+          $("#heightBox").classList.remove("dim");
+          $("#height").value = dragHeight;
+          $("#grab span").hidden = true;
+        });
+        grabbed.addEventListener("pointermove", (e) => {
+          if (e.pointerId !== mainPointer) return;
+          e.preventDefault();
+          const p = rayPoint(e, dragHeight);
+          if (p)
+            sim.setTarget([
+              p.x + offset.x,
+              +$("#height").value,
+              p.z + offset.z,
+            ]);
+        });
+        for (const ev of ["pointerup", "pointercancel", "lostpointercapture"])
+          grabbed.addEventListener(ev, (e) => {
+            if (e.pointerId === mainPointer) releaseAll();
+          });
+        function changeHeight(y) {
+          if (!sim.grabbed) return;
+          const n = Math.max(0.22, Math.min(2.85, y));
+          $("#height").value = n;
+          sim.setTarget([sim.target.x, n, sim.target.z]);
+        }
+        $("#height").addEventListener("pointerdown", (e) => {
+          e.stopPropagation();
+          if (!sim.grabbed) {
+            e.preventDefault();
+            return;
+          }
+          heightPointer = e.pointerId;
+          $("#height").setPointerCapture(e.pointerId);
+        });
+        $("#height").addEventListener("pointerup", (e) => {
+          if (e.pointerId === heightPointer) heightPointer = null;
+        });
+        $("#height").addEventListener("pointercancel", () => {
+          heightPointer = null;
+        });
+        $("#height").oninput = (e) => changeHeight(+e.target.value);
+        window.addEventListener(
+          "wheel",
+          (e) => {
+            if (sim?.grabbed) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+              changeHeight(+$("#height").value - e.deltaY * 0.002);
+            }
+          },
+          { passive: false, capture: true },
+        );
+        window.addEventListener("blur", releaseAll);
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) releaseAll();
+        });
+        window.addEventListener("keydown", (e) => {
+          if (e.target.matches("input,select")) return;
+          if (e.code === "Escape") releaseAll();
+          if (e.code === "Space") {
+            e.preventDefault();
+            load(activeLevel);
+          }
+          if (e.code === "KeyR") $("#random").click();
+          if (e.code === "KeyQ") changeHeight(+$("#height").value - 0.12);
+          if (e.code === "KeyE") changeHeight(+$("#height").value + 0.12);
+        });
+        canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+        function resize() {
+          renderer.setSize(innerWidth, innerHeight);
+          const aspect = innerWidth / innerHeight;
+          const size = innerWidth < 650 ? 4.7 / aspect : 4.1;
+          camera.left = -size * aspect;
+          camera.right = size * aspect;
+          camera.top = size;
+          camera.bottom = -size;
+          camera.updateProjectionMatrix();
+        }
+        window.addEventListener("resize", resize);
+        resize();
+        index = Math.max(0, Math.min(23, save.index || 0));
+        load(level(index));
+        const obj = new THREE.Object3D(),
+          a = new THREE.Vector3(),
+          b = new THREE.Vector3(),
+          d = new THREE.Vector3(),
+          up = new THREE.Vector3(0, 1, 0),
+          project = new THREE.Vector3();
+        let acc = 0,
+          last = performance.now(),
+          frames = 0,
+          perf = [],
+          maxCalls = 0;
+        let paused = false;
+        function render() {
+          cowGroup.position.copy(sim.cow.position);
+          cowGroup.quaternion.copy(sim.cow.quaternion);
+          for (let i = 0; i < N; i++) {
+            a.copy(sim.nodes[i].position);
+            b.copy(sim.nodes[i + 1].position);
+            d.copy(b).sub(a);
+            const spanLength = d.length();
+            obj.position.copy(a).add(b).multiplyScalar(0.5);
+            obj.quaternion.setFromUnitVectors(up, d.normalize());
+            obj.scale.set(ROPE_R, spanLength, ROPE_R);
+            obj.updateMatrix();
+            rope.setMatrixAt(i, obj.matrix);
+          }
+          rope.instanceMatrix.needsUpdate = true;
+          for (let i = 0; i <= N; i++) {
+            obj.position.copy(sim.nodes[i].position);
+            obj.quaternion.identity();
+            obj.scale.setScalar(1);
+            obj.updateMatrix();
+            ropeJoints.setMatrixAt(i, obj.matrix);
+          }
+          ropeJoints.instanceMatrix.needsUpdate = true;
+          knot.position.copy(sim.end.position);
+          knot.scale.set(1 + sim.tension * 0.12, 1, 1);
+          flag.rotation.y = Math.sin(sim.time * 2) * 0.2;
+          mark.position.set(sim.end.position.x, 0.015, sim.end.position.z);
+          const p = stemGeo.attributes.position;
+          p.setXYZ(0, sim.end.position.x, 0.025, sim.end.position.z);
+          p.setXYZ(
+            1,
+            sim.end.position.x,
+            sim.end.position.y,
+            sim.end.position.z,
+          );
+          p.needsUpdate = true;
+          noseTip.scale.x = 1 - sim.contact * 0.22;
+          for (let i = 0; i < 2; i++)
+            ears[i].rotation.x =
+              (i ? 1 : -1) *
+              (sim.contact * 0.25 + Math.sin(sim.time * 2.5) * 0.035);
+          cloth.rotation.x =
+            Math.sin(sim.time * 1.6) * 0.025 + sim.contact * 0.18;
+          project.copy(knot.position).project(camera);
+          const x = (project.x * 0.5 + 0.5) * innerWidth,
+            y = (-project.y * 0.5 + 0.5) * innerHeight;
+          grabbed.style.left = `${Math.max(3, Math.min(innerWidth - 61, x - 29))}px`;
+          grabbed.style.top = `${Math.max(3, Math.min(innerHeight - 125, y - 29))}px`;
+          renderer.info.reset();
+          renderer.render(scene, camera);
+          maxCalls = Math.max(maxCalls, renderer.info.render.calls);
+        }
+        function frame(now) {
+          requestAnimationFrame(frame);
+          const begin = performance.now();
+          if (!paused) {
+            acc += Math.min(0.05, (now - last) / 1000);
+            let steps = 0;
+            while (acc >= DT && steps++ < 6) {
+              sim.step();
+              acc -= DT;
+            }
+            if (sim.won && !wonShown) {
+              wonShown = true;
+              $("#toast").classList.add("show");
+              $("#next").disabled = false;
+              const key = isSeed
+                ? `seed:${activeLevel.seed}`
+                : `level:${activeLevel.id}`;
+              save.completed[key] = Math.min(
+                save.completed[key] ?? Infinity,
+                sim.grips,
+              );
+              persist();
+              $("#progress").textContent =
+                `已走过 ${Object.keys(save.completed).length} 段 · ${sim.grips} 次握绳`;
+              tone(390, 0.025, 0.24, "triangle");
+            }
+            if (sim.contact > 0.15 && sim.time - contactClock > 0.5) {
+              tone(130, 0.025, 0.08, "triangle");
+              contactClock = sim.time;
+            } else if (sim.tension > 0.2 && frames % 35 === 0)
+              tone(210 + sim.tension * 100, 0.008, 0.06);
+            if (
+              sim.cow.velocity.length() > 0.4 &&
+              sim.cow.position.y < 0.52 &&
+              sim.time - lastFootfall > 0.32
+            ) {
+              tone(85, 0.012, 0.045, "triangle");
+              lastFootfall = sim.time;
+            }
+            controls.update();
+          }
+          last = now;
+          const js = performance.now() - begin;
+          perf.push(js);
+          if (perf.length > 1200) perf.shift();
+          render();
+          frames++;
+        }
+        requestAnimationFrame(frame);
+        window.__ready = true;
+        $("#error").hidden = true;
+        // QA uses exactly the production simulation and input handlers. No alternate win path.
+        window.comingThrough = {
+          get sim() {
+            return sim;
+          },
+          get level() {
+            return activeLevel;
+          },
+          load(i, mirror = 1) {
+            isSeed = false;
+            index = i;
+            load(level(i, 101 + i, mirror));
+            return sim.state();
+          },
+          state: () => sim.state(),
+          pause(v = true) {
+            paused = v;
+          },
+          step(n = 1) {
+            for (let i = 0; i < n; i++) sim.step();
+            render();
+            return sim.state();
+          },
+          project(p) {
+            return new THREE.Vector3(...p)
+              .project(camera)
+              .toArray()
+              .map((v, i) =>
+                i === 0
+                  ? (v * 0.5 + 0.5) * innerWidth
+                  : i === 1
+                    ? (-v * 0.5 + 0.5) * innerHeight
+                    : v,
+              );
+          },
+          metrics() {
+            const s = [...perf].sort((a, b) => a - b);
+            return {
+              jsP95: s[Math.floor(s.length * 0.95)],
+              maxCalls,
+              frames,
+              dpr: renderer.getPixelRatio(),
+              userAgent: navigator.userAgent,
+            };
+          },
+          renderer,
+          render,
+        };
+      } catch (e) {
+        console.error(e);
+        $("#error").hidden = false;
+        $("#error").textContent =
+          "暂时无法打开晾衣场。请确认浏览器支持 WebGL，并能加载 Three.js CDN，然后刷新。";
+      }
+    </script>
+  </body>
+</html>
