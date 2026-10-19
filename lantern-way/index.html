@@ -217,6 +217,10 @@ const dom = {};
 
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
+// mergeGeometries 要求参与合并的几何 index 属性一致：three 的内置几何有一半带 index（Cylinder/Cone/Plane）、
+// 一半不带（Icosahedron 等 Polyhedron 系）。混着传会返回 null 并刷控制台报错，这里统一先转成非索引再合并。
+const mergeSolid = (...geos) => mergeGeometries(geos.map(g => (g && g.index ? g.toNonIndexed() : g)));
+
 const MAXTORCH = 16;
 const DARK_PENALTY = 42;     // A* cost added for stepping into darkness
 const LIT_OK = 0.18;         // above this a cell counts as "lit"
@@ -368,10 +372,14 @@ function makeTerrain(seed, params) {
   geo.computeVertexNormals();
 
   // per-vertex grid mapping (for cheap light/color writes)
-  const vc = pos.count;
+  // 注意：必须在 toNonIndexed() 之后重新取 position，展开后的顶点数（SEG*SEG*6）
+  // 与索引态的顶点数（(SEG+1)^2）差一个数量级，用旧 count 建 color 缓冲会让
+  // 绝大多数顶点没有颜色、被 GPU 读到垃圾值（表现为荧光绿/青色的地形）。
+  const vpos = geo.attributes.position;
+  const vc = vpos.count;
   G.vGrid = new Int32Array(vc);
   for (let k = 0; k < vc; k++) {
-    const x = pos.getX(k), z = pos.getZ(k);
+    const x = vpos.getX(k), z = vpos.getZ(k);
     let gj = Math.round((x + HALF) / CELL); gj = clamp(gj, 0, SEG);
     let gi = Math.round((HALF - z) / CELL); gi = clamp(gi, 0, SEG);
     G.vGrid[k] = gi * GN + gj;
@@ -475,6 +483,7 @@ function buildGarden(seed) {
   const perlin = makePerlin(seed * 7 + 3);
 
   const place = (geo, mat, count, kind, outlineThick) => {
+    if (!geo) return;
     const mesh = new THREE.InstancedMesh(geo, mat, count);
     mesh.castShadow = true; mesh.receiveShadow = true;
     const items = [];
@@ -508,7 +517,7 @@ function buildGarden(seed) {
   // broadleaf: rounded canopy + trunk (merged)
   const canopy = new THREE.IcosahedronGeometry(0.55, 1); canopy.translate(0, 0.95, 0);
   const trunk = new THREE.CylinderGeometry(0.08, 0.11, 0.7, 6); trunk.translate(0, 0.35, 0);
-  const broad = mergeGeometries([canopy, trunk]);
+  const broad = mergeSolid(canopy, trunk);
   const broadMat = new THREE.MeshToonMaterial({ color: PALETTE.leaf, gradientMap: G.toon });
   place(broad, broadMat, 16, 'tree', 0.05);
 
@@ -516,7 +525,7 @@ function buildGarden(seed) {
   const c1 = new THREE.ConeGeometry(0.42, 0.7, 7); c1.translate(0, 0.55, 0);
   const c2 = new THREE.ConeGeometry(0.32, 0.6, 7); c2.translate(0, 1.0, 0);
   const ctr = new THREE.CylinderGeometry(0.07, 0.09, 0.3, 6); ctr.translate(0, 0.15, 0);
-  const cone = mergeGeometries([c1, c2, ctr]);
+  const cone = mergeSolid(c1, c2, ctr);
   const coneMat = new THREE.MeshToonMaterial({ color: PALETTE.leafDark, gradientMap: G.toon });
   place(cone, coneMat, 12, 'conifer', 0.05);
 
@@ -627,7 +636,7 @@ function buildTorchSystem() {
   // flame: two crossed soft planes
   const fg1 = new THREE.PlaneGeometry(0.42, 0.8); fg1.translate(0, 0.95, 0);
   const fg2 = fg1.clone(); fg2.rotateY(Math.PI / 2);
-  const flameGeo = mergeGeometries([fg1, fg2]);
+  const flameGeo = mergeSolid(fg1, fg2);
   const flameMat = new THREE.MeshBasicMaterial({
     map: makeFlameTexture(), color: 0xffffff, transparent: true,
     depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending
@@ -1071,7 +1080,7 @@ function loadLevel(idx, overrideSeed) {
   G.fear.set(0); G.fearVis = 0;
   G.path = []; G.pathIndex = 0; G.pathDirty = true; G.lastPath = 0; G.lightDirty = true;
   G.zoomTarget = 1; G.camera.zoom = 1; G.camera.updateProjectionMatrix();
-  controls.autoRotate = false; G.rotateOn = false; dom.btnRotate.classList.remove('on');
+  G.controls.autoRotate = false; G.rotateOn = false; dom.btnRotate.classList.remove('on');
   G.island.position.y = 0; G.enterT = 0;
   setOutlines(G.outlineOn);
   updateHud(); setBanner(null);
@@ -1148,7 +1157,7 @@ function initUI() {
 
   $('btnSeed').addEventListener('click', () => loadLevel(G.levelIdx, (Math.random() * 1e9) | 0));
   dom.btnOutline.addEventListener('click', () => { setOutlines(!G.outlineOn); dom.btnOutline.classList.toggle('on', G.outlineOn); });
-  dom.btnRotate.addEventListener('click', () => { G.rotateOn = !G.rotateOn; controls.autoRotate = G.rotateOn; dom.btnRotate.classList.toggle('on', G.rotateOn); });
+  dom.btnRotate.addEventListener('click', () => { G.rotateOn = !G.rotateOn; G.controls.autoRotate = G.rotateOn; dom.btnRotate.classList.toggle('on', G.rotateOn); });
   dom.btnSound.addEventListener('click', () => { G.soundOn = !G.soundOn; if (G.soundOn) initAudio(); dom.btnSound.classList.toggle('on', G.soundOn); });
   dom.btnReset.addEventListener('click', resetLevel);
   dom.btnHelp.addEventListener('click', () => { dom.help.classList.add('show'); dom.helpBack.classList.add('show'); });
@@ -1238,7 +1247,13 @@ function animate() {
   updateEntrance(dt);
 
   let animating = false;
-  for (const T of G.torches) { if (T.anim < 1) { T.anim = Math.min(1, T.anim + dt / 0.4); animating = true; } }
+  for (const T of G.torches) {
+    if (T.anim < 1) { T.anim = Math.min(1, T.anim + dt / 0.4); animating = true; }
+    // 光半径必须随点燃动画长出来：effR 是所有光照/寻路/池光的唯一依据，
+    // 之前这里只涨 anim 不写 effR，effR 永远停在 0 → 火把不发光、路径代价不生效。
+    const wantR = TORCH_R * T.anim;
+    if (Math.abs(T.effR - wantR) > 0.004) { T.effR = wantR; G.lightDirty = true; }
+  }
   if (animating) updateTorchInstances();
   if (G.lightDirty || animating) { updateTorchLight(); G.lightDirty = false; }
 
