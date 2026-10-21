@@ -1,0 +1,475 @@
+:root {
+  color-scheme: dark;
+  --night: #12161c;
+  --deep: #0b0e13;
+  --fire: #ff9a52;
+  --paper: #f1e3cc;
+  --paper-dim: #c8b79c;
+  --ice: #7fa6bf;
+  --ink: #171a1f;
+  --ink-soft: #4a4038;
+  --ink-faint: #8a7a66;
+  --rule: rgba(23, 26, 31, .34);
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK SC", monospace;
+  --serif: ui-serif, "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--deep);
+  color: var(--paper);
+  font-family: var(--font);
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 274px;
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* ---------- 画面 ---------- */
+
+.stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--deep);
+  cursor: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#scene { display: block; width: 100%; height: 100%; touch-action: none; }
+
+.hotspots { position: absolute; inset: 0; pointer-events: none; }
+
+/* 纸纹：一次性生成的噪点贴图，交给合成层，不占每帧的绘制预算 */
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .55;
+  mix-blend-mode: overlay;
+  background-repeat: repeat;
+}
+
+.hotspot {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 18px;
+  background: none;
+  color: transparent;
+  font: inherit;
+  pointer-events: none;
+}
+
+.hotspot:focus-visible {
+  outline: 2px solid rgba(241, 227, 204, .92);
+  outline-offset: 3px;
+  background: rgba(255, 154, 82, .1);
+}
+
+.hand-hint {
+  position: absolute;
+  left: 22px;
+  top: 18px;
+  margin: 0;
+  max-width: 22em;
+  font-size: 12px;
+  line-height: 1.7;
+  letter-spacing: .06em;
+  color: rgba(241, 227, 204, .72);
+  text-shadow: 0 1px 12px rgba(11, 14, 19, .9);
+  text-wrap: pretty;
+  pointer-events: none;
+}
+
+/* ---------- 账本小票 ---------- */
+
+.receipt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 24px 20px 16px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: -16px 0 40px rgba(0, 0, 0, .55), inset 1px 0 0 rgba(255, 255, 255, .5);
+  overflow: hidden;
+}
+
+.receipt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .45;
+  background-image:
+    repeating-linear-gradient(122deg, rgba(23, 26, 31, .028) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(38deg, rgba(255, 255, 255, .35) 0 1px, transparent 1px 5px);
+}
+
+.receipt-head, .receipt-body, .receipt-foot { position: relative; }
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  color: var(--ink-faint);
+}
+
+.receipt h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 31px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: #1b1e24;
+}
+
+.receipt .lede {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.receipt .lede.small { font-size: 11.5px; color: #6b5c4c; margin-top: 6px; }
+
+.receipt-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule);
+}
+
+.receipt-title {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  color: var(--ink-faint);
+}
+
+.ledger {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.8;
+  color: #3c342c;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(23, 26, 31, .25) transparent;
+}
+
+.ledger li {
+  padding: 1px 0 2px;
+  border-bottom: 1px dotted rgba(23, 26, 31, .13);
+  animation: print .3s ease-out both;
+}
+
+/* 空账本不该占满右栏、把说明文字挤到纸底 */
+.ledger:empty { display: none; }
+
+.ledger .t { color: var(--ink-faint); }
+.ledger b { font-weight: 600; color: #1b1e24; }
+.ledger .sep { color: rgba(23, 26, 31, .3); }
+
+@keyframes print {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.ledger-empty {
+  margin: 4px 0 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+.ledger-empty[hidden] { display: none; }
+
+/* 账本还空着时，用极淡的横线占住纸面，别让右栏空出一大块 */
+.receipt-body:has(.ledger:empty)::after {
+  content: "";
+  flex: 1 1 auto;
+  min-height: 60px;
+  margin-top: 12px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 23px,
+    rgba(23, 26, 31, .085) 23px 24px
+  );
+  pointer-events: none;
+}
+
+.receipt-foot {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule);
+}
+
+.meters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.meters dt {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  color: var(--ink-faint);
+}
+
+.meters dd {
+  margin: 2px 0 0;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: #1b1e24;
+  white-space: nowrap;
+}
+
+.meter {
+  display: block;
+  height: 3px;
+  margin-top: 5px;
+  border-radius: 2px;
+  background: rgba(23, 26, 31, .14);
+  overflow: hidden;
+}
+
+.meter b {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #b5652b, #dd9c5f);
+  transition: width .2s linear;
+}
+
+#bodyMeter[data-low="true"] { background: #a8452c; }
+#fuelMeter { background: linear-gradient(90deg, #8a4a28, #c9752f); }
+#timeMeter { background: linear-gradient(90deg, #3f5b6b, #6f92a6); }
+
+.loss-line {
+  margin: 9px 0 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--ink-faint);
+}
+
+.loss-line span[data-cold="true"] { color: #a8452c; font-weight: 600; }
+
+.controls { display: flex; gap: 8px; margin-top: 12px; }
+
+.controls button {
+  flex: 1 1 auto;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1.5px solid #1b1e24;
+  border-radius: 6px;
+  background: #f8eedb;
+  color: #1b1e24;
+  font: 600 12px/1 var(--font);
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: background .15s ease, transform .15s ease;
+}
+
+.controls button:hover { background: #fff7e8; }
+.controls button:active { transform: translateY(1px); }
+.controls button[aria-pressed="false"] { background: #e6d8c0; color: #6b5c4c; }
+.controls .fold { display: none; flex: 0 0 auto; }
+
+/* ---------- 结算 ---------- */
+
+.card {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: radial-gradient(circle at 50% 42%, rgba(10, 13, 18, .55), rgba(10, 13, 18, .93));
+}
+
+.card[hidden] { display: none; }
+
+.card-inner {
+  width: min(420px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 26px 24px 20px;
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 26px 64px rgba(0, 0, 0, .6);
+  transform: rotate(-.4deg);
+  animation: card-in .45s cubic-bezier(.22, 1, .32, 1) both;
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(14px) rotate(-.4deg); }
+  to { opacity: 1; transform: rotate(-.4deg); }
+}
+
+.card-kicker {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  color: var(--ink-faint);
+}
+
+.card h2 {
+  margin: 8px 0 10px;
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: .06em;
+}
+
+.card-line { margin: 0; font-size: 13px; line-height: 1.85; color: var(--ink-soft); white-space: pre-line; }
+
+.card-stars {
+  margin: 14px 0 0;
+  font-size: 19px;
+  letter-spacing: .26em;
+  color: #c9752f;
+}
+
+.card-stars span { color: rgba(23, 26, 31, .3); }
+
+.card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule);
+}
+
+.card-stats dt {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  color: var(--ink-faint);
+}
+
+.card-stats dd { margin: 2px 0 0; font-family: var(--mono); font-size: 15px; }
+
+.card-best { margin: 12px 0 0; font-size: 11.5px; color: var(--ink-faint); }
+
+#again {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 16px;
+  border: 1.5px solid #1b1e24;
+  border-radius: 6px;
+  background: #f8eedb;
+  color: #1b1e24;
+  font: 600 13px/1 var(--font);
+  letter-spacing: .06em;
+  cursor: pointer;
+}
+
+#again:hover { background: #fff7e8; }
+
+.card-hint {
+  margin: 10px 0 0;
+  font-size: 10.5px;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--ink-faint);
+}
+
+/* ---------- 窄屏：纵向重排 ---------- */
+
+@media (max-width: 700px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .stage { cursor: default; }
+
+  /* 窄屏里窗子挪到了正上方，提示语收窄一点，别压到窗框上。 */
+  .hand-hint { left: 14px; top: 12px; font-size: 11px; max-width: 14em; }
+
+  .receipt {
+    max-height: min(44vh, 290px);
+    padding: 11px 14px 10px;
+    box-shadow: 0 -14px 34px rgba(0, 0, 0, .55);
+  }
+
+  .receipt-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .eyebrow { display: none; }
+  .receipt h1 { font-size: 19px; letter-spacing: .08em; }
+  .receipt .lede { margin: 0; font-size: 11px; line-height: 1.5; }
+  .receipt .lede.small { display: none; }
+
+  .receipt-body { margin-top: 8px; padding-top: 8px; }
+  .receipt-title { display: none; }
+  .ledger { max-height: 3.9em; overflow-y: hidden; font-size: 10.5px; line-height: 1.85; }
+  .receipt.open .ledger { max-height: 26vh; overflow-y: auto; }
+  .ledger-empty { margin-top: 0; font-size: 10px; }
+
+  .receipt-foot { margin-top: 8px; padding-top: 8px; }
+  .meters dd { font-size: 13px; }
+  .loss-line { margin-top: 7px; font-size: 9.5px; }
+  .controls { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) auto; margin-top: 9px; gap: 6px; }
+  .controls button { min-height: 44px; font-size: 11.5px; padding: 0 8px; }
+  .controls .fold { display: block; padding: 0 12px; }
+}
+
+@media (max-height: 520px) and (max-width: 700px) {
+  .receipt .lede { display: none; }
+  .receipt { max-height: 40vh; }
+  .ledger { max-height: 2.2em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ledger li { animation: none; }
+  .card-inner { animation: none; }
+  .meter b { transition: none; }
+  .controls button { transition: none; }
+}

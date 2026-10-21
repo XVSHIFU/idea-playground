@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12161c">
+<meta name="description" content="冬夜停电的小屋，你的体温是屋里唯一的火。按住冷掉的东西，它暖起来，你就冷下去；而火盆只肯还你八成的热。">
+<title>借一度 · Borrow a Degree</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<!-- 作品 id：borrow-a-degree ｜ 键盘：Tab 换位置，按住空格传热，R 重来，M 静音 -->
+<div class="app">
+  <main class="stage" id="stage">
+    <canvas id="scene" role="img" aria-label="冬夜的小屋一角：左边是余烬未熄的火盆，中间桌上放着一杯冷茶、一只蜷着的猫和一盆将开的花，右边是一扇结着冰花的窗。按住火盆可以回温，按住冷掉的东西会把你的热量递给它。"></canvas>
+    <div class="hotspots" id="hotspots">
+      <button type="button" class="hotspot" data-target="brazier" aria-label="火盆，按住回温"><span class="sr-only">火盆</span></button>
+      <button type="button" class="hotspot" data-target="tea" aria-label="冷茶，按住传热"><span class="sr-only">冷茶</span></button>
+      <button type="button" class="hotspot" data-target="cat" aria-label="猫，按住传热"><span class="sr-only">猫</span></button>
+      <button type="button" class="hotspot" data-target="flower" aria-label="花，按住传热"><span class="sr-only">花</span></button>
+      <button type="button" class="hotspot" data-target="window" aria-label="窗上的冰，按住传热"><span class="sr-only">窗上的冰</span></button>
+    </div>
+    <p class="hand-hint" id="handHint">按住火盆回温，按住冷掉的东西传热。</p>
+    <div class="grain" id="grain" aria-hidden="true"></div>
+    <p class="sr-only" id="announce" role="status" aria-live="polite" aria-atomic="true"></p>
+  </main>
+
+  <aside class="receipt" id="receipt" aria-label="热量账本">
+    <header class="receipt-head">
+      <p class="eyebrow">BORROW A DEGREE</p>
+      <h1>借一度</h1>
+      <p class="lede">冬夜停电。你的体温是屋里唯一的火。</p>
+      <p class="lede small">按住火盆回温，按住冷掉的东西把热递过去。给出去的每一度，都会散一点在路上。</p>
+    </header>
+
+    <div class="receipt-body">
+      <p class="receipt-title"><span>热量账本</span><span id="receiptClock">22:14</span></p>
+      <ol class="ledger" id="ledger" aria-label="热量账本明细"></ol>
+      <p class="ledger-empty" id="ledgerEmpty">还没有一笔。<br>火盆只肯还你八成的热，<br>其余的会一路散在空气里。</p>
+    </div>
+
+    <footer class="receipt-foot">
+      <dl class="meters">
+        <div>
+          <dt>体温</dt>
+          <dd><span id="bodyValue">37.0</span>°C<i class="meter"><b id="bodyMeter"></b></i></dd>
+        </div>
+        <div>
+          <dt>柴</dt>
+          <dd><span id="fuelValue">360</span><i class="meter"><b id="fuelMeter"></b></i></dd>
+        </div>
+        <div>
+          <dt>夜</dt>
+          <dd><span id="timeValue">1:50</span><i class="meter"><b id="timeMeter"></b></i></dd>
+        </div>
+      </dl>
+      <p class="loss-line">路上会散掉 <span id="lossValue">25%</span> · <span id="fuelNote">火还旺</span></p>
+      <div class="controls">
+        <button type="button" id="restart">再守一夜</button>
+        <button type="button" id="sound" aria-pressed="true">音效 · 开</button>
+        <button type="button" id="fold" class="fold" aria-expanded="false" aria-controls="ledger">账本</button>
+      </div>
+    </footer>
+  </aside>
+</div>
+
+<div class="card" id="card" hidden>
+  <div class="card-inner" role="status" aria-live="polite">
+    <p class="card-kicker" id="cardKicker">22:31</p>
+    <h2 id="cardTitle">窗化开了</h2>
+    <p class="card-line" id="cardLine"></p>
+    <p class="card-stars" id="cardStars" aria-hidden="true"></p>
+    <dl class="card-stats">
+      <div><dt>剩余体温</dt><dd id="statBody">—</dd></div>
+      <div><dt>剩余柴</dt><dd id="statFuel">—</dd></div>
+      <div><dt>用时</dt><dd id="statTime">—</dd></div>
+      <div><dt>这一夜</dt><dd id="statScore">—</dd></div>
+    </dl>
+    <p class="card-best" id="cardBest"></p>
+    <button type="button" id="again">再守一夜</button>
+    <p class="card-hint">空格按住传热，Tab 换位置，R 重来，M 静音</p>
+  </div>
+</div>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

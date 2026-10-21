@@ -494,5 +494,32 @@
     "identity": "借过一下",
     "enabled": true,
     "publicDirectories": []
+  },
+  {
+    "id": "borrow-a-degree",
+    "name": "借一度",
+    "category": "氛围策略",
+    "description": "冬夜停电的小屋，你的体温是唯一的火：把手按在冷掉的东西上，它暖起来，你就冷下去。",
+    "hint": "按住左边的火盆，把手暖回来。",
+    "label": "体温 · 热量账本",
+    "color": "#f1e3cc",
+    "directory": "../borrow-a-degree",
+    "port": 4312,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "style.css",
+      "app.js",
+      "engine.js"
+    ],
+    "files": [
+      "index.html",
+      "style.css",
+      "app.js",
+      "engine.js"
+    ],
+    "publicDirectories": [],
+    "identity": "借一度",
+    "enabled": true
   }
 ]

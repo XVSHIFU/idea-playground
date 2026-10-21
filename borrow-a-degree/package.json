@@ -1,0 +1,9 @@
+{
+  "name": "borrow-a-degree",
+  "private": true,
+  "type": "module",
+  "description": "借一度 —— 浏览器里直接打开 index.html 即可，本文件只声明引擎的模块类型，便于 node 运行 engine.test.mjs。",
+  "scripts": {
+    "test": "node --test engine.test.mjs"
+  }
+}
