@@ -28,7 +28,7 @@
 
 推荐按 [统一接入说明](../docs/ADDING_PROJECTS.md) 使用根目录的 `project:new` / `project:add` 命令维护 `projects.json`，修改后重启入口。`enabled: false` 表示草稿，不显示也不构建。`required` 决定主入口是否可用，`fallback` 是未齐备时的可用替代入口；`identity` 必须出现在已有服务的 HTML title 中，用于端口冲突时的基本识别。`files` 精确列出可公开文件，`publicDirectories` 仅列可整体公开的资源目录，禁止放项目根目录。此接入方式适用于当前纯静态项目；未来有后端、登录、环境变量的项目需先提供运行接口，不能直接套用。
 
-预览图来自各项目实际页面，放在 `public/previews/`，不是实时画面；项目变化后可运行 `node tools/capture.mjs` 更新（需先启动入口，并提供 Playwright，脚本默认复用相邻 protocol-zoo 的开发依赖）。`.impeccable/` 与测试文件只用于开发，不向浏览器公开。
+预览图来自各项目实际页面，保存在 `public/previews/`。在仓库根运行 `npm run preview:capture` 补齐缺图，或运行 `npm run preview:capture -- <id>` 更新指定作品。浏览器安装见[接入说明](../docs/ADDING_PROJECTS.md#预览图)。`.impeccable/` 与测试文件只用于开发。
 
 ## 验证
 

@@ -40,5 +40,83 @@
     "origin": "http://127.0.0.1:4193/index.html",
     "captured": "2026-10-03T04:28:16.929Z",
     "description": "Actual local gameplay after three bids made through the UI in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "syntax-path.png",
+    "origin": "http://127.0.0.1:44583/idea-playground/projects/syntax-path/index.html",
+    "captured": "2026-11-09T13:09:34.026Z",
+    "description": "Actual Pages preview in an isolated browser context. Three steps into the sentence walk, with the paper model in view."
+  },
+  {
+    "file": "taste-score.png",
+    "origin": "http://127.0.0.1:44583/idea-playground/projects/taste-score/index.html",
+    "captured": "2026-11-09T13:09:35.549Z",
+    "description": "Actual Pages preview in an isolated browser context. The revealed caramelized onion flavor score."
+  },
+  {
+    "file": "note-block-studio.png",
+    "origin": "http://127.0.0.1:34917/idea-playground/projects/note-block-studio/index.html",
+    "captured": "2026-11-09T13:05:00.930Z",
+    "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "redstone-pulse-garden.png",
+    "origin": "http://127.0.0.1:43571/idea-playground/projects/redstone-pulse-garden/index.html",
+    "captured": "2026-11-09T13:09:07.699Z",
+    "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "last-cast.png",
+    "origin": "http://127.0.0.1:44583/idea-playground/projects/last-cast/index.html",
+    "captured": "2026-11-09T13:09:44.481Z",
+    "description": "Actual Pages preview in an isolated browser context. The first chapter after starting the boat scene."
+  },
+  {
+    "file": "borrow-a-degree.png",
+    "origin": "http://127.0.0.1:34917/idea-playground/projects/borrow-a-degree/index.html",
+    "captured": "2026-11-09T13:05:37.475Z",
+    "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "roundland.png",
+    "origin": "http://127.0.0.1:36679/idea-playground/projects/roundland/index.html",
+    "captured": "2026-11-09T13:06:33.844Z",
+    "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "lantern-way.png",
+    "origin": "http://127.0.0.1:36679/idea-playground/projects/lantern-way/index.html",
+    "captured": "2026-11-09T13:06:41.752Z",
+    "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "gravity-enchant.png",
+    "origin": "http://127.0.0.1:36679/idea-playground/projects/gravity-enchant/index.html",
+    "captured": "2026-11-09T13:06:49.607Z",
+    "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "splash-arc.png",
+    "origin": "http://127.0.0.1:36679/idea-playground/projects/splash-arc/index.html",
+    "captured": "2026-11-09T13:06:57.006Z",
+    "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "last-lamp.png",
+    "origin": "http://127.0.0.1:36679/idea-playground/projects/last-lamp/index.html",
+    "captured": "2026-11-09T13:07:06.688Z",
+    "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "click-collapse.png",
+    "origin": "http://127.0.0.1:43571/idea-playground/projects/click-collapse/index.html",
+    "captured": "2026-11-09T13:09:15.028Z",
+    "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "coming-through.png",
+    "origin": "http://127.0.0.1:36679/idea-playground/projects/coming-through/index.html",
+    "captured": "2026-11-09T13:07:14.720Z",
+    "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
   }
 ]

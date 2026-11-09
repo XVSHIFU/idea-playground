@@ -3,7 +3,7 @@
 - 本仓库是一组独立网页作品与统一入口。先读根 README，接入约定见 `docs/ADDING_PROJECTS.md`，不必逐个通读其他项目源码。
 - 在具体项目目录开发，保留其 `.code-workspace`。不要新建嵌套 `.git`；所有源码由根仓库跟踪。
 - `idea-hub/projects.json` 是入口与构建使用的清单。新项目用 `npm run project:new -- <id> --name "名称"` 创建；默认草稿，不出现在目录与部署产物中。
-- 更新项目的 `integration.json` 后，运行 `npm run project:add -- <id> --enable` 登记。预览图可选，缺图显示名称，不用虚构截图。
+- 更新项目的 `integration.json` 后，运行 `npm run project:add -- <id> --enable` 登记。已启用作品必须有实际页面截图。运行 `npm run preview:capture` 补齐缺图，并提交 `idea-hub/public/previews/<id>.png` 和截图来源记录。`npm run check` 会报告缺图，草稿可以先留空。
 - 网页资源使用相对路径；不得依赖本机端口、绝对磁盘路径、远端密钥或 Node 服务。需要后端时先明确接入方案。
 - 浏览器存储、BroadcastChannel、Web Locks 使用项目独有前缀；Pages 上的项目共享域名，不能假定路径隔离存储。
 - `files` 和 `publicDirectories` 只允许真正可公开的资源。不要登记服务脚本、测试、环境文件、开发记录或依赖目录。

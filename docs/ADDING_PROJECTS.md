@@ -52,7 +52,14 @@ npm run project:add -- paper-moon --enable
 
 ## 预览图
 
-可选：将实际页面截图放入 `idea-hub/public/previews/<id>.png`。无图时展示名称。所有已启用项目截图可通过 `idea-hub/tools/capture.mjs` 更新；它需先启动本机入口与 Playwright。保留截图来源信息，不将概念图冒充实际页面。
+已启用作品需要实际页面截图。首次使用先在仓库根执行 `npm ci`。Windows 默认使用 Edge，其他系统可执行 `npx playwright install chromium` 安装截图用的浏览器。
+
+```sh
+npm run preview:capture                       # 补齐已启用作品缺少的预览
+npm run preview:capture -- paper-moon         # 更新指定作品的预览
+```
+
+命令会构建并临时启动 Pages 预览，用独立浏览器会话截图。截图放在 `idea-hub/public/previews/<id>.png`，来源记录写入 `idea-hub/.impeccable/preview-origins.json`，两者一起提交。截图后运行 `npm run build` 将新图打包进 `dist`。`npm run check` 会报告已启用但缺图的作品。
 
 ## 验证与提交
 
@@ -69,4 +76,4 @@ npm run preview
 
 ## 发给其他会话
 
-> 当前总仓库是 idea-playground，请在根目录的独立项目文件夹开发，先读根 AGENTS.md 和 docs/ADDING_PROJECTS.md。可用 `npm run project:new -- <英文id> --name "作品名"` 初始化隐藏草稿。完成时提供：一句话简介、不剧透的首次动作、入口文件、必需资源与公开资源清单、静态托管限制、存储/标签页要求、实际验证结果和可选截图；更新 integration.json 后执行 project:add -- <id> --enable。不要新建嵌套 Git 仓库，不修改其他作品，不自行推送或发布。
+> 当前总仓库是 idea-playground，请在根目录的独立项目文件夹开发，先读根 AGENTS.md 和 docs/ADDING_PROJECTS.md。可用 `npm run project:new -- <英文id> --name "作品名"` 初始化隐藏草稿。完成时提供一句话简介、不剧透的首次动作、入口文件、必需资源与公开资源清单、静态托管限制、存储和标签页要求以及实际验证结果。更新 integration.json 后执行 `npm run project:add -- <id> --enable`，再用 `npm run preview:capture` 补齐截图。不要新建嵌套 Git 仓库，不修改其他作品，不自行推送或发布。

@@ -90,12 +90,10 @@
 | 可用入口 | `index.html`；纸面版见 `PLAYTEST.md` |
 | 当前可玩程度 | HTML 版可玩，已通过操作检查；真人体验尚未验证 |
 | 运行或构建命令 | 直接打开 `index.html`；无需构建 |
-| 端口与网页入口 | 未分配端口；HTML title 包含“句法小径” |
-| 公开静态资源 | 允许公开 `index.html`、`styles.css`、`app.js`；当前未接入 `idea-hub/projects.json` |
+| 端口与网页入口 | 本地入口使用端口 `4300`，HTML title 包含“句法小径” |
+| 公开静态资源 | `index.html`、`styles.css`、`app.js`，已登记到 `idea-hub/projects.json` |
 | 存储与浏览器限制 | localStorage 保存两份笔记和走完状态；无多标签页同步，多页编辑可能互相覆盖；导出依赖浏览器下载，打印使用系统对话框 |
-| 实际截图 | `.impeccable/review/desktop.png` 与 `mobile.png`；可按需复制到主入口预览目录 |
-
-后续接入游乐场时，登记上述文件与一个未占用的本机端口；不要把整个项目根目录作为公开资源目录。
+| 实际截图 | [游乐场卡片预览](../idea-hub/public/previews/syntax-path.png) |
 
 ## 参考
 

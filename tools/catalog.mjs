@@ -90,5 +90,9 @@ export async function publicProject(project, root = ROOT, mode = 'static') {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const projects = await loadProjects();
-  console.log(`Catalog valid: ${projects.filter(p => p.enabled !== false).length} enabled, ${projects.filter(p => p.enabled === false).length} drafts.`);
+  const enabled = projects.filter(project => project.enabled !== false);
+  const cards = await Promise.all(enabled.map(project => publicProject(project)));
+  const missing = cards.filter(card => !card.preview).map(card => card.id);
+  if (missing.length) fail(`Missing card previews: ${missing.join(', ')}. Run npm run preview:capture.`);
+  console.log(`Catalog valid: ${enabled.length} enabled with previews, ${projects.length - enabled.length} drafts.`);
 }

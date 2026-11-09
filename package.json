@@ -8,6 +8,7 @@
     "check": "node tools/catalog.mjs",
     "build": "node tools/build.mjs",
     "preview": "node tools/preview.mjs",
+    "preview:capture": "node idea-hub/tools/capture.mjs",
     "test": "node --test tools/tests/*.test.mjs idea-hub/tests/*.test.mjs",
     "verify:pages": "node tools/verify-pages.cjs",
     "project:new": "node tools/project.mjs new",

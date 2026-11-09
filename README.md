@@ -23,7 +23,7 @@ idea-playground/
   grammar-time-board/     昨天今天明天
   clay-auction/            越抢越变形的拍卖会
   roundland/               圆野，微缩岛屿沙盒
-  syntax-path/             句法小径，已登记为隐藏草稿
+  syntax-path/             句法小径，语言与空间互动实验
   note-block-studio/       音符方块，Minecraft 风格的 3D 音序工作台
   redstone-pulse-garden/   红石脉冲花园，植物电路解谜
   panel-adapt-check/       原有检查工具，不作为作品发布
@@ -60,11 +60,12 @@ npm run project:new -- paper-moon --name "纸月亮"
 
 ```sh
 npm run project:add -- paper-moon --enable
+npm run preview:capture
 npm run check
 npm run build
 ```
 
-重启本地主入口即可刷新清单。已有项目也可放到根目录，提供 `integration.json` 后运行 `project:add`。不带 `--enable` 会将该项目登记为草稿。完整字段、资源边界与其他会话交接模板见 [接入说明](docs/ADDING_PROJECTS.md)。
+重启本地主入口即可刷新清单。已有项目也可放到根目录，提供 `integration.json` 后运行 `project:add`。不带 `--enable` 会将该项目登记为草稿。截图依赖的安装方式、接入字段和资源边界见 [接入说明](docs/ADDING_PROJECTS.md)。
 
 ## GitHub Pages 发布
 

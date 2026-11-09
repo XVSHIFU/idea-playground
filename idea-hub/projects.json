@@ -219,7 +219,7 @@
       "styles.css"
     ],
     "identity": "句法小径",
-    "enabled": false
+    "enabled": true
   },
   {
     "id": "taste-score",
