@@ -1,0 +1,21 @@
+{
+  "id": "aphelion",
+  "name": "远日点 · 环地轨道站",
+  "category": "场景与漫游",
+  "description": "驾驶飞行器接近轨道站，切换拆解视图，查看各模块的空间关系。",
+  "hint": "按 E 进入拆解视图，拖动旋转空间站。",
+  "label": "太空飞行 · 模块拆解",
+  "color": "#dce8df",
+  "directory": "../aphelion",
+  "port": 4337,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "远日点 · APHELION",
+  "enabled": true
+}

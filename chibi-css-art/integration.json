@@ -1,0 +1,21 @@
+{
+  "id": "chibi-css-art",
+  "name": "贴贴 · Pure CSS Art",
+  "category": "视觉与交互",
+  "description": "用 HTML 与 CSS 拼出两位相依的动漫角色，可近看线条与色块。",
+  "hint": "打开画面，观察两个人物的轮廓和层次。",
+  "label": "CSS · 角色插画",
+  "color": "#dee5f4",
+  "directory": "../chibi-css-art",
+  "port": 4363,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "贴贴 · Pure CSS Art",
+  "enabled": true
+}

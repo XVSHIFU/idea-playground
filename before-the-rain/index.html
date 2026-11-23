@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#091014" />
+  <meta name="description" content="雨落之前：从第一滴水开始，重建一颗死亡星球。" />
+  <title>雨落之前｜生态重建增量游戏</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main id="game" aria-label="雨落之前游戏主界面">
+    <div class="world" aria-hidden="true">
+      <div class="world-image desert"></div>
+      <div class="world-image restored" id="restoredLayer"></div>
+      <div class="world-image forest" id="forestLayer"></div>
+      <div class="world-grade"></div>
+      <div class="cloud-shade" id="cloudShade"></div>
+      <div class="rain" id="rain"></div>
+      <div class="pulse-ring" id="pulseRing"></div>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="zero-mark">0</div>
+        <div><h1>雨落之前</h1><p>零号气候控制塔 · 纪元 3147</p></div>
+      </div>
+      <div class="phase-readout">
+        <span id="phaseLabel">阶段 I</span>
+        <strong id="phaseName">荒漠苏醒</strong>
+        <div class="phase-line"><i id="phaseBar"></i></div>
+      </div>
+      <div class="header-actions">
+        <button class="tech-entry" id="techBtn"><span>◇</span> 科技树 <i id="techBadge">新</i></button>
+        <button class="icon-btn" id="soundBtn" aria-label="切换声音">◒</button>
+        <button class="icon-btn" id="resetBtn" aria-label="重置存档">↺</button>
+      </div>
+    </header>
+
+    <section class="resources" aria-label="当前资源">
+      <article class="resource primary">
+        <span class="drop-icon">◉</span><div><small>水分</small><strong id="water">0 mL</strong><em id="waterRate">+0 /秒</em></div>
+      </article>
+      <article class="resource"><span>ϟ</span><div><small>电力</small><strong id="power">0</strong><em id="powerRate">+0 /秒</em></div></article>
+      <article class="resource"><span>⌁</span><div><small>生物质</small><strong id="bio">0</strong><em id="bioRate">+0 /秒</em></div></article>
+      <article class="resource locked" id="scienceRes"><span>◇</span><div><small>科研数据</small><strong id="science">0</strong><em>区域 II 解锁</em></div></article>
+    </section>
+
+    <section class="eco-readout" id="ecoReadout" aria-label="区域生态指标">
+      <div class="eco-title"><span>区域生态</span><b id="ecoStatus">人工维持</b></div>
+      <div class="eco-row"><label>湿度</label><div><i id="humidityBar"></i></div><strong id="humidity">0%</strong></div>
+      <div class="eco-row"><label>氧气</label><div><i id="oxygenBar"></i></div><strong id="oxygen">0%</strong></div>
+      <div class="eco-row"><label>土壤</label><div><i id="soilBar"></i></div><strong id="fertility">0%</strong></div>
+    </section>
+
+    <section class="mission" id="missionPanel">
+      <div class="mission-kicker">当前任务 / 01</div>
+      <h2 id="missionTitle">收集空气中的水分</h2>
+      <p id="missionText">修复自动系统前，只能依靠破损集水器凝结微量水汽。</p>
+      <div class="mission-progress"><i id="missionBar"></i></div>
+      <div class="mission-count" id="missionCount">0 / 40 mL</div>
+    </section>
+
+    <section class="collector-zone" aria-label="手动集水器">
+      <button class="collector" id="collectBtn">
+        <span class="collector-halo"></span><span class="collector-core">＋</span>
+        <strong>收集水分</strong><small id="clickGain">每次 +1 mL</small>
+      </button>
+      <button class="collector-upgrade" id="collectorUpgrade"><span id="collectorName">破损集水器</span><b id="collectorLevel">Lv.1</b><small id="collectorUpgradeCost">升级 · 100 水</small></button>
+      <div class="collector-tip" id="collectorTip">点击地表集水器</div>
+    </section>
+
+    <aside class="signal" id="signalPanel">
+      <div class="signal-head"><span class="signal-dot"></span>塔内记录 <b id="logIndex">01 / 05</b></div>
+      <blockquote id="logText">“如果你还能看到这段信息，请让这颗星球再下一次雨。”</blockquote>
+      <button id="nextLog">读取下一段 <span>→</span></button>
+    </aside>
+
+    <nav class="build-dock" aria-label="建设设施" id="buildDock">
+      <div class="dock-label"><span>建设</span><small>区域 01 · 干涸河床</small></div>
+      <button class="build-card" data-build="condenser">
+        <span class="build-icon">◌</span><span class="build-copy"><b>自动冷凝装置</b><small id="condenserDesc">持续收集水分</small></span><span class="build-meta"><em id="condenserLevel">Lv.0</em><strong id="condenserCost">40 水</strong></span>
+      </button>
+      <button class="build-card locked-build" data-build="solar">
+        <span class="build-icon">☼</span><span class="build-copy"><b>修复太阳能阵列</b><small>恢复塔区供电</small></span><span class="build-meta"><em id="solarLevel">离线</em><strong id="solarCost">60 水</strong></span>
+      </button>
+      <button class="build-card locked-build" data-build="moss">
+        <span class="build-icon">⌁</span><span class="build-copy"><b>播种耐旱苔藓</b><small>增加湿度与生物质</small></span><span class="build-meta"><em id="mossLevel">未发现</em><strong id="mossCost">120 水 · 20 电</strong></span>
+      </button>
+      <button class="build-card locked-build climate" data-build="tower">
+        <span class="build-icon">⌬</span><span class="build-copy"><b>启动人工降雨</b><small>阶段 I 最终工程</small></span><span class="build-meta"><em id="towerLevel">0%</em><strong>500 水 · 120 电 · 30 生物质</strong></span>
+      </button>
+    </nav>
+
+    <div class="toast" id="toast" role="status"></div>
+
+    <section class="intro" id="intro">
+      <div class="intro-scan"></div>
+      <div class="intro-content">
+        <span class="intro-year">公元 3147 年 · 静默之后 300 年</span>
+        <h2>人类失去了<br />最后一场雨。</h2>
+        <p>零号气候控制塔重新上线。系统中只剩一条指令。</p>
+        <blockquote>“让这颗星球，再下一次雨。”</blockquote>
+        <button id="wakeBtn">唤醒「零」<span>→</span></button>
+      </div>
+    </section>
+
+    <section class="rain-event" id="rainEvent">
+      <div class="event-card">
+        <span class="event-kicker">气候事件 001</span>
+        <h2>第一场人工降雨</h2>
+        <p>水滴落在已经沉默三百年的地表。苔藓开始扩张，干涸河床再次出现流动。</p>
+        <blockquote>“零号控制塔，请立即停止气候恢复程序。<br />你正在重复三百年前的错误。”</blockquote>
+        <button id="continueBtn">进入阶段 II · 生命萌芽</button>
+      </div>
+    </section>
+
+    <section class="tech-modal" id="techModal" aria-label="科技树">
+      <div class="tech-shell">
+        <header><div><span>零号塔科研终端</span><h2>生态重建科技树</h2></div><div class="tech-balance">◇ <strong id="techScience">0</strong> 科研数据</div><button id="closeTech" aria-label="关闭科技树">×</button></header>
+        <div class="tech-legend"><span><i></i>水循环</span><span><i class="energy-dot"></i>能源</span><span><i class="bio-dot"></i>生态</span><small>按住空白区域拖动 · 滚轮缩放</small></div>
+        <div class="tree-viewport" id="treeViewport"><div class="tree-canvas" id="treeCanvas">
+          <svg class="tech-lines" viewBox="0 0 1280 650" preserveAspectRatio="none" aria-hidden="true"><path d="M120 325 L280 150 M120 325 L280 325 M120 325 L280 500"/><path d="M400 150 L520 150 L650 105 M400 150 L520 150 L650 205"/><path d="M400 325 L650 325 M400 500 L520 500 L650 430 M400 500 L520 500 L650 535"/><path d="M770 430 L910 430 M770 535 L910 535 M1030 430 L1160 325 M1030 535 L1160 325 M770 205 L1160 325"/></svg>
+          <button class="tech-node root owned" data-tech="root" style="left:55px;top:270px"><em>核心</em><b>气候塔基础协议</b><small>已恢复</small></button>
+          <button class="tech-node water-node" data-tech="capillary" style="left:275px;top:95px"><em>水循环</em><b>毛细收集膜</b><small>10 ◇ · 点击提升</small></button>
+          <button class="tech-node energy-node" data-tech="photovoltaic" style="left:275px;top:270px"><em>能源</em><b>高效光伏</b><small>12 ◇ · 电力 +30%</small></button>
+          <button class="tech-node bio-node" data-tech="algaeTech" style="left:275px;top:445px"><em>生态</em><b>藻类培养</b><small>10 ◇ · 解锁设施</small></button>
+          <button class="tech-node water-node" data-tech="microCondense" style="left:645px;top:50px"><em>水循环</em><b>微孔冷凝</b><small>24 ◇ · 水分 +35%</small></button>
+          <button class="tech-node water-node" data-tech="cloudSeed" style="left:645px;top:150px"><em>气候</em><b>生物云核</b><small>45 ◇ · 自然云层</small></button>
+          <button class="tech-node energy-node" data-tech="storage" style="left:645px;top:270px"><em>能源</em><b>固态储能</b><small>28 ◇ · 离线 8 小时</small></button>
+          <button class="tech-node bio-node" data-tech="soilTech" style="left:645px;top:375px"><em>生态</em><b>土壤微生物</b><small>22 ◇ · 解锁土壤</small></button>
+          <button class="tech-node bio-node" data-tech="grassTech" style="left:645px;top:480px"><em>生态</em><b>蒸腾草甸</b><small>34 ◇ · 解锁草地</small></button>
+          <button class="tech-node bio-node" data-tech="insectTech" style="left:905px;top:375px"><em>生态</em><b>昆虫基因库</b><small>48 ◇ · 解锁昆虫</small></button>
+          <button class="tech-node bio-node" data-tech="symbiosis" style="left:905px;top:480px"><em>生态</em><b>共生网络</b><small>58 ◇ · 生态 +25%</small></button>
+          <button class="tech-node final-node" data-tech="naturalCycle" style="left:1145px;top:270px"><em>阶段核心</em><b>自然水循环</b><small>80 ◇ · 让机器退场</small></button>
+        </div></div>
+        <footer><span id="techHint">选择发光节点进行研究 · T 打开 · Esc 关闭</span><button id="archiveScan">扫描旧气象档案 <b id="scanCooldown">+8 ◇</b></button></footer>
+      </div>
+    </section>
+
+    <section class="rain-event natural-event" id="naturalEvent">
+      <div class="event-card">
+        <span class="event-kicker">生态事件 002</span><h2>雨，自己落了下来</h2>
+        <p>没有气候塔指令，没有云层发生器倒计时。植物蒸腾形成的云在山谷上空汇聚，第一场自然降雨开始了。</p>
+        <blockquote>“世界并不需要一个永远正确的控制者。它需要无数生命，彼此修正。”</blockquote>
+        <button id="finishStage2">完成阶段 II · 查看区域地图</button>
+      </div>
+    </section>
+  </main>
+  <script src="./game-v2.js"></script>
+</body>
+</html>

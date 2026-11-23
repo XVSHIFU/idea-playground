@@ -1,0 +1,27 @@
+{
+  "id": "html-creator",
+  "name": "可视化 HTML 创作工具",
+  "category": "工具与原型",
+  "description": "在画布与组件面板中编辑文章页面，再预览或导出 HTML。",
+  "hint": "选择页面中的一个组件，修改后点预览。",
+  "label": "网页编辑 · 原型",
+  "color": "#e4e8ef",
+  "directory": "../html-creator",
+  "port": 4367,
+  "entry": "index.html",
+  "required": [
+    "canvas.html",
+    "index.html",
+    "studio.html",
+    "web-canvas.html"
+  ],
+  "files": [
+    "canvas.html",
+    "index.html",
+    "studio.html",
+    "web-canvas.html"
+  ],
+  "publicDirectories": [],
+  "identity": "可视化 HTML 创作工具",
+  "enabled": true
+}

@@ -1,0 +1,25 @@
+{
+  "id": "harbor-railway",
+  "name": "港湾八十七 · 铁路工坊",
+  "category": "场景与漫游",
+  "description": "操纵模型铁路桌上的调速手柄、转车台与灯光，让微缩港湾运转。",
+  "hint": "拖动红色手柄改变车速，按 3 进入跟车视角。",
+  "label": "模型铁路 · 工坊",
+  "color": "#dce8df",
+  "directory": "../harbor-railway",
+  "port": 4336,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "vendor/THREE-LICENSE.txt",
+    "vendor/three.min.js"
+  ],
+  "files": [
+    "index.html",
+    "vendor/THREE-LICENSE.txt",
+    "vendor/three.min.js"
+  ],
+  "publicDirectories": [],
+  "identity": "港湾八十七 · 铁路工坊",
+  "enabled": true
+}

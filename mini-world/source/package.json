@@ -1,0 +1,20 @@
+{
+  "name": "mini-world-static",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "three": "0.181.2",
+    "lucide-react": "1.31.0"
+  },
+  "devDependencies": {
+    "vite": "7.1.12",
+    "tailwindcss": "4.2.1",
+    "@tailwindcss/postcss": "4.2.1"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "beam-balance",
+  "name": "留住这一球",
+  "category": "游戏与模拟",
+  "description": "拆走支撑梁，观察重心和碰撞，设法让小球留在结构上。",
+  "hint": "从第一关点一根梁，观察球怎样落下。",
+  "label": "拆梁 · 物理",
+  "color": "#eadfd2",
+  "directory": "../beam-balance",
+  "port": 4320,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "留住这一球 · 拆梁物理小游戏",
+  "enabled": true
+}

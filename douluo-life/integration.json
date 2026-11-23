@@ -1,0 +1,21 @@
+{
+  "id": "douluo-life",
+  "name": "斗罗大陆 · 人生纪",
+  "category": "互动叙事",
+  "description": "以自己的身份进入魂师世界，在成长、探索与关系中书写人物经历。",
+  "hint": "开始新人生，按引导建立角色。",
+  "label": "同人 · 角色养成",
+  "color": "#eadfeb",
+  "directory": "../douluo-life",
+  "port": 4352,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "斗罗大陆 · 人生纪",
+  "enabled": true
+}

@@ -19,6 +19,7 @@ const root = path.resolve(__dirname, '..');
       page.on('response', response => { if (response.status() >= 400 && !response.url().endsWith('/favicon.ico')) errors.push(`${response.status()} ${response.url()}`); });
       page.on('request', request => {
         const url = new URL(request.url());
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
         if (url.origin === new URL(preview.url).origin && !url.pathname.startsWith('/idea-playground/') && !url.pathname.endsWith('/favicon.ico')) errors.push(`Root-relative request: ${url.pathname}`);
       });
     });
@@ -47,7 +48,13 @@ const root = path.resolve(__dirname, '..');
     const output = path.join(root, '.impeccable/review/pages'); await fs.mkdir(output, { recursive: true });
     for (const width of [1440, 390, 320]) {
       await page.setViewportSize({ width, height: 1000 });
-      await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].map(img => img.decode().catch(() => {}))); });
+      await page.evaluate(async () => {
+        await document.fonts.ready;
+        const images = Array.from(document.images);
+        // A full-page capture includes cards below the lazy-loading threshold.
+        for (const image of images) image.loading = 'eager';
+        await Promise.all(images.map(image => image.decode()));
+      });
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       if (width !== 320) await page.screenshot({ path: path.join(output, `${width}.png`), fullPage: true });
     }

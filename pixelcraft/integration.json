@@ -1,0 +1,21 @@
+{
+  "id": "pixelcraft",
+  "name": "PixelCraft",
+  "category": "游戏与模拟",
+  "description": "在程序生成的方块地形里采矿、搭建、采食，度过昼夜。",
+  "hint": "创建世界后点击画面，用 WASD 移动。",
+  "label": "体素 · 沙盒",
+  "color": "#eadfd2",
+  "directory": "../pixelcraft",
+  "port": 4327,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "PixelCraft",
+  "enabled": true
+}

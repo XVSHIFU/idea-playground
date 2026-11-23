@@ -4,6 +4,8 @@
 
 仓库：<https://github.com/XVSHIFU/idea-playground>。尚未部署时，下方命令可以先在本地使用；预期 Pages 地址为 <https://xvshifu.github.io/idea-playground/>，是否上线以 Actions 部署结果为准。
 
+[查看完整作品目录、分类和版本入口](docs/HTML-COLLECTION.md)
+
 ## 本机打开与关闭
 
 需要 Node.js 22+。双击根目录 `启动.cmd`，访问 <http://127.0.0.1:4200>。点击作品后按需启动对应本机端口；不用逐个启动项目，也不用安装依赖。双击 `停止.cmd` 关闭主入口及由它启动的服务；仅关闭浏览器不会停止服务。独立启动的作品服务不受影响。

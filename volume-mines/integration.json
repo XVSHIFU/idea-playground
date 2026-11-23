@@ -1,0 +1,21 @@
+{
+  "id": "volume-mines",
+  "name": "三维扫雷",
+  "category": "游戏与模拟",
+  "description": "转动立方雷场，在三维邻域中推理哪些格子可以打开。",
+  "hint": "从入门尺寸开始，旋转雷场查看不同侧面。",
+  "label": "空间 · 推理",
+  "color": "#eadfd2",
+  "directory": "../volume-mines",
+  "port": 4318,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "VOLUME / 26 — 三维扫雷",
+  "enabled": true
+}

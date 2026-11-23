@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071019">
+  <meta name="description" content="灰域纪元——硬科幻文明演化增量策略游戏 MVP">
+  <title>灰域纪元｜文明观测站</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="bootScreen" class="boot-screen" aria-label="游戏启动界面">
+    <div class="boot-orbit" aria-hidden="true"></div>
+    <div class="boot-content">
+      <p class="eyebrow">CIVILIZATION OBSERVATION // EPOCH 00</p>
+      <h1><span>灰域</span>纪元</h1>
+      <p class="boot-subtitle">在宇宙学会看见你之前，先让文明学会生存。</p>
+      <div class="boot-actions">
+        <button id="enterGame" class="primary-button">启动暮色星谷</button>
+        <button id="newGameFromBoot" class="text-button hidden">建立新纪元</button>
+      </div>
+      <div class="boot-meta">
+        <span>阶段 I—III</span><span>本地自动存档</span><span>离线确定性结算</span>
+      </div>
+    </div>
+    <p class="boot-corner">MVP BUILD · 灰域联合观测署</p>
+  </div>
+
+  <div id="game" class="game-shell hidden">
+    <header class="topbar">
+      <button class="brand" data-panel="journal" aria-label="打开文明档案">
+        <span class="brand-mark">◈</span>
+        <span><b>灰域纪元</b><small id="stageName">危机萌芽期</small></span>
+      </button>
+      <div id="resourceBar" class="resource-bar" aria-label="文明资源"></div>
+      <div class="system-strip">
+        <span id="saveState" class="save-state"><i></i>已同步</span>
+        <button class="icon-button" data-panel="settings" aria-label="设置">⚙</button>
+      </div>
+    </header>
+
+    <main id="world" class="world stage-1">
+      <div class="world-background" aria-hidden="true"></div>
+      <div class="world-vignette" aria-hidden="true"></div>
+      <div class="sky-scan" aria-hidden="true"></div>
+      <div id="sceneProps" class="scene-props" aria-hidden="true">
+        <div class="prop prop-solar"><i></i><i></i><i></i></div>
+        <div class="prop prop-mine"><i></i><b></b></div>
+        <div class="prop prop-lab"><i></i><b></b></div>
+        <div class="prop prop-store"><i></i><i></i></div>
+        <div class="prop prop-hab"><i></i><i></i><i></i></div>
+        <div class="prop prop-fusion"><i></i><b></b></div>
+        <div class="prop prop-orbital"><i></i><b></b></div>
+      </div>
+
+      <button id="sceneInteract" class="scene-interact" aria-label="向场景发送资源指令">
+        <span id="sceneReticle" class="scene-reticle">
+          <i></i><b id="reticleLabel">采集物质</b><small>点击场景 / Space</small>
+        </span>
+      </button>
+      <div id="particleLayer" class="particle-layer" aria-hidden="true"></div>
+
+      <aside class="mission-hud">
+        <div class="hud-heading">
+          <span id="stageIndex">阶段 01</span>
+          <b id="stageTitle">危机萌芽期</b>
+        </div>
+        <div id="currentMission" class="current-mission"></div>
+        <div class="meter-block">
+          <div><span>指令能量</span><b id="commandText">100 / 100</b></div>
+          <div class="thin-meter"><i id="commandMeter"></i></div>
+        </div>
+        <div id="exposureBlock" class="meter-block locked-risk">
+          <div><span>文明暴露</span><b id="exposureText">未监测</b></div>
+          <div class="thin-meter danger"><i id="exposureMeter"></i></div>
+        </div>
+      </aside>
+
+      <nav class="action-rail" aria-label="主要系统">
+        <button data-panel="buildings"><span>B</span><b>建设</b><i id="buildingNotice"></i></button>
+        <button data-panel="tech"><span>T</span><b>科技</b><i id="techNotice"></i></button>
+        <button data-panel="roster"><span>R</span><b>成员</b><i id="rosterNotice"></i></button>
+        <button data-panel="journal"><span>J</span><b>档案</b><i id="journalNotice"></i></button>
+      </nav>
+
+      <section class="command-deck" aria-label="指令控制台">
+        <div id="modeSwitch" class="mode-switch"></div>
+        <button id="pulseButton" class="pulse-button">
+          <span>发送指令</span><b id="pulseValue">+1 物质</b>
+        </button>
+        <div class="command-readout">
+          <span>连续指令 <b id="comboText">×0</b></span>
+          <span>暴击 <b id="critText">5%</b></span>
+        </div>
+        <button id="activeSkillButton" class="active-skill" disabled>
+          <span>主动协议</span><b>暂无派驻技能</b>
+        </button>
+      </section>
+
+      <div id="researchTicker" class="research-ticker hidden">
+        <span>研究中</span><b id="researchName"></b>
+        <div><i id="researchProgress"></i></div><small id="researchTime"></small>
+      </div>
+
+      <button id="crisisBeacon" class="crisis-beacon hidden" aria-label="打开危机事件">
+        <i></i><span>危机信号</span><b id="crisisCountdown">等待响应</b>
+      </button>
+    </main>
+
+    <div id="panelBackdrop" class="panel-backdrop hidden"></div>
+
+    <section id="panel-buildings" class="panel side-panel" aria-labelledby="buildingsTitle">
+      <header><div><span>INFRASTRUCTURE</span><h2 id="buildingsTitle">设施建设</h2></div><button class="close-panel" aria-label="关闭">Esc</button></header>
+      <div class="panel-tools">
+        <div id="buyMode" class="segmented"></div>
+        <p>设施会直接出现在主场景，并参与同一套在线与离线结算。</p>
+      </div>
+      <div id="buildingList" class="building-list"></div>
+    </section>
+
+    <section id="panel-tech" class="panel tech-panel" aria-labelledby="techTitle">
+      <header><div><span>RESEARCH NETWORK</span><h2 id="techTitle">技术因果图</h2></div><div class="panel-header-actions"><span id="techZoomLabel">100%</span><button id="techFit">复位视图</button><button class="close-panel" aria-label="关闭">Esc</button></div></header>
+      <div id="techViewport" class="tech-viewport">
+        <div id="techCanvas" class="tech-canvas"><svg id="techLinks" aria-hidden="true"></svg><div id="techNodes"></div></div>
+      </div>
+      <footer class="tech-legend"><span><i class="available"></i>可研究</span><span><i class="running"></i>研究中</span><span><i class="done"></i>已完成</span><span>滚轮缩放 · 拖动平移</span></footer>
+    </section>
+
+    <section id="panel-roster" class="panel side-panel wide-panel" aria-labelledby="rosterTitle">
+      <header><div><span>CIVILIZATION CORE</span><h2 id="rosterTitle">专家与派驻</h2></div><button class="close-panel" aria-label="关闭">Esc</button></header>
+      <div class="roster-hero"><div><span>当前派驻</span><b id="assignmentCount">0 / 2</b><p>匹配岗位提供完整属性贡献；机制型被动始终生效。</p></div><div class="recruit-actions"><button id="singleRecruitButton" disabled>单次招募</button><button id="recruitButton" class="primary-button" disabled>十次招募</button></div></div>
+      <div id="assignmentSlots" class="assignment-slots"></div>
+      <div id="rosterList" class="roster-list"></div>
+      <div class="pity-strip"><span>标准招募保底</span><div><i id="pityMeter"></i></div><b id="pityText">0 / 80</b></div>
+    </section>
+
+    <section id="panel-journal" class="panel side-panel" aria-labelledby="journalTitle">
+      <header><div><span>ARCHIVE</span><h2 id="journalTitle">文明任务与档案</h2></div><button class="close-panel" aria-label="关闭">Esc</button></header>
+      <div class="journal-tabs" id="journalTabs">
+        <button data-tab="missions" class="active">任务</button><button data-tab="events">事件</button><button data-tab="history">纪年</button>
+      </div>
+      <div id="journalContent" class="journal-content"></div>
+    </section>
+
+    <section id="panel-settings" class="panel compact-panel" aria-labelledby="settingsTitle">
+      <header><div><span>SYSTEM</span><h2 id="settingsTitle">运行设置</h2></div><button class="close-panel" aria-label="关闭">Esc</button></header>
+      <div class="settings-list">
+        <label><span><b>音效反馈</b><small>点击、建设与科技突破</small></span><input id="soundToggle" type="checkbox" checked></label>
+        <label><span><b>动态特效</b><small>粒子、镜头与场景扫描</small></span><input id="effectsToggle" type="checkbox" checked></label>
+        <button id="manualSave">立即保存</button>
+        <button id="resetSave" class="danger-button">清除本地文明</button>
+      </div>
+      <div class="shortcut-list"><span>Space 发送指令</span><span>Q / E 切换资源</span><span>B / T / R / J 打开系统</span><span>Esc 关闭顶层界面</span><span>F 聚焦当前目标</span></div>
+    </section>
+
+    <div id="modalRoot" class="modal-root hidden" role="dialog" aria-modal="true"></div>
+    <div id="toastStack" class="toast-stack" aria-live="polite"></div>
+  </div>
+
+  <script src="./game.js"></script>
+</body>
+</html>

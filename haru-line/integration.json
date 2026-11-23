@@ -1,0 +1,21 @@
+{
+  "id": "haru-line",
+  "name": "夏日环线 · HARU LINE",
+  "category": "场景与漫游",
+  "description": "在稻田与村落间看列车绕行，可分别从站台、车窗、空中观看。",
+  "hint": "按 3 从乘客车窗看风景，再按 4 到站台等车。",
+  "label": "乡间环线 · 四视角",
+  "color": "#dce8df",
+  "directory": "../haru-line",
+  "port": 4333,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "夏日环线 · HARU LINE — Japanese Countryside Railway",
+  "enabled": true
+}

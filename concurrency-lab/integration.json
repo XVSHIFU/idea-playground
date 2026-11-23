@@ -1,0 +1,21 @@
+{
+  "id": "concurrency-lab",
+  "name": "Python 爬虫并发 · 引导式课程",
+  "category": "学习页面",
+  "description": "用队列、线程池和异步任务的可视化实验理解取走与完成的区别。",
+  "hint": "先取走一个任务，再报告完成，观察等待者的状态。",
+  "label": "并发 · 可视化",
+  "color": "#e7ebd8",
+  "directory": "../concurrency-lab",
+  "port": 4375,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "Python 爬虫并发 · 引导式课程",
+  "enabled": true
+}

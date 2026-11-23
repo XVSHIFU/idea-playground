@@ -1,0 +1,35 @@
+{
+  "id": "valley-line",
+  "name": "Valley Line · 山谷铁路",
+  "category": "场景与漫游",
+  "description": "从自由视角或跟车视角看微缩列车运行，在岔口切换山谷环线和河畔捷径。",
+  "hint": "先切到 Follow train，再选择 River shortcut。",
+  "label": "微缩铁路 · 道岔",
+  "color": "#dce8df",
+  "directory": "../valley-line",
+  "port": 4335,
+  "entry": "index.html",
+  "required": [
+    "app.js",
+    "index.html",
+    "style.css",
+    "vendor/BufferGeometryUtils.js",
+    "vendor/OrbitControls.js",
+    "vendor/THREE-LICENSE.txt",
+    "vendor/three.core.min.js",
+    "vendor/three.module.js"
+  ],
+  "files": [
+    "app.js",
+    "index.html",
+    "style.css",
+    "vendor/BufferGeometryUtils.js",
+    "vendor/OrbitControls.js",
+    "vendor/THREE-LICENSE.txt",
+    "vendor/three.core.min.js",
+    "vendor/three.module.js"
+  ],
+  "publicDirectories": [],
+  "identity": "Valley Line — A little world in motion",
+  "enabled": true
+}

@@ -1,0 +1,23 @@
+{
+  "id": "infinite-garden",
+  "name": "无限庭院",
+  "category": "游戏与模拟",
+  "description": "在循环庭院里改变重力方向，搬运方块，点亮通往下一关的光门。",
+  "hint": "点「进入庭院」，按操作手记进入第一关。",
+  "label": "重力 · 空间解谜",
+  "color": "#eadfd2",
+  "directory": "../infinite-garden",
+  "port": 4329,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "licenses/font.txt"
+  ],
+  "files": [
+    "index.html",
+    "licenses/font.txt"
+  ],
+  "publicDirectories": [],
+  "identity": "无限庭院 · Infinite Garden",
+  "enabled": true
+}

@@ -1,0 +1,21 @@
+{
+  "id": "pelican-bicycle",
+  "name": "鹈鹕骑自行车",
+  "category": "视觉与交互",
+  "description": "用矢量动画表现鹈鹕的踩踏与车轮转动。",
+  "hint": "打开页面，观察脚踏与车轮的运动。",
+  "label": "SVG · 循环动画",
+  "color": "#dee5f4",
+  "directory": "../pelican-bicycle",
+  "port": 4364,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "鹈鹕骑自行车 - SVG 2D 动画",
+  "enabled": true
+}

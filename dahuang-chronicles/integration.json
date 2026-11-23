@@ -1,0 +1,21 @@
+{
+  "id": "dahuang-chronicles",
+  "name": "大荒纪事 · 穿越荒域",
+  "category": "互动叙事",
+  "description": "从暮色中的石村醒来，选择来路，探索任务、舆图与图鉴。",
+  "hint": "输入角色名字，选择来路，点「踏入大荒」。",
+  "label": "荒域 · 角色叙事",
+  "color": "#eadfeb",
+  "directory": "../dahuang-chronicles",
+  "port": 4353,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "大荒纪事 · 穿越荒域 | 离线互动原型",
+  "enabled": true
+}

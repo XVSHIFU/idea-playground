@@ -1,0 +1,21 @@
+{
+  "id": "yiren-life",
+  "name": "一人之下 · 异人人生",
+  "category": "互动叙事",
+  "description": "以不同身份入局，在人情、修行与江湖事件间留下自己的选择。",
+  "hint": "点「开始一段人生」，选择一份出身。",
+  "label": "同人 · 江湖冒险",
+  "color": "#eadfeb",
+  "directory": "../yiren-life",
+  "port": 4347,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "一人之下 · 异人人生",
+  "enabled": true
+}

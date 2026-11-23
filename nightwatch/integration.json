@@ -1,0 +1,21 @@
+{
+  "id": "nightwatch",
+  "name": "神明禁行 · 守夜人纪事",
+  "category": "互动叙事",
+  "description": "在雨夜里的城市中展开巡守、调查与修行，走出一段守夜人生。",
+  "hint": "从封面开始新档，再选人物来路。",
+  "label": "同人 · 都市幻想",
+  "color": "#eadfeb",
+  "directory": "../nightwatch",
+  "port": 4346,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "斩神 · 神明禁行 — 守夜人纪事",
+  "enabled": true
+}

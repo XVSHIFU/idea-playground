@@ -1,0 +1,27 @@
+{
+  "id": "infinity-living-castle",
+  "name": "无限城 · 活城",
+  "category": "场景与漫游",
+  "description": "在会移动的木构城廓里步行、坠落或悬浮，切换第一与第三人称。",
+  "hint": "进入场景后用 WASD 移动，按 V 切换视角。",
+  "label": "木构 · 角色漫游",
+  "color": "#dce8df",
+  "directory": "../infinity-living-castle",
+  "port": 4341,
+  "entry": "index.html",
+  "required": [
+    "THREE-LICENSE.txt",
+    "app.js",
+    "index.html",
+    "style.css"
+  ],
+  "files": [
+    "THREE-LICENSE.txt",
+    "app.js",
+    "index.html",
+    "style.css"
+  ],
+  "publicDirectories": [],
+  "identity": "無限城 · 活城",
+  "enabled": true
+}

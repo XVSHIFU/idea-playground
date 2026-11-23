@@ -1,0 +1,21 @@
+{
+  "id": "blockbound",
+  "name": "Blockbound",
+  "category": "游戏与模拟",
+  "description": "在像素世界里采木、合成工具、建造据点，兼顾生命与饥饿。",
+  "hint": "点 CREATE WORLD，跟随采集木材的第一个目标。",
+  "label": "像素 · 生存",
+  "color": "#eadfd2",
+  "directory": "../blockbound",
+  "port": 4326,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "Blockbound — Pixel Survival",
+  "enabled": true
+}

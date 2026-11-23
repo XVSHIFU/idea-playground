@@ -1,0 +1,21 @@
+{
+  "id": "three-suns",
+  "name": "三恒星文明 · 荒原观测站",
+  "category": "互动叙事",
+  "description": "在三恒星世界里读取观象柱、记录证据，判断应继续观测还是保存文明。",
+  "hint": "进入界面原型，读取第一根观象柱。",
+  "label": "观测 · 界面原型",
+  "color": "#eadfeb",
+  "directory": "../three-suns",
+  "port": 4354,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "三恒星文明 · UI 交互原型 v0.2",
+  "enabled": true
+}

@@ -1,0 +1,2010 @@
+{
+  "sheets": [
+    {
+      "key": "buildings",
+      "url": "assets/buildings.webp",
+      "width": 1774,
+      "height": 887
+    },
+    {
+      "key": "nature",
+      "url": "assets/nature.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "characters",
+      "url": "assets/characters.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "items",
+      "url": "assets/items.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "environment",
+      "url": "assets/environment.webp",
+      "width": 1774,
+      "height": 887
+    },
+    {
+      "key": "livestock",
+      "url": "assets/livestock.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "ui",
+      "url": "assets/ui.webp",
+      "width": 1774,
+      "height": 887
+    },
+    {
+      "key": "goods",
+      "url": "assets/goods.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "work",
+      "url": "assets/work.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "cat",
+      "url": "assets/cat.webp",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "key": "grass",
+      "url": "assets/grass.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "earth",
+      "url": "assets/earth.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "water",
+      "url": "assets/water.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "paper",
+      "url": "assets/paper.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "wood",
+      "url": "assets/wood.webp",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "key": "coopInterior",
+      "url": "assets/coopInterior.webp",
+      "width": 1374,
+      "height": 1145
+    },
+    {
+      "key": "farmhouseInterior",
+      "url": "assets/farmhouseInterior.webp",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "key": "crops",
+      "url": "assets/crops.webp",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "key": "chickens",
+      "url": "assets/chickens.webp",
+      "width": 1774,
+      "height": 887
+    },
+    {
+      "key": "care",
+      "url": "assets/care.webp",
+      "width": 2172,
+      "height": 724
+    }
+  ],
+  "sprites": {
+    "farmhouse": {
+      "sheet": "buildings",
+      "rect": [
+        22,
+        28,
+        431,
+        405
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 310
+    },
+    "shop": {
+      "sheet": "buildings",
+      "rect": [
+        497,
+        58,
+        369,
+        347
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 217
+    },
+    "coop": {
+      "sheet": "buildings",
+      "rect": [
+        939,
+        511,
+        354,
+        346
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 215
+    },
+    "lighthouse": {
+      "sheet": "buildings",
+      "rect": [
+        1384,
+        439,
+        316,
+        422
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 350
+    },
+    "tree": {
+      "sheet": "nature",
+      "rect": [
+        23,
+        29,
+        272,
+        277
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 220
+    },
+    "pine": {
+      "sheet": "nature",
+      "rect": [
+        363,
+        23,
+        223,
+        281
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 235
+    },
+    "appleTree": {
+      "sheet": "nature",
+      "rect": [
+        642,
+        29,
+        275,
+        273
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 215
+    },
+    "cherryTree": {
+      "sheet": "nature",
+      "rect": [
+        964,
+        23,
+        265,
+        278
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 210
+    },
+    "bush": {
+      "sheet": "nature",
+      "rect": [
+        22,
+        394,
+        271,
+        196
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 62
+    },
+    "rock": {
+      "sheet": "nature",
+      "rect": [
+        339,
+        377,
+        265,
+        220
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 55
+    },
+    "ore": {
+      "sheet": "nature",
+      "rect": [
+        651,
+        376,
+        264,
+        221
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52
+    },
+    "stump": {
+      "sheet": "nature",
+      "rect": [
+        966,
+        388,
+        263,
+        206
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 40
+    },
+    "fence": {
+      "sheet": "nature",
+      "rect": [
+        21,
+        707,
+        271,
+        190
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 49
+    },
+    "barrel": {
+      "sheet": "nature",
+      "rect": [
+        368,
+        665,
+        204,
+        247
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 55
+    },
+    "chest": {
+      "sheet": "nature",
+      "rect": [
+        648,
+        689,
+        269,
+        209
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 55
+    },
+    "mailbox": {
+      "sheet": "nature",
+      "rect": [
+        1021,
+        651,
+        153,
+        263
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 65
+    },
+    "chicken": {
+      "sheet": "nature",
+      "rect": [
+        52,
+        981,
+        210,
+        234
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45
+    },
+    "catStatic": {
+      "sheet": "nature",
+      "rect": [
+        356,
+        993,
+        225,
+        223
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 44
+    },
+    "boat": {
+      "sheet": "nature",
+      "rect": [
+        634,
+        1009,
+        295,
+        199
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90
+    },
+    "flower": {
+      "sheet": "nature",
+      "rect": [
+        963,
+        996,
+        261,
+        209
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 36
+    },
+    "bridge": {
+      "sheet": "environment",
+      "rect": [
+        23,
+        98,
+        399,
+        308
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 115
+    },
+    "dock": {
+      "sheet": "environment",
+      "rect": [
+        516,
+        18,
+        282,
+        415
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 190
+    },
+    "shoreRocks": {
+      "sheet": "environment",
+      "rect": [
+        896,
+        100,
+        418,
+        285
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 65
+    },
+    "wildflowers": {
+      "sheet": "environment",
+      "rect": [
+        1338,
+        113,
+        420,
+        243
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45
+    },
+    "grassClump": {
+      "sheet": "environment",
+      "rect": [
+        55,
+        567,
+        321,
+        228
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 42
+    },
+    "haystack": {
+      "sheet": "environment",
+      "rect": [
+        467,
+        527,
+        388,
+        291
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 70
+    },
+    "trough": {
+      "sheet": "environment",
+      "rect": [
+        901,
+        594,
+        377,
+        193
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 55
+    },
+    "barn": {
+      "sheet": "environment",
+      "rect": [
+        1314,
+        464,
+        455,
+        376
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 220
+    },
+    "hoe": {
+      "sheet": "items",
+      "rect": [
+        57,
+        56,
+        233,
+        242
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "water": {
+      "sheet": "items",
+      "rect": [
+        332,
+        58,
+        275,
+        236
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "axe": {
+      "sheet": "items",
+      "rect": [
+        662,
+        58,
+        237,
+        240
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "pickaxe": {
+      "sheet": "items",
+      "rect": [
+        968,
+        53,
+        241,
+        250
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "rod": {
+      "sheet": "items",
+      "rect": [
+        48,
+        352,
+        247,
+        260
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "seed": {
+      "sheet": "items",
+      "rect": [
+        351,
+        356,
+        230,
+        254
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "bag": {
+      "sheet": "items",
+      "rect": [
+        651,
+        356,
+        247,
+        253
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "coin": {
+      "sheet": "items",
+      "rect": [
+        997,
+        395,
+        180,
+        184
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "radish": {
+      "sheet": "items",
+      "rect": [
+        49,
+        649,
+        247,
+        274
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "potato": {
+      "sheet": "items",
+      "rect": [
+        336,
+        651,
+        267,
+        269
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "strawberry": {
+      "sheet": "items",
+      "rect": [
+        642,
+        657,
+        273,
+        249
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "pumpkin": {
+      "sheet": "items",
+      "rect": [
+        961,
+        657,
+        248,
+        252
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "wheat": {
+      "sheet": "items",
+      "rect": [
+        50,
+        955,
+        243,
+        262
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "corn": {
+      "sheet": "items",
+      "rect": [
+        335,
+        963,
+        263,
+        254
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "fish": {
+      "sheet": "items",
+      "rect": [
+        639,
+        1017,
+        276,
+        156
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "sprout": {
+      "sheet": "items",
+      "rect": [
+        979,
+        986,
+        216,
+        221
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "ui.map": {
+      "sheet": "ui",
+      "rect": [
+        42,
+        86,
+        361,
+        298
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "ui.journal": {
+      "sheet": "ui",
+      "rect": [
+        482,
+        51,
+        356,
+        368
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "ui.craft": {
+      "sheet": "ui",
+      "rect": [
+        917,
+        48,
+        392,
+        370
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "ui.settings": {
+      "sheet": "ui",
+      "rect": [
+        1371,
+        52,
+        362,
+        361
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "ui.leaf": {
+      "sheet": "ui",
+      "rect": [
+        78,
+        490,
+        306,
+        346
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "ui.sun": {
+      "sheet": "ui",
+      "rect": [
+        471,
+        468,
+        386,
+        377
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "ui.help": {
+      "sheet": "ui",
+      "rect": [
+        981,
+        480,
+        257,
+        365
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "ui.music": {
+      "sheet": "ui",
+      "rect": [
+        1362,
+        490,
+        340,
+        342
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 48
+    },
+    "egg": {
+      "sheet": "care",
+      "rect": [
+        169,
+        122,
+        382,
+        491
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 38
+    },
+    "feed": {
+      "sheet": "goods",
+      "rect": [
+        660,
+        141,
+        534,
+        412
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 45
+    },
+    "nest": {
+      "sheet": "livestock",
+      "rect": [
+        665,
+        723,
+        536,
+        482
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 60
+    },
+    "player.down.0": {
+      "sheet": "characters",
+      "rect": [
+        75,
+        22,
+        171,
+        277
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.down.1": {
+      "sheet": "characters",
+      "rect": [
+        389,
+        22,
+        170,
+        278
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.down.2": {
+      "sheet": "characters",
+      "rect": [
+        702,
+        22,
+        170,
+        274
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.down.3": {
+      "sheet": "characters",
+      "rect": [
+        1015,
+        22,
+        171,
+        277
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.left.0": {
+      "sheet": "characters",
+      "rect": [
+        83,
+        337,
+        149,
+        275
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.left.1": {
+      "sheet": "characters",
+      "rect": [
+        395,
+        337,
+        149,
+        274
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.left.2": {
+      "sheet": "characters",
+      "rect": [
+        707,
+        337,
+        148,
+        273
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.left.3": {
+      "sheet": "characters",
+      "rect": [
+        1022,
+        338,
+        149,
+        273
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.right.0": {
+      "sheet": "characters",
+      "rect": [
+        82,
+        649,
+        151,
+        276
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.right.1": {
+      "sheet": "characters",
+      "rect": [
+        396,
+        649,
+        151,
+        275
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.right.2": {
+      "sheet": "characters",
+      "rect": [
+        709,
+        649,
+        152,
+        275
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.right.3": {
+      "sheet": "characters",
+      "rect": [
+        1025,
+        648,
+        149,
+        277
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.up.0": {
+      "sheet": "characters",
+      "rect": [
+        79,
+        966,
+        158,
+        267
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.up.1": {
+      "sheet": "characters",
+      "rect": [
+        395,
+        966,
+        155,
+        267
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.up.2": {
+      "sheet": "characters",
+      "rect": [
+        706,
+        965,
+        157,
+        268
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "player.up.3": {
+      "sheet": "characters",
+      "rect": [
+        1021,
+        966,
+        157,
+        267
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 90,
+      "originalFrame": [
+        314,
+        314
+      ],
+      "animation": "walk"
+    },
+    "work.right.0": {
+      "sheet": "work",
+      "rect": [
+        75,
+        30,
+        190,
+        352
+      ],
+      "origin": [
+        0.43157894736842106,
+        0.9971590909090909
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.8263157894736842,
+        0.5482954545454546
+      ],
+      "referenceHeight": 361,
+      "animation": "ready"
+    },
+    "work.right.1": {
+      "sheet": "work",
+      "rect": [
+        364,
+        19,
+        199,
+        361
+      ],
+      "origin": [
+        0.5125628140703518,
+        0.997229916897507
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.12562814070351758,
+        0.3157894736842105
+      ],
+      "referenceHeight": 361,
+      "animation": "raised"
+    },
+    "work.right.2": {
+      "sheet": "work",
+      "rect": [
+        656,
+        43,
+        222,
+        337
+      ],
+      "origin": [
+        0.42342342342342343,
+        0.9970326409495549
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.7927927927927928,
+        0.7566765578635015
+      ],
+      "referenceHeight": 361,
+      "animation": "impact"
+    },
+    "work.right.3": {
+      "sheet": "work",
+      "rect": [
+        972,
+        76,
+        229,
+        305
+      ],
+      "origin": [
+        0.388646288209607,
+        0.9967213114754099
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.9082969432314411,
+        0.8918032786885246
+      ],
+      "referenceHeight": 361,
+      "animation": "crouch"
+    },
+    "work.down.0": {
+      "sheet": "work",
+      "rect": [
+        74,
+        427,
+        184,
+        349
+      ],
+      "origin": [
+        0.45108695652173914,
+        0.997134670487106
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.6521739130434783,
+        0.5616045845272206
+      ],
+      "referenceHeight": 361,
+      "animation": "ready"
+    },
+    "work.down.1": {
+      "sheet": "work",
+      "rect": [
+        359,
+        418,
+        212,
+        357
+      ],
+      "origin": [
+        0.5141509433962265,
+        0.9971988795518207
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.14150943396226415,
+        0.32492997198879553
+      ],
+      "referenceHeight": 361,
+      "animation": "raised"
+    },
+    "work.down.2": {
+      "sheet": "work",
+      "rect": [
+        659,
+        440,
+        210,
+        336
+      ],
+      "origin": [
+        0.44761904761904764,
+        0.9970238095238095
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.680952380952381,
+        0.7619047619047619
+      ],
+      "referenceHeight": 361,
+      "animation": "impact"
+    },
+    "work.down.3": {
+      "sheet": "work",
+      "rect": [
+        971,
+        472,
+        218,
+        305
+      ],
+      "origin": [
+        0.41284403669724773,
+        0.9967213114754099
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.8990825688073395,
+        0.9081967213114754
+      ],
+      "referenceHeight": 361,
+      "animation": "crouch"
+    },
+    "work.up.0": {
+      "sheet": "work",
+      "rect": [
+        61,
+        836,
+        207,
+        374
+      ],
+      "origin": [
+        0.463768115942029,
+        0.9973262032085561
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.8888888888888888,
+        0.48128342245989303
+      ],
+      "referenceHeight": 361,
+      "animation": "ready"
+    },
+    "work.up.1": {
+      "sheet": "work",
+      "rect": [
+        362,
+        836,
+        200,
+        377
+      ],
+      "origin": [
+        0.535,
+        0.9973474801061007
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.535,
+        0.2864721485411141
+      ],
+      "referenceHeight": 361,
+      "animation": "raised"
+    },
+    "work.up.2": {
+      "sheet": "work",
+      "rect": [
+        647,
+        852,
+        230,
+        361
+      ],
+      "origin": [
+        0.43043478260869567,
+        0.997229916897507
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.8217391304347826,
+        0.6814404432132964
+      ],
+      "referenceHeight": 361,
+      "animation": "impact"
+    },
+    "work.up.3": {
+      "sheet": "work",
+      "rect": [
+        971,
+        885,
+        228,
+        332
+      ],
+      "origin": [
+        0.42105263157894735,
+        0.9969879518072289
+      ],
+      "displayHeight": 90,
+      "hand": [
+        0.8903508771929824,
+        0.8192771084337349
+      ],
+      "referenceHeight": 361,
+      "animation": "crouch"
+    },
+    "cat.walk.0": {
+      "sheet": "cat",
+      "rect": [
+        67,
+        64,
+        251,
+        226
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "walk.0"
+    },
+    "cat.walk.1": {
+      "sheet": "cat",
+      "rect": [
+        428,
+        63,
+        253,
+        230
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "walk.1"
+    },
+    "cat.walk.2": {
+      "sheet": "cat",
+      "rect": [
+        786,
+        63,
+        257,
+        233
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "walk.2"
+    },
+    "cat.walk.3": {
+      "sheet": "cat",
+      "rect": [
+        1152,
+        63,
+        251,
+        228
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "walk.3"
+    },
+    "cat.sit": {
+      "sheet": "cat",
+      "rect": [
+        104,
+        427,
+        189,
+        229
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "sit"
+    },
+    "cat.look": {
+      "sheet": "cat",
+      "rect": [
+        434,
+        412,
+        205,
+        244
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "look"
+    },
+    "cat.groom": {
+      "sheet": "cat",
+      "rect": [
+        789,
+        425,
+        211,
+        230
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "groom"
+    },
+    "cat.sleep": {
+      "sheet": "cat",
+      "rect": [
+        1152,
+        481,
+        233,
+        168
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "sleep"
+    },
+    "cat.stretch": {
+      "sheet": "cat",
+      "rect": [
+        64,
+        769,
+        260,
+        255
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "stretch"
+    },
+    "cat.walkBack.0": {
+      "sheet": "cat",
+      "rect": [
+        430,
+        774,
+        233,
+        246
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "walkBack.0"
+    },
+    "cat.walkBack.1": {
+      "sheet": "cat",
+      "rect": [
+        799,
+        775,
+        225,
+        237
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "walkBack.1"
+    },
+    "cat.sniff": {
+      "sheet": "cat",
+      "rect": [
+        1131,
+        772,
+        254,
+        248
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 52,
+      "referenceHeight": 255,
+      "animation": "sniff"
+    },
+    "crop.radish.sprout": {
+      "sheet": "crops",
+      "rect": [
+        80,
+        105,
+        223,
+        181
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 20,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.radish.juvenile": {
+      "sheet": "crops",
+      "rect": [
+        26,
+        360,
+        322,
+        268
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 34,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.radish.mature": {
+      "sheet": "crops",
+      "rect": [
+        11,
+        679,
+        337,
+        380
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.potato.sprout": {
+      "sheet": "crops",
+      "rect": [
+        425,
+        51,
+        248,
+        235
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 20,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.potato.juvenile": {
+      "sheet": "crops",
+      "rect": [
+        385,
+        348,
+        318,
+        280
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 34,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.potato.mature": {
+      "sheet": "crops",
+      "rect": [
+        367,
+        682,
+        331,
+        376
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.strawberry.sprout": {
+      "sheet": "crops",
+      "rect": [
+        785,
+        49,
+        247,
+        236
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 20,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.strawberry.juvenile": {
+      "sheet": "crops",
+      "rect": [
+        753,
+        372,
+        322,
+        255
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 34,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.strawberry.mature": {
+      "sheet": "crops",
+      "rect": [
+        728,
+        681,
+        358,
+        377
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.wheat.sprout": {
+      "sheet": "crops",
+      "rect": [
+        1164,
+        31,
+        209,
+        253
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 20,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.wheat.juvenile": {
+      "sheet": "crops",
+      "rect": [
+        1110,
+        334,
+        307,
+        293
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 34,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "crop.wheat.mature": {
+      "sheet": "crops",
+      "rect": [
+        1112,
+        648,
+        309,
+        410
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 57,
+      "productionStatus": "distinct generated crop stage"
+    },
+    "chicken.walk.0": {
+      "sheet": "chickens",
+      "rect": [
+        50,
+        39,
+        335,
+        342
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "referenceHeight": 350,
+      "animation": "walk.0"
+    },
+    "chicken.walk.1": {
+      "sheet": "chickens",
+      "rect": [
+        495,
+        40,
+        337,
+        341
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "referenceHeight": 350,
+      "animation": "walk.1"
+    },
+    "chicken.walk.2": {
+      "sheet": "chickens",
+      "rect": [
+        941,
+        40,
+        338,
+        340
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "referenceHeight": 350,
+      "animation": "walk.2"
+    },
+    "chicken.walk.3": {
+      "sheet": "chickens",
+      "rect": [
+        1391,
+        40,
+        336,
+        338
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "referenceHeight": 350,
+      "animation": "walk.3"
+    },
+    "chicken.peck": {
+      "sheet": "chickens",
+      "rect": [
+        50,
+        501,
+        343,
+        328
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "referenceHeight": 350,
+      "animation": "peck"
+    },
+    "chicken.rest": {
+      "sheet": "chickens",
+      "rect": [
+        495,
+        555,
+        334,
+        277
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "referenceHeight": 350,
+      "animation": "rest"
+    },
+    "chicken.stretch": {
+      "sheet": "chickens",
+      "rect": [
+        915,
+        482,
+        405,
+        355
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "referenceHeight": 350,
+      "animation": "stretch"
+    },
+    "chicken.back": {
+      "sheet": "chickens",
+      "rect": [
+        1426,
+        476,
+        245,
+        359
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 45,
+      "referenceHeight": 350,
+      "animation": "back"
+    },
+    "waterBowl": {
+      "sheet": "care",
+      "rect": [
+        857,
+        163,
+        458,
+        415
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 32
+    },
+    "foodBowl": {
+      "sheet": "care",
+      "rect": [
+        1590,
+        178,
+        434,
+        389
+      ],
+      "origin": [
+        0.5,
+        1
+      ],
+      "displayHeight": 32
+    },
+    "berry": {
+      "sheet": "goods",
+      "rect": [
+        113,
+        79,
+        453,
+        503
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 45
+    },
+    "fertilizer": {
+      "sheet": "goods",
+      "rect": [
+        65,
+        673,
+        509,
+        515
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 45
+    },
+    "bread": {
+      "sheet": "goods",
+      "rect": [
+        654,
+        741,
+        552,
+        444
+      ],
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "displayHeight": 45
+    }
+  }
+}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#edf0e7"><meta name="description" content="Take the scenic route. Explore a miniature Three.js railway world with living towns, winding rivers and a little steam train.">
+<title>Valley Line — A little world in motion</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%232e5843'/%3E%3Ctext x='20' y='29' text-anchor='middle' font-size='28' fill='white'%3E↟%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="./style.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/controls/OrbitControls.js":"./vendor/OrbitControls.js"}}</script>
+</head>
+<body>
+<svg class="icon-defs" xmlns="http://www.w3.org/2000/svg"><defs>
+<symbol id="i-train" viewBox="0 0 24 24"><path d="M6 17h12V7a4 4 0 0 0-4-4h-4a4 4 0 0 0-4 4v10Zm0-6h12M9 3V1m6 2V1M8 17l-3 5m11-5 3 5M7 20h10"/><path d="M9 14h.01M15 14h.01"/></symbol>
+<symbol id="i-orbit" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="5" transform="rotate(-35 12 12)"/><path d="m17 2 3 2-3 2"/></symbol>
+<symbol id="i-iso" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Zm-9 5v9l9 5 9-5V8M12 13v9"/></symbol>
+<symbol id="i-follow" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/><circle cx="12" cy="12" r="4"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 1v2m0 18v2M1 12h2m18 0h2M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2"/></symbol>
+<symbol id="i-sound" viewBox="0 0 24 24"><path d="M11 4 5 9H2v6h3l6 5V4Zm4 4a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+<symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 9a9 9 0 1 1 1 10M3 3v6h6"/></symbol>
+<symbol id="i-route" viewBox="0 0 24 24"><path d="M7 21V3m0 12c0-7 10-3 10-12M4 6l3-3 3 3m4 0 3-3 3 3"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6 18a5 5 0 0 1-1-10 7 7 0 0 1 13 0 5 5 0 0 1 0 10Z"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 0 1 14 0Z"/><circle cx="12" cy="10" r="2"/></symbol>
+</defs></svg>
+<header><a class="brand" href="./" aria-label="Valley Line home"><span class="brand-icon"><svg><use href="#i-train"/></svg></span><span>VALLEY LINE<small>A little world in motion</small></span></a><div class="header-center"><span class="live-dot"></span> THE COUNTRYSIDE COLLECTION <span class="edition">№ 001</span></div><div class="header-actions"><span id="clock">10:24</span><button id="day" class="icon-button" title="Switch daylight / golden hour" aria-label="Switch daylight or golden hour"><svg><use href="#i-sun"/></svg></button><button id="help" class="icon-button help" title="Controls & shortcuts" aria-label="Controls and shortcuts">?</button></div></header>
+<main>
+<section class="intro"><div class="eyebrow">YOUR OWN LITTLE RAILWAY</div><h1>Take the<br><em>scenic route.</em></h1><p>Slow down. Switch tracks.<br>Watch the world roll by.</p></section>
+<aside class="controls">
+<div class="panel-label">THE VIEW <span>01—03</span></div><div class="camera-buttons" role="group" aria-label="Camera mode"><button data-camera="free" class="selected" aria-pressed="true"><svg><use href="#i-orbit"/></svg><span>Free 3D</span><kbd>1</kbd></button><button data-camera="follow" aria-pressed="false"><svg><use href="#i-follow"/></svg><span>Follow train</span><kbd>2</kbd></button><button data-camera="iso" aria-pressed="false"><svg><use href="#i-iso"/></svg><span>Isometric</span><kbd>3</kbd></button></div>
+<div class="panel-divider"></div><div class="panel-label">AT THE JUNCTION <svg><use href="#i-route"/></svg></div><div class="route-tabs" role="group" aria-label="Next route"><button data-route="main" class="selected" aria-pressed="true">Valley loop</button><button data-route="branch" aria-pressed="false">River shortcut</button></div><p class="route-note" id="route-note">The long way round. Always worth it.</p>
+<div class="panel-divider"></div><div class="switch-row"><span><svg><use href="#i-cloud"/></svg> Steam & smoke</span><button id="smoke" class="switch on" role="switch" aria-checked="true" aria-label="Steam and smoke"><i></i></button></div><div class="switch-row"><span><svg><use href="#i-sound"/></svg> Railway sounds</span><button id="sound" class="switch" role="switch" aria-checked="false" aria-label="Railway sounds"><i></i></button></div>
+</aside>
+<div id="world" aria-label="Interactive three dimensional railway landscape"><div id="loading"><span class="loading-wheel"></span><p>Laying the tracks…</p></div><div id="labels"></div><div class="world-note"><span class="live-dot"></span><span id="world-status">A WORLD IN MOTION</span></div></div>
+<div class="scene-tools"><button id="reset-camera" class="icon-button" title="Reset camera · R" aria-label="Reset camera"><svg><use href="#i-reset"/></svg></button><button id="zoom-in" class="icon-button" title="Zoom in" aria-label="Zoom in">+</button><button id="zoom-out" class="icon-button" title="Zoom out" aria-label="Zoom out">−</button></div>
+<div class="map-card"><div class="panel-label">THE VALLEY <span>LIVE MAP</span></div><canvas id="minimap" width="240" height="140" aria-label="Railway map with moving train position"></canvas><div class="map-key"><span><i></i> Railway</span><span><i></i> River</span><span><i></i> Your train</span></div></div>
+<div class="camera-hint" id="camera-hint"><span>↔</span> Drag to orbit <b>·</b> Scroll to explore <b>·</b> Right-drag to pan</div>
+<section class="transport" aria-label="Train controls"><div class="train-badge"><svg><use href="#i-train"/></svg></div><div class="train-name"><small>OUT ON THE LINE</small><strong>The Evergreen <span>№ 04</span></strong></div><button id="play" aria-label="Pause simulation" title="Pause / resume · Space"><span id="play-symbol">Ⅱ</span></button><div class="speed-control"><div><label for="speed">Cruising speed</label><output id="speed-value">36 <span>km/h</span></output></div><input id="speed" type="range" min="0" max="80" value="36" step="1" aria-label="Train speed"></div><div class="journey"><span class="small-dot"></span><div><small id="journey-label">NEXT STOP</small><strong id="destination">Willowbrook</strong></div></div><button id="whistle" class="whistle" title="Blow the whistle · H" aria-label="Blow the train whistle"><svg><use href="#i-sound"/></svg></button></section>
+<footer><span>Made for the joy of the journey.</span><span>3 TOWNS <i>·</i> 3 BRIDGES <i>·</i> ENDLESS LITTLE JOURNEYS</span></footer>
+</main>
+<div id="toast" role="status"></div>
+<dialog id="help-dialog"><button id="close-help" class="close" aria-label="Close help">×</button><span class="eyebrow">WELCOME ABOARD</span><h2>A little room to wander.</h2><p>Follow the Evergreen through the valley, or explore at your own pace.</p><dl><dt>Orbit / pan / zoom</dt><dd>Drag / right-drag / scroll</dd><dt>Camera views</dt><dd><kbd>1</kbd> Free <kbd>2</kbd> Follow <kbd>3</kbd> Isometric</dd><dt>Pause / resume</dt><dd><kbd>Space</kbd></dd><dt>Reset the view</dt><dd><kbd>R</kbd></dd><dt>Blow the whistle</dt><dd><kbd>H</kbd></dd><dt>Switch the junction</dt><dd><kbd>J</kbd> or the route buttons</dd></dl><p class="help-end">Route changes take effect when the locomotive next reaches the junction. The train slows to call at stations. On touch screens, drag to orbit and pinch to zoom.</p></dialog>
+<script type="module" src="./app.js"></script>
+</body></html>

@@ -1,0 +1,21 @@
+{
+  "id": "eizan-summer",
+  "name": "叡山电车 · 夏日车窗",
+  "category": "场景与漫游",
+  "description": "坐进蓝色长椅车厢，从侧窗与驾驶室前窗看夏季山林掠过。",
+  "hint": "切换「斜看车窗」和「正看车头」，观察同一段路。",
+  "label": "乘客 · 林间铁路",
+  "color": "#dce8df",
+  "directory": "../eizan-summer",
+  "port": 4331,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "叡山电车 · 夏日车窗",
+  "enabled": true
+}

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#187f82"><title>再捞一条 · 猫猫的小小海湾</title><meta name="description" content="按住撒网，松开收网。陪一只贪心的小猫满载回家，升级小船，收集海湾里的奇妙鱼儿。"><link rel="stylesheet" href="style.css"></head>
+<body>
+<main id="game" aria-label="再捞一条捕鱼游戏">
+<canvas id="sea" aria-label="海湾：移动鼠标划船与瞄准。虚线圈显示最大范围；按住左键停船张网，松开捕捉实线圈内的鱼。Esc 取消撒网或暂停。" tabindex="0"></canvas>
+<div id="hud" class="hidden">
+ <div class="topline"><div class="brand"><span class="brandmark">≈</span><div><b>再捞一条</b><small>猫猫的小小海湾</small></div></div><div class="zone"><span id="zoneName">薄荷浅湾</span><small id="zoneHint">小鱼成群 · 风平浪静</small></div><div class="topright"><span class="coin"><i>贝</i> <b id="coins">0</b></span><button id="sound" class="round" title="开启声音" aria-label="开启声音">♫</button><button id="pause" class="round" title="暂停（Esc）" aria-label="暂停（Esc）">Ⅱ</button></div></div>
+ <div id="objective" class="objective"><span>海湾心愿</span><b id="goalText">带回 5 条鱼</b><small id="goalProgress">0 / 5</small></div>
+ <div class="ship-status"><div><b id="boatName">小木盆</b><span id="loadText">0 / 16 kg</span></div><div class="meter"><i id="loadBar"></i></div><small id="loadHint">空船轻快，去找一群小鱼吧</small><div id="waterStatus"><span>船内积水</span><div class="meter water"><i id="waterBar"></i></div><b id="waterText">0%</b></div></div>
+ <div id="toast" role="status"></div><div id="warning" class="warning hidden"></div>
+ <div id="dockArrow" class="dock-arrow">← 小码头 <span>靠岸自动卖鱼</span></div>
+ <div class="bottomline"><div class="cargo"><div class="cargo-label"><b>这一船的收获</b><span id="cargoValue">还空着呢</span></div><div id="cargoList"></div><small id="cargoTip">装船后点击鱼卡，可以放生减重</small></div><div class="return-wrap"><button id="return" class="primary return">收工，回家 <span>R ↵</span></button><small id="returnHint">慢慢划，不着急</small></div></div>
+ <div id="controls" class="controls">鼠标划船与瞄准 <em>·</em> 按住停船张网，松开收网 <em>·</em> Esc 取消 / 暂停</div>
+ <div id="aimHint" class="aim-hint hidden" aria-live="off"></div>
+ <div id="netHint" class="net-hint hidden">松开收网</div>
+</div>
+<div id="dockMenu" class="dock-menu hidden"><b>已安全停靠 · 小码头</b><span>海面已暂停，准备好了再出发。</span><div><button id="dockShop" class="secondary">打开码头 <kbd>E</kbd></button><button id="dockSail" class="primary">出海 <kbd>Enter</kbd></button></div></div>
+<section id="welcome" class="welcome"><div class="welcome-wash"></div><div class="welcome-copy"><span class="eyebrow">一只猫 · 一片海 · 一点点贪心</span><h1>再捞<span>一条</span><i>ONE MORE FISH</i></h1><p>小木盆装不下整片海，<br>但总能再装下一条……吧？</p><button id="start" class="primary big">去捞第一网 <span>→</span></button><div class="welcome-controls"><span>↗ 移动划船</span><span>◉ 按住撒网</span><span>⌂ 满载回家</span></div><small id="saveNote">进度会自动保存在这台设备上</small></div><div class="welcome-note">今天也要，平平安安满载而归。</div></section>
+<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div id="modalContent" class="panel"></div></div>
+</main><script type="module" src="game.js"></script>
+</body></html>

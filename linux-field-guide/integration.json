@@ -1,0 +1,21 @@
+{
+  "id": "linux-field-guide",
+  "name": "Linux 系统管理 · 交互手册",
+  "category": "学习页面",
+  "description": "按章节浏览系统管理主题，在学习目录中记录自己的进度。",
+  "hint": "从目录打开一个章节，切换主题或标记进度。",
+  "label": "Linux · 自学",
+  "color": "#e7ebd8",
+  "directory": "../linux-field-guide",
+  "port": 4377,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "Linux 系统管理 · 从终端到运维实践",
+  "enabled": true
+}

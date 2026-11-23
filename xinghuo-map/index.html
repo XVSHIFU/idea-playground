@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050507" />
+  <meta name="description" content="星火汇中华" />
+  <title>星火汇中华</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <canvas id="stage"></canvas>
+  <div class="noise"></div>
+  <div class="vignette"></div>
+
+  <audio id="bgm" src="./庄重国庆主题配乐.wav" preload="none" loop playsinline webkit-playsinline></audio>
+
+  <section class="opening show" id="opening">
+    <div class="opening-panel">
+      <div class="opening-star">★</div>
+      <div class="opening-kicker">INTERACTIVE DIGITAL CANVAS · NATIONAL DAY</div>
+      <h1>星火汇中华</h1>
+      <div class="opening-divider" aria-hidden="true">
+        <span class="line"></span>
+        <span class="text">盛世华章</span>
+        <span class="line"></span>
+      </div>
+      <div class="opening-slogan">五星联动成线 · 主星压轴点亮</div>
+      <p>
+        以红色中国地图轮廓为背景，<br />
+        让五星化作五个发光节点，其中四颗副星依次点亮，最后由主星压轴点亮 <b>科技创新、山河锦绣、家乡新貌、校园青春、星火共鸣</b>。<br />
+        最终，所有光点将汇聚成 <b>77</b>，并写下国庆祝福。
+      </p>
+      <div class="opening-actions">
+        <button class="hero-btn primary" id="startBtn">开始体验</button>
+        <button class="hero-btn" id="demoBtn">▶ 比赛演示</button>
+        <button class="hero-btn gold" id="musicBtn">♪ 播放音乐</button>
+      </div>
+      <div class="opening-tip">手动模式下，请按高亮顺序依次点亮四颗副星，最后点亮主星。</div>
+    </div>
+  </section>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="eyebrow">NATIONAL DAY · FIVE STARS · INTERACTIVE ART</div>
+      <h2>星火汇中华</h2>
+      <div class="brand-divider" aria-hidden="true">
+        <span class="line"></span>
+        <span class="star">★</span>
+        <span class="line"></span>
+      </div>
+      <p>红色中国轮廓背景 · 五星联动叙事 · 星光汇聚成 77</p>
+    </div>
+    <div class="toolbar">
+      <button class="ui-btn primary" id="toolbarDemoBtn">▶ 比赛演示</button>
+      <button class="ui-btn" id="replayBtn">↻ 重播</button>
+      <button class="ui-btn" id="soundBtn">♪ 音乐</button>
+      <button class="ui-btn" id="shotBtn">⬇ 截图</button>
+    </div>
+  </header>
+
+  <section class="scene-caption" id="sceneCaption">
+    <div class="scene-no" id="sceneNo">1 / 5</div>
+    <div class="scene-kicker" id="sceneKicker">FIRST STAR · START HERE</div>
+    <div class="scene-title" id="sceneTitle">点击第一颗星光</div>
+    <div class="scene-text" id="sceneText">五颗星光依次点亮，整幅画面会浮现更大、更鲜明的主题场景。</div>
+  </section>
+
+  <div class="step-indicator" id="stepIndicator">当前进度：0 / 5</div>
+
+  <div class="big77">77</div>
+
+  <section class="finale" id="finale">
+    <div class="finale-kicker">七十七载 · 星火同辉</div>
+    <div class="finale-number">77</div>
+    <div class="finale-divider" aria-hidden="true"></div>
+    <div class="finale-title">山河同辉 · 青春有为</div>
+    <div class="finale-sub">以代码写山河，以星火寄祝福</div>
+  </section>
+
+  <div class="toast" id="toast">已保存截图</div>
+  <script src="./app.js"></script>
+</body>
+</html>

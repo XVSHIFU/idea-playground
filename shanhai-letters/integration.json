@@ -1,0 +1,35 @@
+{
+  "id": "shanhai-letters",
+  "name": "山海来信",
+  "category": "视觉与交互",
+  "description": "用旅行手账、立体地景和手机预览体验同一段旅程的不同呈现。",
+  "hint": "选一套地图，再从全国总览进入省份。",
+  "label": "旅行地图 · 设计集",
+  "color": "#dee5f4",
+  "directory": "../shanhai-letters",
+  "port": 4355,
+  "entry": "index.html",
+  "required": [
+    "arrivals.html",
+    "index.html",
+    "letters.html",
+    "map-studies.html",
+    "phone.html",
+    "slow-travel.html",
+    "spatial.html",
+    "three-worlds.html"
+  ],
+  "files": [
+    "arrivals.html",
+    "index.html",
+    "letters.html",
+    "map-studies.html",
+    "phone.html",
+    "slow-travel.html",
+    "spatial.html",
+    "three-worlds.html"
+  ],
+  "publicDirectories": [],
+  "identity": "山海来信",
+  "enabled": true
+}

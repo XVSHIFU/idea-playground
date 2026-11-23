@@ -1,0 +1,43 @@
+{
+  "id": "before-the-rain",
+  "name": "雨落之前",
+  "category": "游戏与模拟",
+  "description": "修复荒漠中的集水器，用水分、电力和生物质重建星球生态。",
+  "hint": "先唤醒「零」，再点击「收集水分」启动荒漠集水器。",
+  "label": "生态 · 增量",
+  "color": "#eadfd2",
+  "directory": "../before-the-rain",
+  "port": 4324,
+  "entry": "index.html",
+  "required": [
+    "assets/desert.png",
+    "assets/forest.png",
+    "assets/restored.png",
+    "fonts/Noto-LICENSE.txt",
+    "fonts/Rajdhani-LICENSE.txt",
+    "fonts/climate-sans-bold.woff",
+    "fonts/climate-sans-regular.woff",
+    "fonts/rajdhani-latin-500-normal.woff2",
+    "fonts/rajdhani-latin-600-normal.woff2",
+    "game-v2.js",
+    "index.html",
+    "style.css"
+  ],
+  "files": [
+    "assets/desert.png",
+    "assets/forest.png",
+    "assets/restored.png",
+    "fonts/Noto-LICENSE.txt",
+    "fonts/Rajdhani-LICENSE.txt",
+    "fonts/climate-sans-bold.woff",
+    "fonts/climate-sans-regular.woff",
+    "fonts/rajdhani-latin-500-normal.woff2",
+    "fonts/rajdhani-latin-600-normal.woff2",
+    "game-v2.js",
+    "index.html",
+    "style.css"
+  ],
+  "publicDirectories": [],
+  "identity": "雨落之前｜生态重建增量游戏",
+  "enabled": true
+}

@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="paper">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier · AI 原生写作工作室</title>
+
+
+
+<style>
+/* ============================================================
+   THEME TOKENS
+   ============================================================ */
+:root {
+  --font-reading: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', Georgia, serif;
+  --font-display: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', Georgia, serif;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+
+  --topbar-h: 56px;
+  --sidebar-w: 268px;
+  --ai-w: 340px;
+  --content-width: 700px;
+  --doc-body: 17.5px;
+  --doc-leading: 1.88;
+  --doc-h1: 44px;
+  --doc-h2: 25px;
+  --doc-h3: 19px;
+  --radius: 10px;
+  --radius-lg: 14px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- 纸张质感 ---------- */
+:root[data-theme="paper"] {
+  --bg: #f1ebdf;
+  --bg-canvas: #f7f1e4;
+  --bg-elevated: #fffdf6;
+  --bg-hover: rgba(156, 90, 46, 0.055);
+  --text: #2e2921;
+  --text-secondary: #5b5142;
+  --text-muted: #857a67;
+  --text-faint: #a89c87;
+  --border: #e6ddc9;
+  --border-strong: #d3c5a6;
+  --accent: #9c5a2e;
+  --accent-2: #c27a45;
+  --accent-soft: rgba(156, 90, 46, 0.085);
+  --accent-soft-2: rgba(156, 90, 46, 0.16);
+  --code-bg: #f1e9d8;
+  --code-head-bg: #eae0cb;
+  --code-text: #4a3f2f;
+  --shadow-sm: 0 1px 2px rgba(74, 52, 24, 0.045);
+  --shadow-md: 0 2px 5px rgba(74, 52, 24, 0.045), 0 12px 30px rgba(74, 52, 24, 0.07);
+  --shadow-lg: 0 4px 14px rgba(74, 52, 24, 0.06), 0 24px 56px rgba(74, 52, 24, 0.11);
+  --tok-comment: #a39684;
+  --tok-cmd: #9c5a2e;
+  --tok-bin: #3a3228;
+  --tok-arg: #5b7a8c;
+  --tok-val: #6b8b5a;
+  --tok-str: #8a6d3b;
+  --diff-del-bg: rgba(190, 60, 50, 0.075);
+  --diff-del-text: #a84a3c;
+  --diff-add-bg: rgba(80, 130, 70, 0.085);
+  --diff-add-text: #4f7a3f;
+  --callout-info-bg: rgba(90, 125, 145, 0.075);
+  --callout-info-border: rgba(90, 125, 145, 0.24);
+  --callout-info-icon: #5b7a8c;
+  --callout-warn-bg: rgba(175, 120, 40, 0.075);
+  --callout-warn-border: rgba(175, 120, 40, 0.24);
+  --callout-warn-icon: #a8782e;
+  --btn-primary-bg: #9c5a2e;
+  --btn-primary-text: #faf6ec;
+  --scrollbar-thumb: #d3c5a6;
+  --paper-noise-opacity: 0.055;
+  --doc-letter-spacing: 0.015em;
+  --heading-letter-spacing: -0.012em;
+}
+
+/* ---------- 现代极简 ---------- */
+:root[data-theme="minimal"] {
+  --bg: #ffffff;
+  --bg-canvas: #ffffff;
+  --bg-elevated: #fafafa;
+  --bg-hover: rgba(0, 0, 0, 0.035);
+  --text: #131316;
+  --text-secondary: #46464e;
+  --text-muted: #71717a;
+  --text-faint: #a4a4ad;
+  --border: #ebebef;
+  --border-strong: #d6d6dc;
+  --accent: #17171a;
+  --accent-2: #5b5bd6;
+  --accent-soft: rgba(0, 0, 0, 0.04);
+  --accent-soft-2: rgba(0, 0, 0, 0.075);
+  --code-bg: #f6f6f8;
+  --code-head-bg: #f0f0f3;
+  --code-text: #2a2a2e;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.035);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.035), 0 10px 26px rgba(0, 0, 0, 0.045);
+  --shadow-lg: 0 2px 10px rgba(0, 0, 0, 0.05), 0 20px 46px rgba(0, 0, 0, 0.07);
+  --tok-comment: #a4a4ad;
+  --tok-cmd: #17171a;
+  --tok-bin: #17171a;
+  --tok-arg: #5b5bd6;
+  --tok-val: #0f766e;
+  --tok-str: #b45309;
+  --diff-del-bg: rgba(220, 38, 38, 0.055);
+  --diff-del-text: #b91c1c;
+  --diff-add-bg: rgba(22, 163, 74, 0.065);
+  --diff-add-text: #15803d;
+  --callout-info-bg: rgba(91, 91, 214, 0.05);
+  --callout-info-border: rgba(91, 91, 214, 0.18);
+  --callout-info-icon: #5b5bd6;
+  --callout-warn-bg: rgba(180, 83, 9, 0.05);
+  --callout-warn-border: rgba(180, 83, 9, 0.18);
+  --callout-warn-icon: #b45309;
+  --btn-primary-bg: #17171a;
+  --btn-primary-text: #ffffff;
+  --scrollbar-thumb: #d6d6dc;
+  --paper-noise-opacity: 0;
+  --doc-letter-spacing: 0.005em;
+  --heading-letter-spacing: -0.025em;
+  --font-reading: var(--font-ui);
+  --font-display: var(--font-ui);
+  --doc-body: 16px;
+  --doc-leading: 1.78;
+  --doc-h1: 42px;
+  --doc-h2: 23px;
+}
+
+/* ---------- 深色阅读 ---------- */
+:root[data-theme="dark"] {
+  --bg: #131317;
+  --bg-canvas: #18181d;
+  --bg-elevated: #202027;
+  --bg-hover: rgba(255, 255, 255, 0.045);
+  --text: #e0e1e6;
+  --text-secondary: #b2b3bc;
+  --text-muted: #85868f;
+  --text-faint: #5b5c66;
+  --border: #2a2a33;
+  --border-strong: #3a3a45;
+  --accent: #d9a05b;
+  --accent-2: #e8b86e;
+  --accent-soft: rgba(217, 160, 91, 0.1);
+  --accent-soft-2: rgba(217, 160, 91, 0.18);
+  --code-bg: #0f0f13;
+  --code-head-bg: #15151a;
+  --code-text: #c8c8d0;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.32), 0 14px 36px rgba(0, 0, 0, 0.38);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.38), 0 24px 60px rgba(0, 0, 0, 0.48);
+  --tok-comment: #5a5a66;
+  --tok-cmd: #d9a05b;
+  --tok-bin: #d8d8e0;
+  --tok-arg: #8fb8d8;
+  --tok-val: #a8d48f;
+  --tok-str: #e8b86e;
+  --diff-del-bg: rgba(248, 113, 113, 0.09);
+  --diff-del-text: #f0908c;
+  --diff-add-bg: rgba(74, 222, 128, 0.09);
+  --diff-add-text: #7ad48f;
+  --callout-info-bg: rgba(143, 184, 216, 0.07);
+  --callout-info-border: rgba(143, 184, 216, 0.2);
+  --callout-info-icon: #8fb8d8;
+  --callout-warn-bg: rgba(217, 160, 91, 0.07);
+  --callout-warn-border: rgba(217, 160, 91, 0.22);
+  --callout-warn-icon: #d9a05b;
+  --btn-primary-bg: #d9a05b;
+  --btn-primary-text: #131317;
+  --scrollbar-thumb: #3a3a45;
+  --paper-noise-opacity: 0;
+  --doc-letter-spacing: 0.012em;
+  --heading-letter-spacing: -0.01em;
+  --doc-body: 17px;
+  --doc-leading: 1.86;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--accent-soft-2); color: var(--text); }
+
+.hidden { display: none !important; }
+
+/* 主题切换时的平滑过渡 */
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition: background-color 0.45s ease, color 0.3s ease 0.08s,
+              border-color 0.45s ease, box-shadow 0.45s ease,
+              fill 0.3s ease 0.05s, stroke 0.3s ease 0.05s,
+              opacity 0.3s ease !important;
+}
+
+/* 全局细微滚动条 */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
+  border: 2.5px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+.topbar {
+  height: var(--topbar-h);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 14px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 50;
+  transition: background-color 0.45s ease, border-color 0.45s ease;
+}
+
+.scroll-progress {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.12s linear, opacity 0.3s ease;
+  z-index: 51;
+  border-radius: 0 2px 2px 0;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.topbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--text-muted);
+  transition: background 0.16s ease, color 0.16s ease, transform 0.1s ease;
+  flex-shrink: 0;
+}
+.icon-btn:hover { background: var(--bg-hover); color: var(--text); }
+.icon-btn:active { transform: scale(0.94); }
+
+.doc-id {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.doc-id-name {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+.save-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3fb950;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.12);
+  animation: savePulse 3.2s ease-in-out infinite;
+}
+@keyframes savePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* Mode switch */
+.mode-switch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  transition: background-color 0.45s ease, border-color 0.45s ease;
+}
+.mode-btn {
+  padding: 5px 15px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-radius: 6px;
+  transition: all 0.2s var(--ease-out);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.mode-btn:hover { color: var(--text); }
+.mode-btn.active {
+  background: var(--bg-canvas);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Theme switcher */
+.theme-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 9px;
+  border-radius: 9px;
+  transition: background 0.16s ease;
+}
+.theme-switcher:hover { background: var(--bg-hover); }
+.theme-dot {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  position: relative;
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s ease;
+  flex-shrink: 0;
+}
+.theme-dot[data-theme-set="paper"] {
+  background: linear-gradient(135deg, #f6f0e2, #e2d3b6);
+  box-shadow: inset 0 0 0 1px rgba(156, 90, 46, 0.22);
+}
+.theme-dot[data-theme-set="minimal"] {
+  background: linear-gradient(135deg, #ffffff, #ececef);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+}
+.theme-dot[data-theme-set="dark"] {
+  background: linear-gradient(135deg, #383843, #141418);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+.theme-dot:hover { transform: scale(1.18); }
+.theme-dot.active {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--accent);
+}
+
+.btn-publish {
+  padding: 7px 18px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--btn-primary-text);
+  background: var(--btn-primary-bg);
+  border-radius: 8px;
+  transition: all 0.2s var(--ease-out);
+  white-space: nowrap;
+}
+.btn-publish:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  filter: brightness(1.06);
+}
+.btn-publish:active { transform: translateY(0); }
+
+/* Preview mode exit */
+.preview-exit {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px 6px 10px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: all 0.16s ease;
+}
+.preview-exit:hover { background: var(--bg-hover); color: var(--text); }
+body.preview-mode .preview-exit { display: inline-flex; }
+body.preview-mode .mode-switch,
+body.preview-mode .doc-id { display: none; }
+
+/* ============================================================
+   WORKSPACE
+   ============================================================ */
+.workspace {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ============================================================
+   SIDEBAR (shared)
+   ============================================================ */
+.sidebar {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-shrink: 0;
+  background: var(--bg);
+  transition: width 0.36s var(--ease-in-out),
+              opacity 0.28s ease,
+              border-color 0.3s ease,
+              background-color 0.45s ease;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 8px; }
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+  border: 2px solid var(--bg);
+}
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+
+.sidebar-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- LEFT ---------- */
+.sidebar-left {
+  width: var(--sidebar-w);
+  border-right: 1px solid var(--border);
+}
+.sidebar-left.collapsed {
+  width: 0;
+  opacity: 0;
+  border-right-color: transparent;
+}
+.sidebar-left .sidebar-inner { width: var(--sidebar-w); }
+
+body.preview-mode .sidebar-left,
+body.preview-mode .sidebar-right {
+  width: 0;
+  opacity: 0;
+  border-color: transparent;
+}
+
+.sb-section {
+  padding: 18px 14px 8px;
+}
+.sb-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  margin-bottom: 8px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.sb-add {
+  width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+.sb-add:hover { background: var(--bg-hover); color: var(--text); transform: scale(1.1); }
+
+.doc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.doc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  text-align: left;
+  transition: background 0.16s ease;
+  width: 100%;
+}
+.doc-item:hover { background: var(--bg-hover); }
+.doc-item.active { background: var(--accent-soft); }
+
+.doc-item-icon {
+  width: 26px; height: 26px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  margin-top: 1px;
+  transition: all 0.2s var(--ease-out);
+}
+.doc-item.active .doc-item-icon {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--btn-primary-text);
+  box-shadow: 0 2px 6px var(--accent-soft-2);
+}
+.doc-item-text { min-width: 0; flex: 1; }
+.doc-item-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  transition: color 0.2s;
+}
+.doc-item.active .doc-item-title { color: var(--accent); font-weight: 600; }
+.doc-item-sub {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sb-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 10px 22px;
+  transition: background-color 0.45s ease;
+}
+
+/* TOC */
+.sb-toc { flex: 1; padding-top: 4px; }
+.toc {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0 8px;
+}
+.toc-item {
+  position: relative;
+  display: block;
+  padding: 7px 10px 7px 16px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  border-radius: 6px;
+  transition: all 0.18s var(--ease-out);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+.toc-item:hover { color: var(--text); background: var(--bg-hover); }
+.toc-item.level-2 { padding-left: 28px; font-size: 12px; }
+.toc-item.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 500;
+}
+.toc-item.active::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.5px;
+  height: 13px;
+  border-radius: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.sb-footer {
+  padding: 14px 20px 18px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--text-faint);
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+  letter-spacing: 0.02em;
+  transition: border-color 0.45s ease;
+}
+.sb-footer .sep { opacity: 0.5; }
+
+/* ---------- RIGHT (AI) ---------- */
+.sidebar-right {
+  width: var(--ai-w);
+  border-left: 1px solid var(--border);
+}
+.sidebar-right.collapsed {
+  width: 0;
+  opacity: 0;
+  border-left-color: transparent;
+}
+.sidebar-right .sidebar-inner { width: var(--ai-w); }
+
+.ai-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.45s ease;
+}
+.ai-brand { display: flex; align-items: center; gap: 10px; }
+.ai-avatar {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: #fff;
+  font-size: 14px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px var(--accent-soft-2);
+  position: relative;
+  overflow: hidden;
+}
+.ai-avatar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 50%);
+  pointer-events: none;
+}
+[data-theme="minimal"] .ai-avatar {
+  background: linear-gradient(135deg, #5b5bd6 0%, #8b5cf6 100%);
+  box-shadow: 0 2px 12px rgba(91, 91, 214, 0.24);
+}
+.ai-brand-text { line-height: 1.3; }
+.ai-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+.ai-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+.ai-status .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #3fb950;
+  box-shadow: 0 0 0 2px rgba(63, 185, 80, 0.15);
+}
+
+.ai-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+.ai-body::-webkit-scrollbar { width: 8px; }
+.ai-body::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+  border: 2px solid var(--bg);
+}
+
+.ai-message {
+  padding: 12px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  border-top-left-radius: 4px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  transition: background-color 0.45s ease, border-color 0.45s ease;
+}
+.ai-message strong { color: var(--text); font-weight: 600; }
+
+.ai-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.ai-chip {
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  transition: all 0.18s var(--ease-out);
+  white-space: nowrap;
+}
+.ai-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+.ai-chip:active { transform: translateY(0) scale(0.98); }
+
+.ai-change {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
+  transition: opacity 0.3s ease, transform 0.3s ease,
+              background-color 0.45s ease, border-color 0.45s ease;
+}
+.ai-change-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.45s ease;
+}
+.ai-change-tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ai-change-tag::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2.5px var(--accent-soft-2);
+}
+.ai-change-loc {
+  font-size: 11px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
+}
+.ai-change-diff {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.diff-line {
+  padding: 5px 9px;
+  border-radius: 5px;
+  font-family: var(--font-reading);
+}
+.diff-del {
+  background: var(--diff-del-bg);
+  color: var(--diff-del-text);
+  text-decoration: line-through;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+  opacity: 0.85;
+}
+.diff-add {
+  background: var(--diff-add-bg);
+  color: var(--diff-add-text);
+}
+.ai-change-actions {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px 13px;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.45s ease;
+}
+.btn-sm {
+  flex: 1;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 7px;
+  transition: all 0.18s var(--ease-out);
+  letter-spacing: 0.02em;
+}
+.btn-accept {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+.btn-accept:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn-accept:active { transform: translateY(0); }
+.btn-reject {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.btn-reject:hover { background: var(--bg-hover); color: var(--text); }
+.btn-reject:active { transform: scale(0.98); }
+
+.ai-composer {
+  border-top: 1px solid var(--border);
+  padding: 12px 14px 14px;
+  background: var(--bg);
+  transition: background-color 0.45s ease, border-color 0.45s ease;
+}
+.ai-input-wrap {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 9px 11px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.45s ease;
+}
+.ai-input-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.ai-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text);
+  max-height: 120px;
+}
+.ai-input::placeholder { color: var(--text-faint); }
+.composer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.composer-hint {
+  font-size: 10.5px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+.composer-send {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  transition: all 0.18s var(--ease-out);
+}
+.composer-send:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.composer-send:active { transform: translateY(0) scale(0.94); }
+
+/* ============================================================
+   CANVAS
+   ============================================================ */
+.canvas {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--bg-canvas);
+  position: relative;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+  transition: background-color 0.45s ease;
+}
+
+/* 纸张质感：SVG 噪点 + 柔和暖光 */
+[data-theme="paper"] .canvas {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 60% 40% at 18% 8%, rgba(200, 175, 130, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 35% at 85% 70%, rgba(200, 175, 130, 0.075) 0%, transparent 58%),
+    radial-gradient(ellipse 70% 45% at 50% 100%, rgba(210, 185, 140, 0.09) 0%, transparent 62%);
+  background-attachment: fixed, fixed, fixed, fixed;
+  background-size: 180px 180px, auto, auto, auto;
+}
+[data-theme="minimal"] .canvas {
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(220, 222, 232, 0.35), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, #fcfcfd 100%);
+}
+[data-theme="dark"] .canvas {
+  background-image:
+    radial-gradient(ellipse 100% 55% at 50% -8%, rgba(217, 160, 91, 0.055), transparent 62%),
+    radial-gradient(ellipse 50% 40% at 88% 92%, rgba(143, 184, 216, 0.02), transparent 55%);
+}
+.canvas::-webkit-scrollbar { width: 10px; }
+.canvas::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 5px;
+  border: 3px solid var(--bg-canvas);
+}
+.canvas::-webkit-scrollbar-track { background: transparent; }
+
+/* ============================================================
+   DOCUMENT
+   ============================================================ */
+.doc {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 68px 36px 140px;
+  font-family: var(--font-reading);
+  font-size: var(--doc-body);
+  line-height: var(--doc-leading);
+  color: var(--text);
+  letter-spacing: var(--doc-letter-spacing);
+  animation: docFade 0.55s var(--ease-out);
+  transition: max-width 0.4s var(--ease-out);
+}
+body.preview-mode .doc { max-width: 760px; }
+
+@keyframes docFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.doc-kicker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.kicker-tag {
+  display: inline-block;
+  padding: 3px 11px;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 100px;
+  transition: background-color 0.45s ease, color 0.45s ease;
+}
+.kicker-meta {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--text-faint);
+  letter-spacing: 0.03em;
+}
+
+.doc h1 {
+  font-family: var(--font-display);
+  font-size: var(--doc-h1);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: var(--heading-letter-spacing);
+  color: var(--text);
+  margin-bottom: 18px;
+}
+[data-theme="minimal"] .doc h1 { font-weight: 700; }
+
+.doc-lede {
+  font-size: calc(var(--doc-body) * 1.06);
+  line-height: 1.72;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+  font-weight: 400;
+  letter-spacing: 0.008em;
+}
+[data-theme="minimal"] .doc-lede { color: var(--text-muted); }
+
+.doc-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 38px 0 44px;
+  color: var(--text-faint);
+}
+.doc-divider span {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.doc-body > * + * { margin-top: 1.15em; }
+
+.doc h2 {
+  font-family: var(--font-display);
+  font-size: var(--doc-h2);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  margin-top: 2.1em;
+  margin-bottom: 0.75em;
+  position: relative;
+  scroll-margin-top: 24px;
+}
+.doc h2::before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 0.42em;
+  width: 3px;
+  height: 0.68em;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.doc h2:hover::before { opacity: 0.55; }
+
+.doc h3 {
+  font-family: var(--font-display);
+  font-size: var(--doc-h3);
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+  letter-spacing: 0.005em;
+}
+
+.doc p { margin: 0; }
+
+.doc a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-soft-2);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 0.18s ease;
+}
+.doc a:hover { text-decoration-color: var(--accent); }
+
+.doc strong { font-weight: 600; color: var(--text); }
+.doc em { font-style: italic; }
+
+.doc ul, .doc ol {
+  padding-left: 1.5em;
+  margin: 1em 0;
+}
+.doc li { margin: 0.35em 0; padding-left: 0.2em; }
+.doc li::marker { color: var(--accent); }
+
+.doc code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  padding: 0.14em 0.42em;
+  background: var(--code-bg);
+  border-radius: 5px;
+  color: var(--code-text);
+  border: 1px solid var(--border);
+  transition: background-color 0.45s ease, border-color 0.45s ease;
+}
+
+/* Quote */
+.doc-quote {
+  margin: 1.6em 0;
+  padding: 4px 0 4px 22px;
+  border-left: 2.5px solid var(--accent);
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 0.98em;
+  line-height: 1.8;
+}
+[data-theme="minimal"] .doc-quote { font-style: normal; color: var(--text-muted); }
+
+/* Code block */
+.code-block {
+  margin: 1.6em 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--code-bg);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-ui);
+  transition: background-color 0.45s ease, border-color 0.45s ease, box-shadow 0.2s ease;
+}
+.code-block:hover { box-shadow: var(--shadow-md); }
+.code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--code-head-bg);
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.45s ease, border-color 0.45s ease;
+}
+.code-lang {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+  text-transform: lowercase;
+}
+.code-copy {
+  font-size: 11px;
+  color: var(--text-faint);
+  padding: 2px 8px;
+  border-radius: 5px;
+  transition: all 0.15s ease;
+  opacity: 0;
+}
+.code-block:hover .code-copy { opacity: 1; }
+.code-copy:hover { background: var(--bg-hover); color: var(--text); }
+.code-copy:active { transform: scale(0.95); }
+
+.code-body {
+  padding: 15px 16px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.72;
+  color: var(--code-text);
+  tab-size: 2;
+}
+.code-body code { font-family: inherit; }
+.tok-comment { color: var(--tok-comment); font-style: italic; }
+.tok-cmd { color: var(--tok-cmd); font-weight: 500; }
+.tok-bin { color: var(--tok-bin); font-weight: 600; }
+.tok-arg { color: var(--tok-arg); }
+.tok-val { color: var(--tok-val); }
+.tok-str { color: var(--tok-str); }
+.tok-key { color: var(--tok-cmd); }
+
+/* Callout */
+.callout {
+  margin: 1.6em 0;
+  display: flex;
+  gap: 13px;
+  padding: 15px 17px;
+  border-radius: var(--radius);
+  border: 1px solid;
+  font-size: 0.94em;
+  line-height: 1.75;
+  font-family: var(--font-reading);
+  transition: background-color 0.45s ease, border-color 0.45s ease;
+}
+.callout-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}
+.callout-body { flex: 1; min-width: 0; }
+.callout-body p { margin: 0; }
+.callout-body p + p { margin-top: 0.5em; }
+.callout-body strong { font-weight: 600; }
+
+.callout-info {
+  background: var(--callout-info-bg);
+  border-color: var(--callout-info-border);
+  color: var(--text);
+}
+.callout-info .callout-icon { color: var(--callout-info-icon); }
+
+.callout-warn {
+  background: var(--callout-warn-bg);
+  border-color: var(--callout-warn-border);
+  color: var(--text);
+}
+.callout-warn .callout-icon { color: var(--callout-warn-icon); }
+
+/* Table */
+.doc-table {
+  width: 100%;
+  margin: 1.7em 0;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: 0.9em;
+  line-height: 1.55;
+}
+.doc-table th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.82em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 9px 14px 9px 0;
+  border-bottom: 1.5px solid var(--border-strong);
+}
+.doc-table td {
+  padding: 12px 14px 12px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.doc-table tr:last-child td { border-bottom: none; }
+.doc-table td:first-child {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Figure */
+.doc-figure {
+  margin: 2em 0;
+  text-align: center;
+}
+.figure-frame {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 26px 22px;
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.45s ease, border-color 0.45s ease;
+}
+[data-theme="paper"] .figure-frame {
+  background: linear-gradient(180deg, var(--bg-elevated), var(--code-bg));
+}
+.figure-frame svg { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+.doc-figure figcaption {
+  margin-top: 11px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+}
+
+.arch-primary { fill: var(--accent); }
+.arch-text-primary { fill: var(--btn-primary-text); font-family: var(--font-ui); font-size: 14px; font-weight: 600; }
+.arch-line { fill: none; stroke: var(--border-strong); stroke-width: 1.4; stroke-dasharray: 3 4; }
+.arch-node { fill: var(--bg-canvas); stroke: var(--border-strong); stroke-width: 1.2; }
+.arch-text { fill: var(--text); font-family: var(--font-mono); font-size: 12.5px; font-weight: 500; }
+.arch-hint { fill: var(--text-faint); font-family: var(--font-mono); font-size: 10.5px; }
+
+/* Accordion */
+.accordion {
+  margin: 1.1em 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  transition: border-color 0.2s ease, background-color 0.45s ease;
+}
+.accordion[open] { border-color: var(--border-strong); }
+.accordion summary {
+  padding: 13px 17px;
+  font-family: var(--font-ui);
+  font-size: 0.94em;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: background 0.15s ease;
+  user-select: none;
+}
+.accordion summary::-webkit-details-marker { display: none; }
+.accordion summary:hover { background: var(--bg-hover); }
+.accordion summary .chev {
+  flex-shrink: 0;
+  color: var(--text-faint);
+  transition: transform 0.28s var(--ease-out);
+}
+.accordion[open] summary .chev { transform: rotate(180deg); }
+.accordion-content {
+  padding: 2px 17px 16px;
+  font-size: 0.94em;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  font-family: var(--font-reading);
+}
+.accordion-content p { margin: 0.4em 0; }
+.accordion-content code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 0.1em 0.38em;
+  background: var(--code-bg);
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* Short article drop-cap */
+.doc-short .doc-body > p:first-of-type::first-letter {
+  font-size: 3.4em;
+  float: left;
+  line-height: 0.88;
+  padding: 0.08em 0.12em 0 0;
+  color: var(--accent);
+  font-weight: 600;
+  font-family: var(--font-display);
+}
+
+/* 设计模式下的块边界提示 */
+body.design-mode .doc-body > * {
+  position: relative;
+}
+body.design-mode .doc-body > *::after {
+  content: '';
+  position: absolute;
+  inset: -9px -14px;
+  border: 1px dashed var(--accent-soft-2);
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+body.design-mode .doc-body > *:hover::after {
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1180px) {
+  :root { --ai-w: 304px; --sidebar-w: 244px; }
+  .sidebar-left .sidebar-inner { width: 244px; }
+  .sidebar-right .sidebar-inner { width: 304px; }
+}
+@media (max-width: 960px) {
+  .sidebar-right { width: 0; opacity: 0; border-left-color: transparent; }
+  .sidebar-right .sidebar-inner { width: 304px; }
+  .topbar-center { display: none; }
+}
+@media (max-width: 760px) {
+  .sidebar-left { width: 0; opacity: 0; border-right-color: transparent; }
+  .sidebar-left .sidebar-inner { width: 244px; }
+  .sidebar-left.mobile-open {
+    position: fixed;
+    left: 0; top: var(--topbar-h);
+    width: 244px; height: calc(100vh - var(--topbar-h));
+    opacity: 1;
+    z-index: 60;
+    border-right: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+  }
+  .doc { padding: 44px 22px 100px; }
+  :root { --doc-h1: 32px; --doc-h2: 21px; --doc-body: 16px; --content-width: 100%; }
+  .doc-id-name { max-width: 120px; }
+  .theme-switcher { display: none; }
+  .btn-publish { padding: 7px 13px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ==================== TOPBAR ==================== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="icon-btn" id="toggleLeft" title="收起/展开目录">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="15" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <div class="doc-id">
+        <span class="doc-id-name" id="topDocName">Linux 服务管理指南</span>
+        <span class="save-dot" title="已自动保存"></span>
+      </div>
+      <button class="preview-exit" id="previewExit">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        退出预览
+      </button>
+    </div>
+
+    <div class="topbar-center">
+      <div class="mode-switch">
+        <button class="mode-btn active" data-mode="write">写作</button>
+        <button class="mode-btn" data-mode="design">设计</button>
+        <button class="mode-btn" data-mode="preview">预览</button>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="theme-switcher">
+        <button class="theme-dot active" data-theme-set="paper" title="纸张质感"></button>
+        <button class="theme-dot" data-theme-set="minimal" title="现代极简"></button>
+        <button class="theme-dot" data-theme-set="dark" title="深色阅读"></button>
+      </div>
+      <button class="btn-publish">发布</button>
+      <button class="icon-btn" id="toggleRight" title="收起/展开 AI 面板">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="16" rx="2"/>
+          <line x1="15" y1="4" x2="15" y2="20"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="scroll-progress" id="scrollProgress"></div>
+  </header>
+
+  <!-- ==================== WORKSPACE ==================== -->
+  <div class="workspace">
+
+    <!-- ---------- LEFT SIDEBAR ---------- -->
+    <aside class="sidebar sidebar-left" id="sidebarLeft">
+      <div class="sidebar-inner">
+        <div class="sb-section">
+          <div class="sb-section-head">
+            <span>文档</span>
+            <button class="sb-add" title="新建文档">+</button>
+          </div>
+          <div class="doc-list">
+            <button class="doc-item active" data-doc="long">
+              <span class="doc-item-icon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </span>
+              <span class="doc-item-text">
+                <span class="doc-item-title">Linux 服务管理指南</span>
+                <span class="doc-item-sub">系统笔记 · 12 分钟</span>
+              </span>
+            </button>
+            <button class="doc-item" data-doc="short">
+              <span class="doc-item-icon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9"/>
+                  <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                </svg>
+              </span>
+              <span class="doc-item-text">
+                <span class="doc-item-title">雨天的城市</span>
+                <span class="doc-item-sub">随笔 · 3 分钟</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sb-divider"></div>
+
+        <div class="sb-section sb-toc">
+          <div class="sb-section-head"><span>目录</span></div>
+
+          <nav class="toc" id="tocLong">
+            <button class="toc-item level-2" data-target="sec-intro">引言</button>
+            <button class="toc-item level-2" data-target="sec-model">systemd 的核心模型</button>
+            <button class="toc-item level-2" data-target="sec-lifecycle">服务的生命周期</button>
+            <button class="toc-item level-2" data-target="sec-unit">编写一个 unit 文件</button>
+            <button class="toc-item level-2" data-target="sec-debug">排查常见问题</button>
+            <button class="toc-item level-2" data-target="sec-best">最佳实践</button>
+          </nav>
+
+          <nav class="toc hidden" id="tocShort">
+            <button class="toc-item level-2" data-target="s-1">雨从傍晚开始</button>
+            <button class="toc-item level-2" data-target="s-2">移动的蘑菇</button>
+            <button class="toc-item level-2" data-target="s-3">被雨水吸走的声音</button>
+            <button class="toc-item level-2" data-target="s-4">雨还在下</button>
+          </nav>
+        </div>
+
+        <div class="sb-footer" id="docFooter">
+          <span>约 2,480 字</span>
+          <span class="sep">·</span>
+          <span>预计 12 分钟</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ---------- CANVAS ---------- -->
+    <main class="canvas" id="canvas">
+
+      <!-- ===== 长文：Linux 指南 ===== -->
+      <article class="doc doc-long" id="docLong">
+        <div class="doc-kicker">
+          <span class="kicker-tag">Linux</span>
+          <span class="kicker-tag">系统管理</span>
+          <span class="kicker-meta">2026 年 11 月 · 技术笔记</span>
+        </div>
+
+        <h1>Linux 服务管理指南</h1>
+
+        <p class="doc-lede">从 systemd 基础到生产环境的守护进程实践——一篇写给 SRE 与后端工程师的实用笔记。</p>
+
+        <div class="doc-divider"><span></span><span></span><span></span></div>
+
+        <div class="doc-body">
+
+          <h2 id="sec-intro">引言</h2>
+          <p>在 Linux 系统中，<strong>服务（service）</strong>是长期运行在后台、等待请求或执行周期性任务的进程。从 Web 服务器到日志收集器，从定时备份到监控代理，几乎所有生产级组件都以「服务」的形式存在。</p>
+          <p>理解如何正确地定义、启动、监控和排障一个服务，是系统管理员和 SRE 的核心技能之一。本文以 systemd 为主线，梳理一条从概念到实践、从编写 unit 到定位故障的完整路径。</p>
+
+          <h2 id="sec-model">systemd 的核心模型</h2>
+          <p>systemd 是现代 Linux 发行版的初始化系统和服务管理器。它以 <strong>unit</strong> 为基本单位描述系统中的各类资源，其中最常见的三种是：</p>
+          <ul>
+            <li><code>.service</code> —— 描述一个可执行的服务进程</li>
+            <li><code>.socket</code> —— 描述一个监听端口的套接字</li>
+            <li><code>.timer</code> —— 描述一个定时触发器</li>
+          </ul>
+
+          <blockquote class="doc-quote">
+            与 SysVinit 的 shell 脚本不同，systemd 使用声明式的 unit 文件，并通过 cgroup 精确追踪进程树，这使得服务依赖、重启策略和资源限制都变得可描述。
+          </blockquote>
+
+          <figure class="doc-figure">
+            <div class="figure-frame">
+              <svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="systemd 的 unit 类型结构图">
+                <rect x="252" y="14" width="136" height="54" rx="12" class="arch-primary"/>
+                <text x="320" y="47" text-anchor="middle" class="arch-text-primary">systemd · PID 1</text>
+
+                <path d="M320 68 V 106" class="arch-line"/>
+                <path d="M320 106 H 160 V 148" class="arch-line"/>
+                <path d="M320 106 V 148" class="arch-line"/>
+                <path d="M320 106 H 480 V 148" class="arch-line"/>
+
+                <rect x="88" y="148" width="144" height="50" rx="10" class="arch-node"/>
+                <text x="160" y="178" text-anchor="middle" class="arch-text">.service</text>
+
+                <rect x="248" y="148" width="144" height="50" rx="10" class="arch-node"/>
+                <text x="320" y="178" text-anchor="middle" class="arch-text">.socket</text>
+
+                <rect x="408" y="148" width="144" height="50" rx="10" class="arch-node"/>
+                <text x="480" y="178" text-anchor="middle" class="arch-text">.timer</text>
+
+                <text x="160" y="224" text-anchor="middle" class="arch-hint">nginx.service</text>
+                <text x="320" y="224" text-anchor="middle" class="arch-hint">sshd.socket</text>
+                <text x="480" y="224" text-anchor="middle" class="arch-hint">logrotate.timer</text>
+              </svg>
+            </div>
+            <figcaption>图 1 · systemd 以 unit 为基本单位描述系统资源</figcaption>
+          </figure>
+
+          <h2 id="sec-lifecycle">服务的生命周期</h2>
+          <p>一个服务从被触发到最终退出，大致经历以下状态流转：</p>
+          <p><code>inactive → activating → active → deactivating → inactive</code></p>
+          <p>使用 <code>systemctl</code> 可以观察和控制这一过程：</p>
+
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-lang">bash</span>
+              <button class="code-copy">复制</button>
+            </div>
+            <pre class="code-body"><code><span class="tok-comment"># 查看服务当前状态</span>
+<span class="tok-cmd">sudo</span> <span class="tok-bin">systemctl</span> <span class="tok-arg">status</span> <span class="tok-val">nginx.service</span>
+
+<span class="tok-comment"># 启动、停止、重启</span>
+<span class="tok-cmd">sudo</span> <span class="tok-bin">systemctl</span> <span class="tok-arg">start</span> <span class="tok-val">nginx</span>
+<span class="tok-cmd">sudo</span> <span class="tok-bin">systemctl</span> <span class="tok-arg">stop</span> <span class="tok-val">nginx</span>
+<span class="tok-cmd">sudo</span> <span class="tok-bin">systemctl</span> <span class="tok-arg">restart</span> <span class="tok-val">nginx</span>
+
+<span class="tok-comment"># 设置开机自启</span>
+<span class="tok-cmd">sudo</span> <span class="tok-bin">systemctl</span> <span class="tok-arg">enable</span> <span class="tok-val">nginx</span></code></pre>
+          </div>
+
+          <div class="callout callout-info">
+            <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="callout-body">
+              <p><strong>提示：</strong>自定义的 unit 文件应放在 <code>/etc/systemd/system/</code>，系统自带的通常位于 <code>/usr/lib/systemd/system/</code>。后者在包升级时可能被覆盖，不建议直接修改。</p>
+            </div>
+          </div>
+
+          <h2 id="sec-unit">编写一个 unit 文件</h2>
+          <p>一个最小可用的 service 单元通常包含三部分：<code>[Unit]</code>、<code>[Service]</code> 和 <code>[Install]</code>。</p>
+
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-lang">ini</span>
+              <button class="code-copy">复制</button>
+            </div>
+            <pre class="code-body"><code><span class="tok-key">[Unit]</span>
+<span class="tok-arg">Description</span>=<span class="tok-str">My Background Worker</span>
+<span class="tok-arg">After</span>=<span class="tok-str">network.target</span>
+
+<span class="tok-key">[Service]</span>
+<span class="tok-arg">Type</span>=<span class="tok-str">simple</span>
+<span class="tok-arg">ExecStart</span>=<span class="tok-str">/usr/local/bin/worker --config /etc/worker.conf</span>
+<span class="tok-arg">Restart</span>=<span class="tok-str">on-failure</span>
+<span class="tok-arg">RestartSec</span>=<span class="tok-str">5</span>
+<span class="tok-arg">User</span>=<span class="tok-str">worker</span>
+<span class="tok-arg">Group</span>=<span class="tok-str">worker</span>
+<span class="tok-arg">WorkingDirectory</span>=<span class="tok-str">/var/lib/worker</span>
+
+<span class="tok-key">[Install]</span>
+<span class="tok-arg">WantedBy</span>=<span class="tok-str">multi-user.target</span></code></pre>
+          </div>
+
+          <p>把文件放到 <code>/etc/systemd/system/worker.service</code>，然后执行 <code>sudo systemctl daemon-reload</code> 使其生效。</p>
+
+          <h3>常用 unit 类型速查</h3>
+          <table class="doc-table">
+            <thead>
+              <tr><th>Unit 类型</th><th>用途</th><th>典型文件</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>.service</td><td>长期运行的服务进程</td><td>nginx.service</td></tr>
+              <tr><td>.socket</td><td>监听套接字，按需激活服务</td><td>sshd.socket</td></tr>
+              <tr><td>.timer</td><td>基于时间的定时触发器</td><td>logrotate.timer</td></tr>
+              <tr><td>.target</td><td>一组 unit 的逻辑分组</td><td>multi-user.target</td></tr>
+            </tbody>
+          </table>
+
+          <h2 id="sec-debug">排查常见问题</h2>
+
+          <details class="accordion" open>
+            <summary>
+              服务启动失败，如何定位原因？
+              <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </summary>
+            <div class="accordion-content">
+              <p>先看 <code>systemctl status</code> 输出末尾的日志，再用 <code>journalctl -u &lt;service&gt; -n 50 --no-pager</code> 查看最近 50 行日志。检查 unit 文件路径、文件权限，以及 <code>ExecStart</code> 指向的可执行文件是否存在。</p>
+            </div>
+          </details>
+
+          <details class="accordion">
+            <summary>
+              修改 unit 文件后为什么没有生效？
+              <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </summary>
+            <div class="accordion-content">
+              <p>systemd 会缓存 unit 文件的解析结果，修改后必须执行 <code>systemctl daemon-reload</code>。如果修改的是 <code>[Service]</code> 段，还需要 <code>systemctl restart &lt;service&gt;</code> 重新拉起进程。</p>
+            </div>
+          </details>
+
+          <details class="accordion">
+            <summary>
+              如何查看某个服务的全部日志？
+              <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </summary>
+            <div class="accordion-content">
+              <p>使用 <code>journalctl -u &lt;service&gt;</code> 查看全部日志，加 <code>-f</code> 实时跟踪，加 <code>--since "1 hour ago"</code> 限定时间范围。若日志已被清理，可查看 <code>/var/log/</code> 下服务自身写入的文件。</p>
+            </div>
+          </details>
+
+          <h2 id="sec-best">最佳实践</h2>
+          <p>把服务写好只是第一步，让它能在生产环境中稳定、安全、可观测地运行，才是工程上的关键。</p>
+
+          <div class="callout callout-warn">
+            <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div class="callout-body">
+              <p><strong>注意：</strong>生产环境的服务应始终设置 <code>Restart=on-failure</code> 与合理的 <code>RestartSec</code>，并通过 <code>User=</code> 以非 root 身份运行。避免在 <code>ExecStart</code> 中使用 shell 管道，优先编写独立脚本。</p>
+            </div>
+          </div>
+
+          <p>此外，建议为每个服务配置资源限制（<code>MemoryMax</code>、<code>CPUQuota</code>）与日志速率限制（<code>LogRateLimitIntervalSec</code>），并在 <code>[Unit]</code> 中显式声明依赖关系，减少启动顺序带来的不确定性。</p>
+
+        </div>
+      </article>
+
+      <!-- ===== 短文：雨天的城市 ===== -->
+      <article class="doc doc-short hidden" id="docShort">
+        <div class="doc-kicker">
+          <span class="kicker-tag">随笔</span>
+          <span class="kicker-meta">2026 年 11 月 · 短文</span>
+        </div>
+
+        <h1>雨天的城市</h1>
+
+        <p class="doc-lede">有些夜晚，不需要发生什么。</p>
+
+        <div class="doc-divider"><span></span><span></span><span></span></div>
+
+        <div class="doc-body">
+
+          <p id="s-1">雨是从傍晚开始下的。</p>
+
+          <p>起初只是零星几点，落在窗玻璃上，汇成一条条细线，再慢慢地滑下去，把窗外的霓虹拉成模糊的光带。我没有开灯，就坐在窗边，看城市被一点点洗旧。</p>
+
+          <h2 id="s-2">移动的蘑菇</h2>
+
+          <p>街上的行人撑起了伞。红的、黑的、格子的，像一朵朵移动的蘑菇。有个女孩没带伞，抱着书包在屋檐下小跑，鞋跟踩在水洼里，溅起一小朵水花。她停下来，仰头看了看天，然后笑了——那种「算了吧」的笑。</p>
+
+          <blockquote class="doc-quote">
+            雨天的城市有一种奇怪的温柔。
+          </blockquote>
+
+          <h2 id="s-3">被雨水吸走的声音</h2>
+
+          <p>车流的声音被雨水吸走了一半，剩下的一半变得钝钝的，像隔着一层棉。便利店的门开了又关，暖黄的光漏出来，把门口的雨帘照亮了一小片。</p>
+
+          <p>我想起小时候，夏天的暴雨。那时候没有伞，就顶着书包跑回家，浑身湿透，被母亲骂一顿，然后喝一碗姜茶。那碗姜茶的味道，到现在还记得。</p>
+
+          <h2 id="s-4">雨还在下</h2>
+
+          <p>城市的灯一盏盏亮起来，一盏盏又暗下去。我起身开了灯，泡了杯茶，坐回窗边。</p>
+
+          <p>有些夜晚，不需要发生什么。</p>
+
+        </div>
+      </article>
+
+    </main>
+
+    <!-- ---------- RIGHT SIDEBAR (AI) ---------- -->
+    <aside class="sidebar sidebar-right" id="sidebarRight">
+      <div class="sidebar-inner">
+
+        <div class="ai-head">
+          <div class="ai-brand">
+            <div class="ai-avatar">✦</div>
+            <div class="ai-brand-text">
+              <div class="ai-name">AI 助手</div>
+              <div class="ai-status"><span class="dot"></span>已就绪 · Claude</div>
+            </div>
+          </div>
+          <button class="icon-btn" style="width:28px;height:28px" title="更多">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="5" cy="12" r="1.6"/>
+              <circle cx="12" cy="12" r="1.6"/>
+              <circle cx="19" cy="12" r="1.6"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="ai-body">
+
+          <div class="ai-message">
+            我可以直接编辑这篇文档。试试让我润色某段、插入提示卡，或者调整排版——变更会以预览形式出现，确认后才会应用。
+          </div>
+
+          <div class="ai-chips">
+            <button class="ai-chip">润色选中段落</button>
+            <button class="ai-chip">插入提示卡</button>
+            <button class="ai-chip">生成摘要</button>
+            <button class="ai-chip">换一种主题</button>
+          </div>
+
+          <div class="ai-change" id="aiChange">
+            <div class="ai-change-head">
+              <span class="ai-change-tag">建议变更</span>
+              <span class="ai-change-loc">§ 最佳实践</span>
+            </div>
+            <div class="ai-change-diff">
+              <div class="diff-line diff-del">生产环境的服务应设置 Restart=on-failure。</div>
+              <div class="diff-line diff-add">生产环境的服务应始终设置 Restart=on-failure 与合理的 RestartSec，并通过 User= 以非 root 身份运行。</div>
+            </div>
+            <div class="ai-change-actions">
+              <button class="btn-sm btn-accept">接受变更</button>
+              <button class="btn-sm btn-reject">拒绝</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="ai-composer">
+          <div class="ai-input-wrap">
+            <textarea class="ai-input" rows="2" placeholder="描述你想修改的内容…"></textarea>
+            <div class="composer-bar">
+              <span class="composer-hint">⌘ ↵ 发送</span>
+              <button class="composer-send" title="发送">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="19" x2="12" y2="5"/>
+                  <polyline points="5 12 12 5 19 12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const root = document.documentElement;
+  const canvas = document.getElementById('canvas');
+
+  /* ---------- 主题切换 ---------- */
+  const themeDots = document.querySelectorAll('.theme-dot');
+  themeDots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      const theme = dot.dataset.themeSet;
+      root.classList.add('theme-transitioning');
+      root.dataset.theme = theme;
+      themeDots.forEach(function (d) {
+        d.classList.toggle('active', d === dot);
+      });
+      setTimeout(function () {
+        root.classList.remove('theme-transitioning');
+      }, 480);
+    });
+  });
+
+  /* ---------- 面板开合 ---------- */
+  const sidebarLeft = document.getElementById('sidebarLeft');
+  const sidebarRight = document.getElementById('sidebarRight');
+
+  document.getElementById('toggleLeft').addEventListener('click', function () {
+    if (window.innerWidth <= 760) {
+      sidebarLeft.classList.toggle('mobile-open');
+    } else {
+      sidebarLeft.classList.toggle('collapsed');
+    }
+  });
+
+  document.getElementById('toggleRight').addEventListener('click', function () {
+    sidebarRight.classList.toggle('collapsed');
+  });
+
+  /* ---------- 模式切换：写作 / 设计 / 预览 ---------- */
+  const modeBtns = document.querySelectorAll('.mode-btn');
+  const previewExit = document.getElementById('previewExit');
+
+  function setMode(mode) {
+    document.body.classList.remove('design-mode', 'preview-mode');
+
+    modeBtns.forEach(function (b) {
+      b.classList.toggle('active', b.dataset.mode === mode);
+    });
+
+    if (mode === 'design') {
+      document.body.classList.add('design-mode');
+    } else if (mode === 'preview') {
+      document.body.classList.add('preview-mode');
+      sidebarLeft.classList.remove('mobile-open');
+    }
+  }
+
+  modeBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      setMode(btn.dataset.mode);
+    });
+  });
+
+  previewExit.addEventListener('click', function () {
+    setMode('write');
+  });
+
+  /* ---------- 文档切换 ---------- */
+  const docItems = document.querySelectorAll('.doc-item');
+  const docLong = document.getElementById('docLong');
+  const docShort = document.getElementById('docShort');
+  const tocLong = document.getElementById('tocLong');
+  const tocShort = document.getElementById('tocShort');
+  const topDocName = document.getElementById('topDocName');
+  const docFooter = document.getElementById('docFooter');
+
+  const docMeta = {
+    long: {
+      name: 'Linux 服务管理指南',
+      footer: '<span>约 2,480 字</span><span class="sep">·</span><span>预计 12 分钟</span>'
+    },
+    short: {
+      name: '雨天的城市',
+      footer: '<span>约 620 字</span><span class="sep">·</span><span>预计 3 分钟</span>'
+    }
+  };
+
+  function switchDoc(key) {
+    docItems.forEach(function (item) {
+      item.classList.toggle('active', item.dataset.doc === key);
+    });
+
+    if (key === 'long') {
+      docLong.classList.remove('hidden');
+      docShort.classList.add('hidden');
+      tocLong.classList.remove('hidden');
+      tocShort.classList.add('hidden');
+    } else {
+      docLong.classList.add('hidden');
+      docShort.classList.remove('hidden');
+      tocLong.classList.add('hidden');
+      tocShort.classList.remove('hidden');
+    }
+
+    topDocName.textContent = docMeta[key].name;
+    docFooter.innerHTML = docMeta[key].footer;
+
+    canvas.scrollTo({ top: 0, behavior: 'smooth' });
+
+    activeTocId = null;
+    updateTocHighlight();
+    updateProgress();
+  }
+
+  docItems.forEach(function (item) {
+    item.addEventListener('click', function () {
+      switchDoc(item.dataset.doc);
+    });
+  });
+
+  /* ---------- 目录跳转 ---------- */
+  function bindToc(tocRoot) {
+    tocRoot.querySelectorAll('.toc-item').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const targetId = btn.dataset.target;
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        const canvasRect = canvas.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const offset = targetRect.top - canvasRect.top + canvas.scrollTop - 24;
+        canvas.scrollTo({ top: offset, behavior: 'smooth' });
+      });
+    });
+  }
+
+  bindToc(tocLong);
+  bindToc(tocShort);
+
+  /* ---------- 滚动进度与目录高亮 ---------- */
+  const progress = document.getElementById('scrollProgress');
+  let activeTocId = null;
+  let ticking = false;
+
+  function updateProgress() {
+    const max = canvas.scrollHeight - canvas.clientHeight;
+    const ratio = max > 0 ? Math.min(canvas.scrollTop / max, 1) : 0;
+    progress.style.width = (ratio * 100).toFixed(2) + '%';
+    progress.style.opacity = ratio > 0.005 ? '0.65' : '0';
+  }
+
+  function updateTocHighlight() {
+    const activeToc = document.querySelector('.toc:not(.hidden)');
+    if (!activeToc) return;
+
+    const headings = activeToc.querySelectorAll('.toc-item');
+    if (!headings.length) return;
+
+    const canvasRect = canvas.getBoundingClientRect();
+    const threshold = canvasRect.top + 90;
+
+    let currentId = null;
+    headings.forEach(function (btn) {
+      const target = document.getElementById(btn.dataset.target);
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
+      if (rect.top <= threshold) {
+        currentId = btn.dataset.target;
+      }
+    });
+
+    if (currentId !== activeTocId) {
+      activeTocId = currentId;
+      headings.forEach(function (btn) {
+        btn.classList.toggle('active', btn.dataset.target === currentId);
+      });
+    }
+  }
+
+  canvas.addEventListener('scroll', function () {
+    if (!ticking) {
+      window.requestAnimationFrame(function () {
+        updateTocHighlight();
+        updateProgress();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  /* ---------- 复制代码 ---------- */
+  document.querySelectorAll('.code-copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const block = btn.closest('.code-block');
+      const code = block.querySelector('code');
+      const text = code ? code.innerText : '';
+      const done = function () {
+        const original = '复制';
+        btn.textContent = '已复制';
+        setTimeout(function () { btn.textContent = original; }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(done);
+      } else {
+        done();
+      }
+    });
+  });
+
+  /* ---------- AI chips 快捷指令 ---------- */
+  document.querySelectorAll('.ai-chip').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      const input = document.querySelector('.ai-input');
+      if (input) {
+        input.value = chip.textContent;
+        input.focus();
+      }
+    });
+  });
+
+  /* ---------- AI 建议卡片接受/拒绝 ---------- */
+  const acceptBtn = document.querySelector('.btn-accept');
+  const rejectBtn = document.querySelector('.btn-reject');
+  const changeCard = document.getElementById('aiChange');
+
+  function dismissChange() {
+    if (!changeCard) return;
+    changeCard.style.opacity = '0';
+    changeCard.style.transform = 'translateY(-4px)';
+    setTimeout(function () {
+      changeCard.style.display = 'none';
+    }, 320);
+  }
+
+  if (acceptBtn) acceptBtn.addEventListener('click', dismissChange);
+  if (rejectBtn) rejectBtn.addEventListener('click', dismissChange);
+
+  /* ---------- 初始状态 ---------- */
+  if (window.innerWidth <= 960) {
+    sidebarRight.classList.add('collapsed');
+  }
+  updateTocHighlight();
+  updateProgress();
+
+  /* ---------- 窗口尺寸变化 ---------- */
+  let resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      if (window.innerWidth > 760) {
+        sidebarLeft.classList.remove('mobile-open');
+      }
+      updateTocHighlight();
+      updateProgress();
+    }, 160);
+  });
+
+})();
+</script>
+
+</body>
+</html>

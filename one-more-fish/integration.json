@@ -1,0 +1,31 @@
+{
+  "id": "one-more-fish",
+  "name": "再捞一条 · 猫猫的小小海湾",
+  "category": "游戏与模拟",
+  "description": "掌舵猫咪的小船，寻找鱼群，权衡载重与返航时机。",
+  "hint": "出海后用鼠标划船，按住张网，松开收网。",
+  "label": "捕鱼 · 经营",
+  "color": "#eadfd2",
+  "directory": "../one-more-fish",
+  "port": 4316,
+  "entry": "index.html",
+  "required": [
+    "assets/bay.png",
+    "assets/cat-boat.png",
+    "game.js",
+    "index.html",
+    "rules.js",
+    "style.css"
+  ],
+  "files": [
+    "assets/bay.png",
+    "assets/cat-boat.png",
+    "game.js",
+    "index.html",
+    "rules.js",
+    "style.css"
+  ],
+  "publicDirectories": [],
+  "identity": "再捞一条 · 猫猫的小小海湾",
+  "enabled": true
+}

@@ -1,0 +1,39 @@
+{
+  "id": "odd-arms",
+  "name": "ODD ARMS",
+  "category": "游戏与模拟",
+  "description": "选择玩具英雄与搭档，在桌面竞技场里躲避敌人、拾取升级。",
+  "hint": "选择英雄和武器，开始第一局。",
+  "label": "桌面 · 生存",
+  "color": "#eadfd2",
+  "directory": "../odd-arms",
+  "port": 4325,
+  "entry": "index.html",
+  "required": [
+    "assets/index-CoEarHME.css",
+    "assets/index-DUApy62r.js",
+    "fonts/DEJAVU-LICENSE.txt",
+    "fonts/NOTO-LICENSE.txt",
+    "fonts/body.woff",
+    "fonts/display.woff",
+    "fonts/japanese.woff",
+    "index.html",
+    "licenses/three.txt",
+    "models/manifest.json"
+  ],
+  "files": [
+    "assets/index-CoEarHME.css",
+    "assets/index-DUApy62r.js",
+    "fonts/DEJAVU-LICENSE.txt",
+    "fonts/NOTO-LICENSE.txt",
+    "fonts/body.woff",
+    "fonts/display.woff",
+    "fonts/japanese.woff",
+    "index.html",
+    "licenses/three.txt",
+    "models/manifest.json"
+  ],
+  "publicDirectories": [],
+  "identity": "ODD ARMS — Your idea. Your hero.",
+  "enabled": true
+}

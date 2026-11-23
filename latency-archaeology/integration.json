@@ -1,0 +1,21 @@
+{
+  "id": "latency-archaeology",
+  "name": "延迟考古学",
+  "category": "视觉与交互",
+  "description": "让虚拟小包穿过六个节点，观察自己的点击怎样改变这片网络的天气。",
+  "hint": "点「发包」，看第一枚小包走完整条路径。",
+  "label": "模拟网络 · 节奏",
+  "color": "#dee5f4",
+  "directory": "../latency-archaeology",
+  "port": 4361,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "延迟考古学 / Latency Archaeology",
+  "enabled": true
+}

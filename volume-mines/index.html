@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#111512" />
+<title>VOLUME / 26 — 三维扫雷</title>
+<style>
+:root { --bg:#111512; --panel:#181d19; --panel2:#202621; --line:rgba(232,233,211,.13); --ink:#e9e9dc; --muted:#90988d; --gold:#d8b47b; --green:#a8c5ac; --bad:#d98b78; }
+* {box-sizing:border-box} html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,"Noto Sans SC","Microsoft Yahei",system-ui,sans-serif;color:var(--ink)}
+button{font:inherit;cursor:pointer} button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+body:before{position:fixed;content:"";inset:0;pointer-events:none;background:radial-gradient(ellipse 49% 48% at 57% 48%,rgba(95,112,92,.105),transparent 81%),radial-gradient(ellipse 26% 39% at 83% 9%,rgba(168,139,96,.04),transparent 100%);z-index:0}
+body:after{position:fixed;content:"";inset:0;pointer-events:none;opacity:.16;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath filter='url(%23n)' opacity='.22' d='M0 0h180v180H0z'/%3E%3C/svg%3E");z-index:8}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab;z-index:1}
+#stage.grabbing{cursor:grabbing} #stage.target{cursor:crosshair}
+.header{height:82px;position:fixed;inset:0 0 auto;z-index:6;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(23px,3.8vw,64px);border-bottom:1px solid var(--line);pointer-events:none}
+.header>*{pointer-events:auto}
+.brand{display:flex;align-items:center;gap:17px;text-decoration:none;color:inherit}
+.brand-logo{position:relative;width:38px;height:38px;border:1px solid rgba(216,180,123,.75);display:grid;place-items:center;transform:rotate(-13deg);border-radius:3px}
+.brand-logo span{font-size:22px;color:var(--gold);font-family:Georgia,serif;transform:rotate(13deg);font-weight:400;line-height:1}
+.brand-title{font-family:Georgia,"Times New Roman",serif;letter-spacing:.11em;font-size:18px;white-space:nowrap}.brand-title b{font-weight:400;color:var(--gold)}
+.brand-sub{display:block;font-family:ui-monospace,Consolas,monospace;font-size:9px;color:var(--muted);letter-spacing:.24em;margin-top:7px}
+.hud{display:flex;align-items:center;gap:30px}
+.readout{display:grid;gap:7px;min-width:72px}.readout-label,.micro{color:var(--muted);font-size:10px;letter-spacing:.19em;font-family:ui-monospace,Consolas,monospace;text-transform:uppercase}.readout-value{font-family:ui-monospace,Consolas,monospace;font-size:21px;letter-spacing:.045em;line-height:1.0;font-weight:500;font-variant-numeric:tabular-nums}
+.hud-divider{height:30px;width:1px;background:var(--line)}
+.reset-btn{border:1px solid rgba(216,180,123,.53);color:var(--gold);padding:12px 16px;background:rgba(216,180,123,.055);font:11px ui-monospace,Consolas,monospace;letter-spacing:.10em;display:flex;align-items:center;gap:14px;transition:.2s}
+.reset-btn:hover{background:rgba(216,180,123,.17);border-color:var(--gold)}.reset-btn span{font-size:17px;line-height:0}
+.left-content{position:absolute;z-index:4;left:clamp(24px,4.6vw,74px);top:27%;max-width:280px;pointer-events:none}
+.eyebrow{font:10px ui-monospace,Consolas,monospace;color:var(--gold);letter-spacing:.26em;display:flex;align-items:center;gap:10px}
+.eyebrow:before{content:"";width:21px;height:1px;background:var(--gold)}
+.left-content h1{font-family:Georgia,"Noto Serif SC",serif;font-size:clamp(35px,4.25vw,66px);line-height:1.03;font-weight:400;letter-spacing:-.05em;margin:30px 0 18px;color:#f3f1df}
+.left-content h1 em{display:block;font-weight:400;color:var(--gold)}
+.left-content p{margin:0;font-size:12px;letter-spacing:.055em;line-height:2.0;color:#a1aa9d;max-width:238px}
+.left-bottom{position:fixed;left:clamp(24px,4.6vw,74px);bottom:54px;z-index:5;display:flex;flex-direction:column;gap:20px}
+.fieldtag{font-family:ui-monospace,Consolas,monospace;color:var(--muted);font-size:10px;letter-spacing:.11em}
+.fieldtag strong{display:block;color:#dadfcf;font-size:18px;margin-top:7px;letter-spacing:.08em;font-weight:400}
+.progress-track{height:2px;width:190px;background:rgba(204,217,191,.14);position:relative}.progress-track div{background:var(--gold);position:absolute;inset:0 auto 0 0;width:0;transition:width .3s}
+.progress-caption{font:10px ui-monospace,Consolas,monospace;letter-spacing:.11em;color:var(--muted)}
+.right-tools{position:fixed;right:clamp(20px,3.7vw,60px);top:28%;z-index:5;display:flex;flex-direction:column;align-items:center;gap:12px}
+.tool-name{font:9px ui-monospace,Consolas,monospace;letter-spacing:.20em;color:var(--muted);margin-bottom:5px;white-space:nowrap}
+.tool-btn{width:46px;height:46px;border:1px solid var(--line);background:rgba(22,29,24,.72);color:var(--muted);display:grid;place-items:center;font-family:ui-monospace,Consolas,monospace;font-size:13px;transition:.18s;backdrop-filter:blur(8px);position:relative}
+.tool-btn:hover{color:var(--ink);border-color:rgba(216,180,123,.5)} .tool-btn.active{color:var(--gold);background:rgba(216,180,123,.1);border-color:rgba(216,180,123,.65)}
+.tool-btn .tiny{font-size:10px} .tool-rule{width:46px;height:1px;background:var(--line);margin:5px 0}
+.layer-ui{display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:6px;padding:8px 0;animation:appear .25s both}
+.layer-ui[hidden]{display:none}.layer-ui span{font:10px ui-monospace,Consolas,monospace;color:var(--gold);white-space:nowrap}
+.layer-arrow{border:1px solid var(--line);background:var(--panel);color:var(--ink);width:33px;height:28px}.layer-arrow:hover{border-color:var(--gold)}
+.bottom-center{position:fixed;bottom:43px;left:50%;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:24px;border:1px solid rgba(222,227,209,.10);padding:13px 22px;background:rgba(12,17,14,.60);backdrop-filter:blur(14px);white-space:nowrap}
+.keytip{display:flex;gap:9px;align-items:center;color:#b3baac;font-size:11px;letter-spacing:.02em}.keytip kbd{font:10px ui-monospace,Consolas,monospace;border:1px solid rgba(216,225,210,.21);border-radius:2px;padding:4px 5px;color:#e5e8d7;min-width:29px;text-align:center}
+.corner-label{position:fixed;bottom:53px;right:clamp(20px,3.7vw,60px);z-index:3;font:10px ui-monospace,Consolas,monospace;color:#6b776d;letter-spacing:.16em}
+#toast{position:fixed;z-index:7;left:50%;top:117px;transform:translateX(-50%) translateY(-8px);min-width:220px;text-align:center;color:var(--gold);font:11px ui-monospace,Consolas,monospace;letter-spacing:.10em;opacity:0;pointer-events:none;transition:opacity .22s,transform .22s;padding:10px 18px;border:1px solid rgba(216,180,123,.25);background:rgba(20,27,22,.88)} #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#hint{position:fixed;bottom:118px;left:50%;transform:translateX(-50%);z-index:4;color:#abb5a9;font:11px ui-monospace,Consolas,monospace;white-space:nowrap;pointer-events:none;letter-spacing:.055em;text-shadow:0 2px 9px #000}
+#hint strong{color:var(--gold);font-weight:500}
+#end-overlay{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:rgba(8,13,10,.55);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .24s}
+#end-overlay.show{opacity:1;pointer-events:auto}.end-card{text-align:center;border:1px solid rgba(216,180,123,.32);background:#191f1a;min-width:min(90vw,400px);padding:45px 33px 37px;box-shadow:0 28px 100px rgba(0,0,0,.35)}
+.end-icon{font:54px Georgia,serif;color:var(--gold);line-height:1}.end-kicker{color:var(--gold);font:10px ui-monospace,Consolas,monospace;letter-spacing:.26em;margin:27px 0 9px}.end-title{font:38px Georgia,"Noto Serif SC",serif;margin:0 0 10px;color:#f2f0df;font-weight:400}.end-copy{font-size:12px;color:var(--muted);line-height:1.8;max-width:280px;margin:0 auto 28px}.end-btn{background:var(--gold);border:0;color:#121712;padding:14px 29px;font:11px ui-monospace,Consolas,monospace;letter-spacing:.15em}.end-btn:hover{background:#e6c993}
+#difficulty{position:fixed;top:96px;right:clamp(23px,3.8vw,64px);z-index:8;background:#1b211c;border:1px solid var(--line);width:256px;padding:11px;box-shadow:0 20px 55px #0008;display:none}
+#difficulty.show{display:block;animation:appear .17s both}.diff-title{font:10px ui-monospace,Consolas,monospace;color:var(--muted);letter-spacing:.16em;padding:8px 11px 12px}.diff-option{display:flex;justify-content:space-between;align-items:center;width:100%;padding:14px 11px;color:var(--ink);border:0;border-top:1px solid var(--line);background:transparent;text-align:left}.diff-option:hover,.diff-option.active{background:rgba(216,180,123,.09);color:var(--gold)}.diff-option small{color:var(--muted);font:10px ui-monospace,Consolas,monospace}
+#help-panel{position:fixed;inset:0;z-index:12;display:none;align-items:center;justify-content:center;background:rgba(7,11,8,.75);backdrop-filter:blur(6px)}#help-panel.open{display:flex}.help-card{width:min(92vw,510px);background:#1b211c;border:1px solid rgba(216,180,123,.32);padding:35px}.help-head{display:flex;justify-content:space-between;align-items:center}.help-head h2{margin:0;font:28px Georgia,serif;font-weight:400}.close-help{color:var(--ink);background:transparent;border:1px solid var(--line);width:33px;height:33px}.help-card p{color:#aeb8a8;font-size:12px;line-height:2.2}.help-rows{border-top:1px solid var(--line);margin-top:20px;padding-top:12px}.help-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);gap:16px;font-size:12px;color:#adb5a8}.help-row b{color:var(--ink);font-weight:500}
+.help-trigger{position:fixed;right:clamp(20px,3.7vw,60px);bottom:102px;z-index:5;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:50%;width:27px;height:27px;font:13px Georgia,serif}
+@keyframes appear{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1120px){.left-content{top:23%;max-width:185px}.left-content h1{font-size:44px}.left-content p{font-size:11px;max-width:190px}.bottom-center{gap:11px;padding:10px 14px}.keytip{font-size:10px}.hud{gap:16px}}
+@media(max-width:720px){.header{height:70px;padding:0 16px}.brand{gap:9px}.brand-logo{width:31px;height:31px}.brand-title{font-size:13px}.brand-sub{font-size:7px}.hud{gap:11px}.readout{min-width:48px}.readout-label{font-size:8px}.readout-value{font-size:15px}.hud-divider{display:none}.reset-btn{padding:10px 8px;font-size:0;gap:0}.reset-btn span{font-size:21px}.left-content{top:85px;left:18px;max-width:150px}.left-content h1{font-size:33px;margin:13px 0 0}.left-content p{display:none}.eyebrow{font-size:8px}.right-tools{top:25%;right:12px;gap:6px}.tool-btn{width:35px;height:35px;font-size:11px}.tool-rule{width:35px}.tool-name{font-size:8px}.left-bottom{left:18px;bottom:24px;gap:10px}.progress-track{width:120px}.fieldtag{font-size:8px}.fieldtag strong{font-size:14px}.progress-caption{font-size:8px}.bottom-center{bottom:23px;left:auto;right:13px;transform:none;gap:6px;padding:9px}.keytip{font-size:9px}.keytip:nth-child(1),.keytip:nth-child(3){display:none}.corner-label{display:none}#hint{bottom:80px;font-size:9px;left:50%;white-space:normal;width:58%;text-align:center}.help-trigger{bottom:80px;right:13px}#difficulty{top:77px;right:12px}}
+@media(max-height:680px){.left-content{top:24%}.left-content h1{font-size:37px}.left-bottom{bottom:21px}.bottom-center{bottom:21px}.corner-label{bottom:28px}.right-tools{top:25%}}
+</style>
+</head>
+<body>
+<canvas id="stage" aria-label="可旋转操作的三维扫雷立方体"></canvas>
+<header class="header">
+ <div class="brand"><div class="brand-logo"><span>✳</span></div><div><div class="brand-title">VOLUME <b>/ 26</b></div><small class="brand-sub">THREE-DIMENSIONAL MINES</small></div></div>
+ <div class="hud">
+  <div class="readout"><div class="readout-label">REMAINING</div><div class="readout-value" id="mine-count">018</div></div>
+  <div class="hud-divider"></div>
+  <div class="readout"><div class="readout-label">ELAPSED</div><div class="readout-value" id="time-count">00:00</div></div>
+  <div class="hud-divider"></div>
+  <button class="reset-btn" id="new-btn" title="选择难度与开启新游戏">NEW FIELD <span>↗</span></button>
+ </div>
+</header>
+<div id="difficulty" role="menu" aria-label="选择扫雷难度">
+  <div class="diff-title">SELECT FIELD SIZE</div>
+  <button class="diff-option" data-level="5">入门 · 5³ <small>125 CELLS / 12 MINES</small></button>
+  <button class="diff-option active" data-level="6">标准 · 6³ <small>216 CELLS / 24 MINES</small></button>
+  <button class="diff-option" data-level="8">挑战 · 8³ <small>512 CELLS / 84 MINES</small></button>
+</div>
+<div class="left-content">
+ <div class="eyebrow">SPATIAL LOGIC / 001</div>
+ <h1>Read the <em>void.</em></h1>
+ <p>看不见的，未必不存在。<br>旋转空间，剖开迷雾，<br>让每一个数字指向真相。</p>
+</div>
+<div class="left-bottom">
+ <div class="fieldtag">ACTIVE FIELD <strong id="field-size">06 × 06 × 06</strong></div>
+ <div class="progress-track"><div id="progress"></div></div>
+ <div class="progress-caption" id="progress-label">0% REVEALED · READY</div>
+</div>
+<div class="right-tools" role="group" aria-label="空间观察工具">
+ <div class="tool-name">VIEW AXIS</div>
+ <button class="tool-btn active" data-view="all" title="完整立方体视图 (Esc)" aria-label="完整视图">◈</button>
+ <button class="tool-btn" data-view="x" title="X 轴剖面视图" aria-label="X 轴剖面">X</button>
+ <button class="tool-btn" data-view="y" title="Y 轴剖面视图" aria-label="Y 轴剖面">Y</button>
+ <button class="tool-btn" data-view="z" title="Z 轴剖面视图" aria-label="Z 轴剖面">Z</button>
+ <div class="layer-ui" id="layer-ui" hidden><button class="layer-arrow" id="layer-next" title="下一层">+</button><span id="layer-name">03 / 06</span><button class="layer-arrow" id="layer-prev" title="上一层">−</button></div>
+ <div class="tool-rule"></div>
+ <button class="tool-btn" id="explode-btn" title="沿 Z 轴展开各层">⇵</button>
+ <button class="tool-btn" id="flag-btn" title="切换为插旗模式 (F)" aria-label="插旗模式">⚑</button>
+</div>
+<div id="hint">点击方块开始 <strong>·</strong> 首次翻开保证安全</div>
+<div class="bottom-center" aria-label="操作提示">
+ <div class="keytip"><kbd>拖动</kbd>旋转</div>
+ <div class="keytip"><kbd>左键</kbd>揭开</div>
+ <div class="keytip"><kbd>右键</kbd>插旗</div>
+ <div class="keytip"><kbd>滚轮</kbd>缩放</div>
+</div>
+<button class="help-trigger" id="help-btn" title="规则及操作说明">?</button>
+<div class="corner-label">ROTATE TO REVEAL DEPTH</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="end-overlay" role="dialog" aria-modal="true"><div class="end-card"><div class="end-icon" id="end-icon">✳</div><div class="end-kicker" id="end-kicker">FIELD CLEARED</div><h2 class="end-title" id="end-title">空间已解开</h2><p class="end-copy" id="end-copy"></p><button class="end-btn" id="end-retry">NEW EXPEDITION ↗</button></div></div>
+<div id="help-panel" role="dialog" aria-modal="true" aria-label="玩法说明"><div class="help-card"><div class="help-head"><h2>探索规则 / Rules</h2><button class="close-help" id="close-help" aria-label="关闭">×</button></div><p>每个方块的数字代表周围 <b style="color:var(--gold)">26 个立体邻居</b>中藏有几枚地雷。翻开全部安全方块即可获胜；首次翻开保证无雷，且周围邻格安全。翻开的方块变为虚空，数字悬浮在原位。</p><div class="help-rows"><div class="help-row"><span>旋转 / 放大</span><b>拖动 / 滚轮</b></div><div class="help-row"><span>揭开 / 标记</span><b>左键 / 右键</b></div><div class="help-row"><span>移动设备</span><b>点按揭开 / 长按标记</b></div><div class="help-row"><span>切换剖面</span><b>X / Y / Z，Esc 返回</b></div><div class="help-row"><span>查看其他层</span><b>+ / − 或 ↑ / ↓</b></div><div class="help-row"><span>切换插旗模式 / 重开</span><b>F / R</b></div></div></div></div>
+<script>
+(()=>{'use strict';
+const canvas=document.getElementById('stage'),ctx=canvas.getContext('2d',{alpha:true});
+const $=id=>document.getElementById(id);
+const el={mine:$('mine-count'),time:$('time-count'),size:$('field-size'),progress:$('progress'),progressLabel:$('progress-label'),hint:$('hint'),toast:$('toast'),end:$('end-overlay'),endIcon:$('end-icon'),endKicker:$('end-kicker'),endTitle:$('end-title'),endCopy:$('end-copy'),layerUi:$('layer-ui'),layerName:$('layer-name'),explode:$('explode-btn'),flag:$('flag-btn'),difficulty:$('difficulty')};
+const config={5:12,6:24,8:84};let size=6,mines=24,cells=[],revealed=0,flags=0,started=false,startAt=0,elapsed=0,finished=false,won=false,selected=-1;
+let view='all',layer=2,exploded=false,expansion=0,flagMode=false,hover=-1,hoverType='',hitRegions=[],dragging=false,pointer=null,heldLong=false,longTimer=null;
+let yaw=-.67,pitch=.47,zoom=1,W=0,H=0,dpr=1,lastFrame=0,toastTimer=null,endTimer=null,flash=0;
+const rad=Math.PI/180;
+const faceDefs=[{axis:'x',s:1,ids:[1,5,6,2]},{axis:'x',s:-1,ids:[0,3,7,4]},{axis:'y',s:1,ids:[3,2,6,7]},{axis:'y',s:-1,ids:[0,4,5,1]},{axis:'z',s:1,ids:[4,7,6,5]},{axis:'z',s:-1,ids:[0,1,2,3]}];
+const vertices=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+const neigh=[];for(let dz=-1;dz<=1;dz++)for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(dx||dy||dz)neigh.push([dx,dy,dz]);
+function id(x,y,z){return x+y*size+z*size*size}
+function indexCell(i){let z=Math.floor(i/(size*size)),r=i-z*size*size,y=Math.floor(r/size);return {x:r%size,y,z}}
+function inside(x,y,z){return x>=0&&x<size&&y>=0&&y<size&&z>=0&&z<size}
+function neighbors(c){let out=[];for(const [dx,dy,dz] of neigh){let x=c.x+dx,y=c.y+dy,z=c.z+dz;if(inside(x,y,z))out.push(id(x,y,z))}return out}
+function newGame(n=size){clearTimeout(endTimer);endTimer=null;size=n;mines=config[n];revealed=flags=elapsed=0;started=finished=won=false;selected=-1;hover=-1;flagMode=false;flash=0;view='all';exploded=false;expansion=0;layer=Math.floor((size-1)/2);yaw=-.67;pitch=.47;zoom=1;
+ cells=Array.from({length:size**3},(_,i)=>({...indexCell(i),id:i,mine:false,count:0,open:false,flag:false}));
+ el.end.classList.remove('show');el.difficulty.classList.remove('show');el.hint.innerHTML='点击方块开始 <strong>·</strong> 首次翻开保证安全';
+ document.querySelectorAll('.diff-option').forEach(b=>b.classList.toggle('active',+b.dataset.level===size));updateHUD();updateViewUI();toast('NEW FIELD · '+size+'³',1500);
+}
+function plantMines(first){const banned=new Set([first,...neighbors(cells[first])]);const choices=[];for(let i=0;i<cells.length;i++)if(!banned.has(i))choices.push(i);for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]]}
+ for(let i=0;i<mines;i++)cells[choices[i]].mine=true;
+ for(const c of cells)if(!c.mine)c.count=neighbors(c).reduce((n,k)=>n+(cells[k].mine?1:0),0);
+}
+function reveal(i){const c=cells[i];if(!c||finished||c.open||c.flag)return;if(!started){plantMines(i);started=true;startAt=performance.now();el.hint.textContent='数字 = 周围最多 26 个位置中的地雷数量'}
+ if(c.mine){finished=true;won=false;elapsed=Math.floor((performance.now()-startAt)/1000);flash=1;showEnd(false,c);updateHUD();return}
+ const queue=[i],seen=new Set([i]);let p=0;while(p<queue.length){const k=queue[p++],v=cells[k];if(v.open||v.flag||v.mine)continue;v.open=true;revealed++;if(v.count===0){for(const j of neighbors(v)){if(!seen.has(j)&&!cells[j].open&&!cells[j].flag){seen.add(j);queue.push(j)}}}}
+ if(revealed>=cells.length-mines){finished=true;won=true;elapsed=Math.floor((performance.now()-startAt)/1000);showEnd(true)}updateHUD();
+}
+function toggleFlag(i){const c=cells[i];if(!c||finished||c.open)return;c.flag=!c.flag;flags+=c.flag?1:-1;updateHUD()}
+function updateHUD(){el.mine.textContent=String(mines-flags).padStart(3,'0');el.time.textContent=formatTime(elapsed);el.size.textContent=String(size).padStart(2,'0')+' × '+String(size).padStart(2,'0')+' × '+String(size).padStart(2,'0');const percentage=Math.round(revealed/(size**3-mines)*100);el.progress.style.width=percentage+'%';el.progressLabel.textContent=percentage+'% REVEALED · '+(finished?(won?'CLEARED':'BREACHED'):(started?'EXPLORING':'READY'))}
+function formatTime(t){const m=String(Math.floor(t/60)).padStart(2,'0'),s=String(t%60).padStart(2,'0');return m+':'+s}
+function toast(msg,dur=1600){clearTimeout(toastTimer);el.toast.textContent=msg;el.toast.classList.add('show');toastTimer=setTimeout(()=>el.toast.classList.remove('show'),dur)}
+function showEnd(success,trigger){el.endIcon.textContent=success?'✳':'✕';el.endIcon.style.color=success?'var(--gold)':'var(--bad)';el.endKicker.textContent=success?'FIELD CLEARED':'CORE BREACHED';el.endTitle.textContent=success?'空间已解开':'触及了地雷';el.endCopy.textContent=success?`你在 ${formatTime(elapsed)} 内探索完全部 ${size**3-mines} 个安全方块。`: `坐标 (${trigger.x+1}, ${trigger.y+1}, ${trigger.z+1}) 有一枚地雷。已揭开 ${revealed} 个安全方块。`;endTimer=setTimeout(()=>el.end.classList.add('show'),500)}
+function updateViewUI(){document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));el.layerUi.hidden=view==='all';el.layerName.textContent=String(layer+1).padStart(2,'0')+' / '+String(size).padStart(2,'0');el.explode.classList.toggle('active',exploded);el.flag.classList.toggle('active',flagMode);el.flag.title=flagMode?'当前：插旗模式，按 F 切换为揭开':'切换为插旗模式 (F)';
+ if(view==='all'){if(selected>=0)showInspectText();else el.hint.textContent=started?'数字 = 周围最多 26 个位置中的地雷数量':'点击方块开始 · 首次翻开保证安全'}else el.hint.textContent=`${view.toUpperCase()} 轴剖面 · 第 ${layer+1} 层 / 共 ${size} 层 · 数字仍统计完整三维邻域`;
+}
+function setView(v){view=v;if(v!=='all'){layer=Math.floor((size-1)/2);if(exploded)exploded=false;selected=-1}updateViewUI();}
+function setLayer(delta){layer=Math.max(0,Math.min(size-1,layer+delta));updateViewUI()}
+function isVisible(c){return view==='all'||c[view]===layer}
+function world(c){const mul=1.065,k=(size-1)/2;return [(c.x-k)*mul,(c.y-k)*mul,(c.z-k)*(mul+expansion*.64)]}
+function rotate(p){const co=Math.cos(yaw),si=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);let x=co*p[0]+si*p[2],z=-si*p[0]+co*p[2],y=cp*p[1]-sp*z;return {x,y,z:sp*p[1]+cp*z}}
+let stageCx=0,stageCy=0,scale=60,distance=18;
+function project(p){const v=rotate(p),f=distance/(distance-v.z),s=scale*f;return {x:stageCx+v.x*s,y:stageCy-v.y*s,z:v.z,s}}
+function normalZ(axis,s){let p=axis==='x'?[s,0,0]:axis==='y'?[0,s,0]:[0,0,s];return rotate(p).z}
+function quad(pts,fill,stroke,weight=1){ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=weight;ctx.stroke()}}
+function validPolygon(pts,x,y){let result=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const a=pts[i],b=pts[j];if((a.y>y)!==(b.y>y)&&x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)result=!result}return result}
+function screenHit(x,y){for(let i=hitRegions.length-1;i>=0;i--){const r=hitRegions[i];if(r.type==='face'&&validPolygon(r.pts,x,y))return {id:r.id,type:'cube'};if(r.type==='label'&&Math.abs(x-r.x)<r.w/2&&Math.abs(y-r.y)<r.h/2)return {id:r.id,type:'number'}}return null}
+function drawBackground(){// delicate guides, no texture-dependent assets
+ const grd=ctx.createRadialGradient(stageCx,stageCy,36,stageCx,stageCy,Math.max(W,H)*.53);grd.addColorStop(0,'rgba(123,143,112,.040)');grd.addColorStop(.65,'rgba(77,92,73,.015)');grd.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);
+ ctx.save();ctx.strokeStyle='rgba(210,222,201,.026)';ctx.lineWidth=1;let grid=46;for(let x=((stageCx%grid)+grid)%grid;x<W;x+=grid){ctx.beginPath();ctx.moveTo(x,85);ctx.lineTo(x,H);ctx.stroke()}for(let y=((stageCy%grid)+grid)%grid;y<H;y+=grid){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}ctx.restore();
+}
+function drawFrame(){const r=size*.535+expansion*(size-1)*.32,p=size>6?.42:.38;const pts=[[-r,-r,-r],[r,-r,-r],[r,r,-r],[-r,r,-r],[-r,-r,r],[r,-r,r],[r,r,r],[-r,r,r]].map(project);
+ const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+ ctx.save();ctx.lineWidth=.8;ctx.setLineDash([3,9]);ctx.strokeStyle='rgba(182,200,173,.10)';for(const [a,b] of edges){ctx.beginPath();ctx.moveTo(pts[a].x,pts[a].y);ctx.lineTo(pts[b].x,pts[b].y);ctx.stroke()}ctx.restore();
+ // outer coordinate markers
+ const corners=[[r,r,r],[-r,-r,-r],[-r,r,r],[r,-r,-r]];ctx.font='9px ui-monospace,Consolas,monospace';ctx.fillStyle='rgba(167,183,163,.4)';for(let n=0;n<corners.length;n++){const c=project(corners[n]);ctx.fillText(['A','Z','03','06'][n],c.x+8,c.y-7)}
+}
+function drawCube(c,inspecting){const center=world(c),p=project(center),half=.47,points=vertices.map(v=>project([center[0]+v[0]*half,center[1]+v[1]*half,center[2]+v[2]*half]));
+ let count=0;const colorOffset=((c.x*7+c.y*11+c.z*13)%11),isHover=hover===c.id&&hoverType==='cube',selectedNear=inspecting.has(c.id);
+ const faces=faceDefs.map(f=>({...f,d:normalZ(f.axis,f.s)})).filter(f=>f.d>0.012).sort((a,b)=>a.d-b.d);
+ for(const f of faces){const poly=f.ids.map(i=>points[i]);const frontShade=f.axis==='y'&&f.s===1?14:f.axis==='x'&&f.s===1?5:f.axis==='z'&&f.s===1?0:-9;
+ let a=74+colorOffset+frontShade,b=86+colorOffset+frontShade,cc=77+colorOffset+frontShade;
+ if(c.flag){a=91;b=78;cc=55}if(isHover){a+=26;b+=25;cc+=15}else if(selectedNear){a+=13;b+=10;cc+=3}
+ if(!started){a+=2;b+=2;cc+=2}
+ const fill=`rgb(${Math.max(20,a)},${Math.max(24,b)},${Math.max(22,cc)})`,stroke=isHover?'rgba(245,209,139,.96)':selectedNear?'rgba(221,170,94,.55)':'rgba(184,208,183,.31)';
+ quad(poly,fill,stroke,isHover?1.7:.67);hitRegions.push({id:c.id,type:'face',pts:poly});
+ // inset border catches light, emphasizes real facets
+ if(f.d>.25){ctx.beginPath();const t=.09;ctx.moveTo(poly[0].x*(1-t)+p.x*t,poly[0].y*(1-t)+p.y*t);for(let k=1;k<4;k++)ctx.lineTo(poly[k].x*(1-t)+p.x*t,poly[k].y*(1-t)+p.y*t);ctx.closePath();ctx.strokeStyle=isHover?'rgba(250,222,168,.20)':'rgba(246,245,220,.065)';ctx.lineWidth=.7;ctx.stroke()}
+ count++;
+ }
+ if(isHover){ctx.save();ctx.shadowBlur=21;ctx.shadowColor='rgba(227,190,119,.65)';ctx.lineWidth=2;ctx.strokeStyle='rgba(227,190,119,.9)';ctx.beginPath();ctx.arc(p.x,p.y,Math.max(4,scale*.10),0,Math.PI*2);ctx.stroke();ctx.restore()}
+ if(c.flag){drawFlag(p)}
+}
+function drawFlag(p){const x=p.x,y=p.y;
+ ctx.save();ctx.shadowColor='rgba(13,12,8,.62)';ctx.shadowBlur=3;ctx.strokeStyle='#f3d2a0';ctx.lineWidth=1.9;ctx.beginPath();ctx.moveTo(x-3,y+8);ctx.lineTo(x-3,y-12);ctx.stroke();ctx.fillStyle='#f4c27a';ctx.beginPath();ctx.moveTo(x-3,y-11);ctx.lineTo(x+12,y-7);ctx.lineTo(x-3,y-2);ctx.closePath();ctx.fill();ctx.restore()}
+const numColors=['#d9dfbe','#bdd0b4','#bcd3cb','#dfc68d','#e0ad80','#d99687','#e2b4bc','#c1b7d3','#dfb593'];
+function drawNumber(c){const p=project(world(c)),s=Math.min(1.50,Math.max(.60,p.s/scale)),w=(c.count>=10?35:29)*s,h=29*s;
+ const isHover=hover===c.id&&hoverType==='number',isSelected=selected===c.id,color=numColors[Math.min(c.count-1,numColors.length-1)];ctx.save();ctx.translate(p.x,p.y);
+ ctx.fillStyle=isSelected?'rgba(210,171,110,.26)':isHover?'rgba(83,107,90,.93)':'rgba(20,29,24,.89)';ctx.fillRect(-w/2,-h/2,w,h);
+ ctx.strokeStyle=isSelected?'#e5c58e':isHover?'rgba(199,223,193,.72)':'rgba(167,191,166,.31)';ctx.lineWidth=isSelected?1.4:.75;ctx.strokeRect(-w/2,-h/2,w,h);
+ ctx.font=`600 ${Math.max(10,15*s)}px ui-monospace,Consolas,monospace`;ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(c.count),0,1*s);ctx.restore();hitRegions.push({id:c.id,type:'label',x:p.x,y:p.y,w,h});
+}
+function drawMine(c,triggered){const p=project(world(c)),sz=Math.max(6,Math.min(21,p.s*.21));ctx.save();ctx.translate(p.x,p.y);const glow=ctx.createRadialGradient(0,0,1,0,0,sz*3);glow.addColorStop(0,triggered?'rgba(255,151,117,.58)':'rgba(219,147,109,.30)');glow.addColorStop(1,'rgba(215,91,79,0)');ctx.fillStyle=glow;ctx.beginPath();ctx.arc(0,0,sz*3,0,2*Math.PI);ctx.fill();ctx.strokeStyle=triggered?'#ffb49a':'#b57f73';ctx.lineWidth=2;for(let k=0;k<8;k++){const a=k*Math.PI/4;ctx.beginPath();ctx.moveTo(Math.cos(a)*sz*.55,Math.sin(a)*sz*.55);ctx.lineTo(Math.cos(a)*sz*1.22,Math.sin(a)*sz*1.22);ctx.stroke()}ctx.fillStyle=triggered?'#f6bba5':'#b98475';ctx.beginPath();ctx.arc(0,0,sz*.65,0,Math.PI*2);ctx.fill();ctx.restore()}
+function drawSlicePlane(){if(view==='all')return;const extent=size*.54,coordinate=(layer-(size-1)/2)*1.065,c=[];for(const a of [-1,1])for(const b of [-1,1]){let p;if(view==='x')p=[coordinate,a*extent,b*extent];if(view==='y')p=[a*extent,coordinate,b*extent];if(view==='z')p=[a*extent,b*extent,coordinate];c.push(project(p))}
+ const pts=[c[0],c[1],c[3],c[2]];ctx.save();ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(216,180,123,.35)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);for(let i=1;i<4;i++)ctx.lineTo(pts[i].x,pts[i].y);ctx.closePath();ctx.stroke();ctx.restore()}
+function drawInspectRing(c){const p=project(world(c));ctx.save();ctx.strokeStyle='rgba(231,186,119,.75)';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.arc(p.x,p.y,17,0,2*Math.PI);ctx.stroke();ctx.restore()}
+function draw(){if(W===0||H===0)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);stageCx=W*(W>950?.548:W>720?.54:.485);stageCy=H*(H>720?.48:.52);scale=Math.min(H*.073,W*.072)*6/size*zoom;distance=size*3.15;
+ drawBackground();hitRegions=[];drawFrame();drawSlicePlane();
+ const inspecting=new Set();if(selected>=0){const sc=cells[selected];if(sc&&sc.open)for(const j of neighbors(sc))inspecting.add(j)}
+ const objects=[];for(const c of cells){if(!isVisible(c))continue;const depth=rotate(world(c)).z;if(!c.open&&(!finished||won||!c.mine))objects.push({c,depth,type:'cube'});if(c.open&&c.count>0)objects.push({c,depth,type:'number'});if(finished&&!won&&c.mine)objects.push({c,depth,type:'mine'})}
+ objects.sort((a,b)=>a.depth-b.depth||(a.type==='number'?1:-1));for(const obj of objects){const {c,type}=obj;if(type==='cube')drawCube(c,inspecting);else if(type==='number')drawNumber(c);else drawMine(c,hover===c.id)}
+ if(selected>=0&&isVisible(cells[selected]))drawInspectRing(cells[selected]);
+ if(flash>0){ctx.fillStyle=`rgba(207,97,69,${flash*.09})`;ctx.fillRect(0,0,W,H);flash=Math.max(0,flash-.025)}
+}
+function showInspectText(){if(selected<0)return;const c=cells[selected];if(!c||!c.open)return;const marked=neighbors(c).reduce((a,j)=>a+(cells[j].flag?1:0),0);el.hint.innerHTML=`观察 <strong>(${c.x+1},${c.y+1},${c.z+1})</strong> · 数字 ${c.count} · 邻居已标记 ${marked} · 再次点击取消`}
+function handleClick(x,y,button){const hit=screenHit(x,y);if(!hit){selected=-1;updateViewUI();return}const c=cells[hit.id];if(hit.type==='number'){selected=(selected===c.id?-1:c.id);updateViewUI();return}selected=-1;if(button===2||flagMode){toggleFlag(c.id)}else reveal(c.id)}
+function coords(e){const rect=canvas.getBoundingClientRect();return {x:e.clientX-rect.left,y:e.clientY-rect.top}}
+function cancelLong(){if(longTimer!==null){clearTimeout(longTimer);longTimer=null}}
+canvas.addEventListener('pointerdown',e=>{if(e.button!==0&&e.button!==2)return;const p=coords(e);pointer={id:e.pointerId,x:p.x,y:p.y,lastX:p.x,lastY:p.y,button:e.button};dragging=false;heldLong=false;canvas.setPointerCapture(e.pointerId);if(e.pointerType==='touch'){longTimer=setTimeout(()=>{if(pointer&&!dragging){heldLong=true;handleClick(pointer.x,pointer.y,2);toast('FLAG PLACED · 长按插旗',950)}},520)}e.preventDefault()});
+canvas.addEventListener('pointermove',e=>{const p=coords(e);if(pointer&&e.pointerId===pointer.id){let dx=p.x-pointer.lastX,dy=p.y-pointer.lastY;pointer.lastX=p.x;pointer.lastY=p.y;if(Math.hypot(p.x-pointer.x,p.y-pointer.y)>6){dragging=true;cancelLong()}if(dragging&&pointer.button===0){yaw+=dx*.0071;pitch=Math.max(-1.36,Math.min(1.36,pitch+dy*.0065));selected=-1}}else{const h=screenHit(p.x,p.y);hover=h?h.id:-1;hoverType=h?h.type:'';canvas.classList.toggle('target',!!h)}canvas.classList.toggle('grabbing',!!dragging);});
+function endPointer(e){if(!pointer||e.pointerId!==pointer.id)return;cancelLong();const p=coords(e);if(!dragging&&!heldLong)handleClick(p.x,p.y,pointer.button);pointer=null;dragging=false;heldLong=false;canvas.classList.remove('grabbing');const h=screenHit(p.x,p.y);hover=h?h.id:-1;hoverType=h?h.type:''}
+canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointercancel',e=>{cancelLong();pointer=null;dragging=false;heldLong=false});canvas.addEventListener('contextmenu',e=>e.preventDefault());
+canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.58,Math.min(1.6,zoom*(1-e.deltaY*.00105)))},{passive:false});
+window.addEventListener('resize',resize);function resize(){W=innerWidth;H=innerHeight;dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);canvas.style.width=W+'px';canvas.style.height=H+'px'}
+function frame(t){if(!lastFrame)lastFrame=t;let dt=Math.min(40,t-lastFrame);lastFrame=t;let goal=exploded&&view==='all'?1:0;expansion+=(goal-expansion)*Math.min(.18,dt*.012);if(started&&!finished){const s=Math.floor((t-startAt)/1000);if(elapsed!==s){elapsed=s;el.time.textContent=formatTime(s)}}draw();requestAnimationFrame(frame)}
+$('new-btn').addEventListener('click',e=>{e.stopPropagation();el.difficulty.classList.toggle('show')});document.querySelectorAll('.diff-option').forEach(b=>b.addEventListener('click',()=>newGame(+b.dataset.level)));
+document.addEventListener('pointerdown',e=>{if(!el.difficulty.contains(e.target)&&e.target!==$('new-btn')&&!$('new-btn').contains(e.target))el.difficulty.classList.remove('show')});
+document.querySelectorAll('.tool-btn[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+$('layer-next').addEventListener('click',()=>setLayer(1));$('layer-prev').addEventListener('click',()=>setLayer(-1));
+el.explode.addEventListener('click',()=>{if(view!=='all')setView('all');exploded=!exploded;updateViewUI();toast(exploded?'LAYER EXPANSION ON':'LAYER EXPANSION OFF',1100)});
+el.flag.addEventListener('click',()=>{flagMode=!flagMode;updateViewUI();toast(flagMode?'FLAG MODE · 点击插旗':'REVEAL MODE · 点击揭开',1000)});
+$('end-retry').addEventListener('click',()=>newGame());$('help-btn').addEventListener('click',()=>$('help-panel').classList.add('open'));$('close-help').addEventListener('click',()=>$('help-panel').classList.remove('open'));
+$('help-panel').addEventListener('pointerdown',e=>{if(e.target===$('help-panel'))$('help-panel').classList.remove('open')});
+window.addEventListener('keydown',e=>{if($('help-panel').classList.contains('open')){if(e.key==='Escape')$('help-panel').classList.remove('open');return}const k=e.key.toLowerCase();if(k==='escape'){el.difficulty.classList.remove('show');setView('all');selected=-1}else if(k==='r')newGame();else if(k==='f'){flagMode=!flagMode;updateViewUI()}else if('xyz'.includes(k)&&k.length===1)setView(k);else if(view!=='all'&&(e.key==='ArrowUp'||e.key==='ArrowRight'||e.key===']'||e.key==='+')){setLayer(1);e.preventDefault()}else if(view!=='all'&&(e.key==='ArrowDown'||e.key==='ArrowLeft'||e.key==='['||e.key==='-')){setLayer(-1);e.preventDefault()}});
+// exposed read-only debug snapshot for interaction checks
+window.__mines3dDebug=()=>({size,mines,flags,revealed,started,finished,won,view,layer,hover,selected,cellCounts:cells.map(c=>c.count),firstOpen:cells.filter(c=>c.open).map(c=>c.id),mineLocations:cells.filter(c=>c.mine).map(c=>c.id)});
+resize();newGame();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

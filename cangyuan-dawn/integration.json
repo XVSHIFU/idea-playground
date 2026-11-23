@@ -1,0 +1,21 @@
+{
+  "id": "cangyuan-dawn",
+  "name": "沧元图 · 向着朝阳",
+  "category": "互动叙事",
+  "description": "从东宁府的无名少年出发，在修行和人物关系中留下因果。",
+  "hint": "点「开启此生」，选择起点。",
+  "label": "同人 · 修行冒险",
+  "color": "#eadfeb",
+  "directory": "../cangyuan-dawn",
+  "port": 4351,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "沧元图 · 向着朝阳",
+  "enabled": true
+}

@@ -1,0 +1,33 @@
+{
+  "id": "arthropod",
+  "name": "Arthropod · 六足步态",
+  "category": "视觉与交互",
+  "description": "观察六足节肢动物如何跨越台阶、斜坡与墙面，在不同地形上寻找落脚点。",
+  "hint": "切换 Steps、Rolling 和 Wall，观察足端接触。",
+  "label": "逆向运动学 · 地形",
+  "color": "#dee5f4",
+  "directory": "../arthropod",
+  "port": 4356,
+  "entry": "index.html",
+  "required": [
+    "app.js",
+    "index.html",
+    "style.css",
+    "vendor/OrbitControls.js",
+    "vendor/THREE-LICENSE.txt",
+    "vendor/three.core.js",
+    "vendor/three.module.js"
+  ],
+  "files": [
+    "app.js",
+    "index.html",
+    "style.css",
+    "vendor/OrbitControls.js",
+    "vendor/THREE-LICENSE.txt",
+    "vendor/three.core.js",
+    "vendor/three.module.js"
+  ],
+  "publicDirectories": [],
+  "identity": "Arthropod — A study in motion",
+  "enabled": true
+}

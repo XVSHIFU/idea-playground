@@ -1,0 +1,21 @@
+{
+  "id": "ai-radar",
+  "name": "AI 革新雷达 · 离线样机",
+  "category": "工具与原型",
+  "description": "用样例资讯体验筛选动态、核对来源与整理研究线索的流程。",
+  "hint": "从动态列表打开一条记录，再查看来源。",
+  "label": "资讯 · 工作台",
+  "color": "#e4e8ef",
+  "directory": "../ai-radar",
+  "port": 4372,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "AI Radar MVP",
+  "enabled": true
+}

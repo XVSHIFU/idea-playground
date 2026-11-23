@@ -1,0 +1,31 @@
+{
+  "id": "folio-editor",
+  "name": "页间 Folio · 数字写作室",
+  "category": "工具与原型",
+  "description": "在数字写作室里切换文稿、主题与阅读预览。",
+  "hint": "打开一篇文稿，再切换纸张、极简或夜读主题。",
+  "label": "写作 · 排版",
+  "color": "#e4e8ef",
+  "directory": "../folio-editor",
+  "port": 4368,
+  "entry": "index.html",
+  "required": [
+    "atelier.html",
+    "folio.html",
+    "index.html",
+    "inkstone.html",
+    "perch-page.html",
+    "yantai.html"
+  ],
+  "files": [
+    "atelier.html",
+    "folio.html",
+    "index.html",
+    "inkstone.html",
+    "perch-page.html",
+    "yantai.html"
+  ],
+  "publicDirectories": [],
+  "identity": "页间 Folio · 数字写作室",
+  "enabled": true
+}

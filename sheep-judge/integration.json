@@ -1,0 +1,21 @@
+{
+  "id": "sheep-judge",
+  "name": "羊村怪谈 · 法官守则",
+  "category": "互动叙事",
+  "description": "对照十条入村守则，核验现场物证，在一次次判断中推进案卷。",
+  "hint": "阅读入村须知，把第一条守则记在心里。",
+  "label": "同人 · 规则推理",
+  "color": "#eadfeb",
+  "directory": "../sheep-judge",
+  "port": 4348,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "羊村怪谈 · 法官守则",
+  "enabled": true
+}

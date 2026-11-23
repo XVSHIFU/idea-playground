@@ -1,0 +1,21 @@
+{
+  "id": "ten-years-later",
+  "name": "给十年后的我",
+  "category": "互动叙事",
+  "description": "启动一台旧电脑，在 Windows XP 风格的桌面上拆开十二岁的自己留下的信。",
+  "hint": "按 Enter 跳过开机，然后双击桌面上的信。",
+  "label": "复古桌面 · 短篇",
+  "color": "#eadfeb",
+  "directory": "../ten-years-later",
+  "port": 4343,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "给十年后的我",
+  "enabled": true
+}

@@ -1,0 +1,21 @@
+{
+  "id": "root-botnet",
+  "name": "ROOT/BOTNET",
+  "category": "游戏与模拟",
+  "description": "在复古 CRT 终端中积累算力、升级设备，推进四章虚构网络任务。",
+  "hint": "按 Enter 接入终端，查看第一项任务。",
+  "label": "虚构终端 · 增量",
+  "color": "#eadfd2",
+  "directory": "../root-botnet",
+  "port": 4313,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "ROOT/BOTNET · CRT-OS",
+  "enabled": true
+}

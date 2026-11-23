@@ -1,0 +1,21 @@
+{
+  "id": "crazy-water-world",
+  "name": "疯狂水世界",
+  "category": "游戏与模拟",
+  "description": "控制海上钩爪，在合适的时机松手，把物资带回船上。",
+  "hint": "等指针进入绿色区域时松手。",
+  "label": "钩爪 · 打捞",
+  "color": "#eadfd2",
+  "directory": "../crazy-water-world",
+  "port": 4321,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "疯狂水世界：广告版 · 乘风重制版",
+  "enabled": true
+}

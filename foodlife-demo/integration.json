@@ -1,0 +1,27 @@
+{
+  "id": "foodlife-demo",
+  "name": "食光管家与食刻 Life",
+  "category": "工具与原型",
+  "description": "体验家庭饮食项目的两版前端，从菜单、库存到审批与统计。",
+  "hint": "选一个版本，从首页查看菜单或库存。",
+  "label": "饮食管理 · 产品原型",
+  "color": "#e4e8ef",
+  "directory": "../foodlife-demo",
+  "port": 4365,
+  "entry": "index.html",
+  "required": [
+    "foodlife.html",
+    "index.html",
+    "licenses/THIRD_PARTY_NOTICES.md",
+    "shiguang.html"
+  ],
+  "files": [
+    "foodlife.html",
+    "index.html",
+    "licenses/THIRD_PARTY_NOTICES.md",
+    "shiguang.html"
+  ],
+  "publicDirectories": [],
+  "identity": "食光管家与食刻 Life",
+  "enabled": true
+}

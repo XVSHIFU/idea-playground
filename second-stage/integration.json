@@ -1,0 +1,21 @@
+{
+  "id": "second-stage",
+  "name": "我不是戏神 · 第二场戏",
+  "category": "互动叙事",
+  "description": "选择出身，在调查、演出和战斗之间作决定，留下自己的因果。",
+  "hint": "从标题页开始一段新的演出。",
+  "label": "同人 · 人生冒险",
+  "color": "#eadfeb",
+  "directory": "../second-stage",
+  "port": 4344,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "我不是戏神 · 第二场戏",
+  "enabled": true
+}

@@ -1,0 +1,59 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>延迟考古学 / Latency Archaeology</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0d10;color:#d8dde5;font:14px ui-monospace,SFMono-Regular,Menlo,monospace;overflow:hidden}
+  canvas{display:block;width:100vw;height:100vh}
+  #ui{position:fixed;left:18px;top:16px;max-width:430px;background:#0b0d10cc;border:1px solid #303743;padding:12px 14px;backdrop-filter:blur(6px)}
+  b{color:white} button{font:inherit;background:#171b21;color:#e7ebf0;border:1px solid #4a5565;padding:7px 10px;margin:6px 5px 0 0;cursor:pointer}
+  .dim{color:#8993a1}.good{color:#a8d5b5}.warn{color:#e6c384}
+</style>
+<canvas id="c"></canvas>
+<div id="ui">
+  <b>延迟考古学 / Latency Archaeology</b><br>
+  <span class="dim">不要追求低延迟。你的任务是“养”出一段有性格的网络天气。</span><br><br>
+  规则：每次点击 <b>发包</b>，小包穿过 6 个虚构节点。你只能给一个节点施加一次“天气”：<br>
+  <span class="good">雾 +220ms</span>　<span class="warn">阵雨 +80~260ms 抖动</span>　回声：10% 概率复制一个包。<br>
+  目标：12 个包后，让轨迹看起来像你愿意保存的一张“天气化石”。没有分数。
+  <br><button id="send">发包</button><button id="fog">雾</button><button id="rain">阵雨</button><button id="echo">回声</button><button id="reset">重置</button>
+  <div id="status"></div>
+</div>
+<script>
+const c=document.querySelector('#c'),x=c.getContext('2d'),D=devicePixelRatio||1;
+let W,H,nodes=[],packets=[],fossils=[],sent=0,weather=null,weatherNode=2,last=0;
+function resize(){W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;x.setTransform(D,0,0,D,0,0);nodes=[.08,.25,.42,.59,.76,.92].map((p,i)=>({x:W*p,y:H*(.64+.08*Math.sin(i*1.7)),name:['HOME','IX-17','MOSS','NULL','MOON','SITE'][i]}))}
+addEventListener('resize',resize);resize();
+function baseDelay(i){return [70,110,90,130,80][i]}
+function hopDelay(i){
+ let d=baseDelay(i);
+ if(i===weatherNode&&weather==='fog') d+=220;
+ if(i===weatherNode&&weather==='rain') d+=80+Math.random()*180;
+ return d;
+}
+function makePacket(offset=0){ if(sent>=12)return; sent++; packets.push({i:0,t:performance.now()+offset,trail:[],ghost:false}); }
+send.onclick=()=>makePacket(); fog.onclick=()=>weather='fog'; rain.onclick=()=>weather='rain'; echo.onclick=()=>weather='echo';
+reset.onclick=()=>{packets=[];fossils=[];sent=0;weather=null};
+function draw(t){
+ x.fillStyle='rgba(11,13,16,.16)';x.fillRect(0,0,W,H);
+ x.lineWidth=1;x.strokeStyle='#39414d';x.beginPath();nodes.forEach((n,i)=>i?x.lineTo(n.x,n.y):x.moveTo(n.x,n.y));x.stroke();
+ nodes.forEach((n,i)=>{x.fillStyle=i===weatherNode&&weather?'#e6c384':'#d8dde5';x.beginPath();x.arc(n.x,n.y,4,0,7);x.fill();x.fillText(n.name,n.x-18,n.y+22)});
+ for(let p of packets){
+   if(p.i>=nodes.length-1) continue;
+   let a=nodes[p.i],b=nodes[p.i+1],dur=p.dur||(p.dur=hopDelay(p.i)),q=Math.max(0,Math.min(1,(t-p.t)/dur));
+   let xx=a.x+(b.x-a.x)*q, yy=a.y+(b.y-a.y)*q;
+   p.trail.push([xx,yy,t]); p.trail=p.trail.filter(z=>t-z[2]<5000);
+   x.strokeStyle=p.ghost?'#738099':'#8fd3ff';x.beginPath();p.trail.forEach((z,j)=>j?x.lineTo(z[0],z[1]):x.moveTo(z[0],z[1]));x.stroke();
+   x.fillStyle=p.ghost?'#9ba8ba':'#eaf7ff';x.beginPath();x.arc(xx,yy,3,0,7);x.fill();
+   if(q>=1){p.i++;p.t=t;p.dur=0;
+     if(p.i===weatherNode && weather==='echo' && !p.ghost && Math.random()<.10){let g={...p,trail:[...p.trail],ghost:true,t:t+45};packets.push(g)}
+     if(p.i>=nodes.length-1) fossils.push(p.trail.slice());
+   }
+ }
+ if(sent===12 && packets.every(p=>p.i>=nodes.length-1)){
+   x.fillStyle='#d8dde5';x.font='16px ui-monospace,monospace';x.fillText('化石完成：刷新/截图保存它。它不是性能图，而是一段被你故意弄坏的网络天气。',24,H-30);
+ }
+ status.innerHTML=`<br>天气：<b>${weather||'晴'}</b>（作用节点 MOSS）　已发 ${sent}/12 包`;
+ requestAnimationFrame(draw);
+}
+x.fillStyle='#0b0d10';x.fillRect(0,0,W,H);requestAnimationFrame(draw);
+</script>

@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>网页画布 · 原型</title>
+
+
+
+
+<!-- ════════ 网页自身的样式：导出时原样带走 ════════ -->
+<style id="page-css">
+.page-root{container:page/inline-size;position:relative}
+.site{
+  --paper:#f3f2ea;--paper-2:#e9e8de;--ink:#1f2a27;--ink-2:#56635d;--ink-3:#8a948d;
+  --rule:rgba(31,42,39,.13);--rule-2:rgba(31,42,39,.26);
+  --indigo:#2b4c6f;--indigo-soft:rgba(43,76,111,.08);--cinnabar:#b03a2c;--amber:#96611a;
+  --code-bg:#1f2b28;--code-ink:#dfe3d6;--code-dim:#84918a;--code-line:rgba(255,255,255,.09);
+  --serif:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun",serif;
+  --sans:"Noto Sans SC","PingFang SC","HarmonyOS Sans SC","Microsoft YaHei UI","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"JetBrains Mono","Cascadia Code","SF Mono",Consolas,monospace;
+  --pad:clamp(20px,5cqi,64px);
+  min-height:100vh;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.site *,.site *::before,.site *::after{box-sizing:border-box}
+:where(.site) button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:where(.site) a{color:inherit}
+.site .pi{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.site ::selection{background:rgba(43,76,111,.22)}
+.site [hidden]{display:none}
+
+/* 站点导航 */
+.site-head{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:32px;height:60px;padding-inline:var(--pad);
+  background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:900;font-size:19px;letter-spacing:.08em;text-decoration:none;white-space:nowrap}
+.brand svg{width:22px;height:22px;color:var(--cinnabar)}
+.site-nav{display:flex;gap:28px;margin-left:auto;font-size:14px}
+.site-nav a{position:relative;display:block;padding:19px 0;color:var(--ink-2);text-decoration:none;white-space:nowrap;transition:color .15s}
+.site-nav a:hover{color:var(--ink)}
+.site-nav a[aria-current="page"]{color:var(--ink)}
+.site-nav a[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink)}
+.subscribe{height:32px;padding:0 14px;border:1px solid var(--rule-2)!important;border-radius:3px;font-size:13px;white-space:nowrap;transition:background-color .15s,color .15s}
+.subscribe:hover{background:var(--ink)!important;color:var(--paper)!important}
+
+.wrap{max-width:1128px;margin-inline:auto;padding-inline:var(--pad)}
+
+/* 长文：题头 */
+.hero{padding-top:clamp(36px,7cqi,92px);padding-bottom:clamp(28px,4.5cqi,52px)}
+.crumbs{display:flex;gap:8px;font-size:13px;color:var(--ink-3)}
+.crumbs a{color:var(--indigo);text-decoration:none}
+.hero h1{margin:.42em 0 0;max-width:13em;font-family:var(--serif);font-weight:900;font-size:clamp(30px,5.4cqi,60px);line-height:1.24;letter-spacing:.01em;text-wrap:balance}
+.lede{margin:1.2em 0 0;max-width:33em;font-family:var(--serif);font-size:clamp(17px,1.8cqi,20px);line-height:1.95;color:var(--ink-2)}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 26px;margin-top:2.2em;font-size:13px;color:var(--ink-3)}
+.meta .who{display:flex;align-items:center;gap:9px;color:var(--ink-2)}
+.avatar{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--paper);font-family:var(--serif);font-size:13px}
+
+/* 长文：正文与页内目录 */
+.cols{display:grid;grid-template-columns:minmax(0,1fr);border-top:1px solid var(--rule);padding-top:clamp(24px,4cqi,56px);padding-bottom:clamp(56px,8cqi,104px)}
+.toc{margin-bottom:28px;border:1px solid var(--rule);border-radius:4px;font-size:13.5px}
+.toc-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 16px;color:var(--ink-2);text-align:left}
+.toc-toggle .pi{transition:transform .25s}
+.toc.open .toc-toggle .pi{transform:rotate(90deg)}
+.toc ol{display:none;list-style:none;margin:0;padding:0 8px 10px}
+.toc.open ol{display:block}
+.toc a{display:block;padding:7px 8px;color:var(--ink-2);text-decoration:none;line-height:1.5;transition:color .15s}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--indigo);font-weight:500}
+.toc .to-top{display:none}
+@container page (min-width:1000px){
+  .cols{grid-template-columns:minmax(0,680px) 212px;justify-content:space-between;column-gap:64px}
+  .toc{order:2;position:sticky;top:96px;align-self:start;margin:6px 0 0;border:0;border-radius:0}
+  .toc-toggle{padding:0 0 14px;font-size:12.5px;color:var(--ink-3);letter-spacing:.08em;pointer-events:none}
+  .toc-toggle .pi{display:none}
+  .toc ol{display:block;padding:0;border-left:1px solid var(--rule)}
+  .toc a{margin-left:-1px;padding:6px 0 6px 16px;border-left:2px solid transparent}
+  .toc a.on{border-left-color:var(--indigo)}
+  .toc .to-top{display:inline-flex;padding:0;border:0;align-items:center;gap:6px;margin-top:22px;font-size:12.5px;color:var(--ink-3);text-decoration:none}
+  .toc .to-top:hover{color:var(--ink)}
+  .to-top .pi{width:14px;height:14px;transform:rotate(-90deg)}
+}
+
+/* 正文排版 */
+.prose{font-family:var(--serif);font-size:17.5px;line-height:2;letter-spacing:.012em;counter-reset:sec;min-width:0}
+.prose>*{margin:0}
+.prose>*+*{margin-top:1.25em}
+.prose p{text-align:justify}
+.prose>h2{position:relative;margin-top:2.5em;font-weight:700;font-size:1.5em;line-height:1.45;counter-increment:sec;scroll-margin-top:84px}
+.prose>h2:first-child{margin-top:0}
+.prose>h2::before{content:counter(sec,cjk-ideographic);content:counter(sec,simp-chinese-informal);margin-right:.55em;font-size:.82em;color:var(--cinnabar)}
+@container page (min-width:1000px){.prose>h2::before{position:absolute;right:calc(100% + 16px);top:.08em;margin:0}}
+.prose>h3{margin-top:2em;font-size:1.14em;font-weight:700}
+.prose a{color:var(--indigo);text-underline-offset:4px;text-decoration-thickness:1px}
+.prose code{padding:.15em .42em;border-radius:4px;background:rgba(31,42,39,.07);font-family:var(--mono);font-size:.84em;letter-spacing:0}
+.prose kbd{padding:.15em .5em;border:1px solid var(--rule-2);border-bottom-width:2px;border-radius:4px;font-family:var(--mono);font-size:.78em}
+.prose>blockquote{margin-inline:0;padding-left:1.3em;border-left:2px solid var(--cinnabar);font-size:1.08em}
+.prose>blockquote p{margin:0}
+.prose>hr{width:38%;height:1px;margin:2.6em auto;border:0;background:var(--rule-2)}
+
+/* 组件：代码块 */
+.code{border-radius:5px;background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);overflow:hidden}
+.prose>.code{margin-top:1.5em}
+.code-head{display:flex;align-items:center;gap:10px;height:38px;padding:0 8px 0 16px;border-bottom:1px solid var(--code-line);font-size:12px;color:var(--code-dim)}
+.code-head b{font-weight:500;color:var(--code-ink);opacity:.86;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.code-head .lang{margin-left:auto}
+.code.no-head .code-head{display:none}
+.code .copy{display:flex;align-items:center;gap:5px;height:26px;padding:0 9px;border-radius:4px;font-family:var(--sans);font-size:12px;color:var(--code-dim);transition:background-color .15s,color .15s}
+.code .copy:hover{background:var(--code-line);color:var(--code-ink)}
+.code .copy .pi{width:14px;height:14px}
+.code-body{display:flex}
+.code .ln{padding:16px 0 18px 16px;font-size:13.5px;line-height:1.75;color:var(--code-dim);opacity:.6;text-align:right;white-space:pre;user-select:none}
+.code pre{flex:1;min-width:0;margin:0;padding:16px 20px 18px;overflow-x:auto;font:inherit;font-size:13.5px;line-height:1.75;letter-spacing:0;tab-size:2;outline:none}
+.code .k{color:#e6b673}.code .s{color:#a9c99a}.code .c{color:#7e8c82;font-style:italic}.code .f{color:#9fc3df}.code .v{color:#e3a59a}.code .p{color:var(--code-dim);user-select:none}
+
+/* 组件：提示卡 */
+.note{--tone:var(--indigo);display:grid;grid-template-columns:auto 1fr;gap:14px;padding:18px 22px;border-left:2px solid var(--tone);
+  background:color-mix(in srgb,var(--tone) 8%,transparent);font-size:.94em;line-height:1.85}
+.prose>.note{margin-top:1.6em}
+.note[data-v="warn"]{--tone:var(--amber)}
+.note[data-v="danger"]{--tone:var(--cinnabar)}
+.note .pi{width:20px;height:20px;margin-top:.4em;color:var(--tone)}
+.note b{display:block;font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:.04em;color:var(--tone)}
+.note p{margin:0;text-align:left}
+
+/* 组件：图片 */
+.prose>figure{margin-inline:0;margin-top:2em}
+.fig{padding:26px 18px 14px;border:1px solid var(--rule);border-radius:5px;background:var(--paper-2)}
+.fig svg,.plate svg{display:block;width:100%;height:auto;font-family:var(--sans)}
+.plate{border-radius:5px;overflow:hidden}
+.ph{display:grid;place-items:center;gap:8px;min-height:190px;border:1px dashed var(--rule-2);border-radius:5px;color:var(--ink-3);font-family:var(--sans);font-size:13px;text-align:center;align-content:center}
+figcaption{margin-top:12px;font-family:var(--sans);font-size:13px;color:var(--ink-3);text-align:center}
+figure.no-cap figcaption{display:none}
+.prose>figure.w-narrow{max-width:68%;margin-inline:auto}
+@container page (min-width:1000px){.prose>figure.w-wide{margin-inline:-40px}}
+@keyframes cur{50%{opacity:0}}
+.cursor{animation:cur 1.1s steps(2) infinite}
+
+/* 组件：折叠块 */
+.fold{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.prose>.fold{margin-top:1.6em}
+.prose>.fold+.fold{margin-top:0;border-top:0}
+.fold-head{display:flex;align-items:center;gap:10px;padding:14px 4px;font-size:.98em;font-weight:500;cursor:pointer}
+.fold-head .pi{color:var(--ink-3);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.fold-head:hover .pi{color:var(--indigo)}
+.fold.open .fold-head .pi{transform:rotate(90deg)}
+.fold-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .38s cubic-bezier(.2,.7,.2,1)}
+.fold.open .fold-body{grid-template-rows:1fr}
+.fold-body>div{min-height:0;overflow:hidden;font-size:.94em;color:var(--ink-2)}
+.fold-body>div>*{margin:0 0 .8em 32px}
+.fold-body>div>*:last-child{margin-bottom:1.2em}
+.fold dl{display:grid;grid-template-columns:auto 1fr;gap:.5em 1.4em}
+.fold dt{padding-top:.2em;font-family:var(--mono);font-size:.86em;color:var(--ink)}
+.fold dd{margin:0}
+
+/* 长文：上一篇 / 下一篇 */
+.pager{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule)}
+.pager a{display:block;padding:28px 0 36px;text-decoration:none}
+.pager a+a{padding-left:32px;border-left:1px solid var(--rule);text-align:right}
+.pager small{display:block;font-size:12.5px;color:var(--ink-3)}
+.pager span{display:block;margin-top:6px;font-family:var(--serif);font-size:18px;font-weight:700;line-height:1.5}
+.pager a:hover span{color:var(--indigo)}
+
+/* 短文 */
+.essay-head{padding-top:clamp(48px,9cqi,128px);text-align:center}
+.essay-head .kind{font-size:13px;letter-spacing:.4em;text-indent:.4em;color:var(--cinnabar)}
+.essay-head h1{margin:.5em 0 0;font-family:var(--serif);font-weight:900;font-size:clamp(34px,6.4cqi,68px);line-height:1.25;letter-spacing:.06em}
+.dateline{margin-top:1.8em;font-size:13.5px;color:var(--ink-3)}
+.essay .prose{max-width:33em;margin:clamp(36px,6cqi,72px) auto 0;padding-bottom:clamp(56px,8cqi,104px);font-size:18px;line-height:2.1}
+.essay .prose>figure.w-wide{margin-inline:max(calc((100% - 100cqi)/2 + var(--pad)),calc((100% - 1000px)/2))}
+.essay .prose>figure+p{margin-top:clamp(36px,5cqi,64px)}
+.essay .prose>p{text-indent:2em}
+.essay .prose>p:first-of-type{text-indent:0}
+.essay .prose>p:first-of-type::first-letter{float:left;padding:.07em .14em 0 0;font-size:3.7em;font-weight:900;line-height:1;color:var(--cinnabar)}
+.essay .prose>h2{margin-top:2.8em;font-size:1.14em;letter-spacing:.14em;text-align:center}
+.essay .prose>h2::before{content:none}
+.essay .prose>blockquote{margin:2.4em 0 0;padding:1.5em 0;border:0;border-block:1px solid var(--rule-2);font-size:1.22em;font-weight:500;line-height:1.8;text-align:center}
+.essay .prose>blockquote p{text-align:center}
+.essay .prose>.sign{margin-top:3em;font-size:.88em;color:var(--ink-3);text-align:right;text-indent:0}
+.more{border-top:1px solid var(--rule);padding-block:28px 56px}
+.more h3{margin:0 0 6px;font-size:12.5px;font-weight:400;letter-spacing:.08em;color:var(--ink-3)}
+.more a{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:14px 0;border-bottom:1px solid var(--rule);font-family:var(--serif);font-size:17px;text-decoration:none}
+.more a:hover{color:var(--indigo)}
+.more time{font-family:var(--sans);font-size:12.5px;color:var(--ink-3);white-space:nowrap}
+
+.site-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;padding:26px var(--pad) 34px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--ink-3)}
+
+@container page (max-width:640px){
+  .site-head{gap:16px;height:54px}
+  .site-nav{gap:18px}
+  .site-nav a{padding:16px 0}
+  .site-nav .opt,.subscribe{display:none}
+  .prose{font-size:16.5px}
+  .essay .prose{font-size:17px}
+  .code pre,.code .ln{font-size:12.5px}
+  .code pre{padding-inline:14px}
+  .note{padding:16px}
+  .pager{grid-template-columns:1fr}
+  .pager a+a{padding-left:0;border-left:0;border-top:1px solid var(--rule);text-align:left}
+  .prose>figure.w-narrow{max-width:100%}
+}
+@media (prefers-reduced-motion:reduce){.site *{transition-duration:.01ms!important;animation:none!important}}
+</style>
+
+<!-- ════════ 编辑器外壳：不会进入导出文件 ════════ -->
+<style>
+:root{
+  --sh:#191c1b;--sh-2:#242827;--sh-3:#2e3331;--sh-line:rgba(255,255,255,.09);--sh-ink:#dcdfd9;--sh-dim:#8a918c;
+  --tool:#4f6ef2;--tool-l:#93a9ff;
+  --ui:"Noto Sans SC","PingFang SC","Microsoft YaHei UI","Microsoft YaHei",system-ui,sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+html,body{height:100%;margin:0}
+body{display:grid;grid-template-rows:44px minmax(0,1fr);background:var(--sh);color:var(--sh-ink);font-family:var(--ui);font-size:12.5px;overflow:hidden;transition:grid-template-rows .4s var(--ease)}
+.bar button,.tool button,.pill button,.sheet button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+.si{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.bar :focus-visible,.tool :focus-visible,.sheet :focus-visible,.pill :focus-visible{outline:2px solid var(--tool-l);outline-offset:1px;border-radius:5px}
+
+/* 顶栏 */
+.bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:0 10px;overflow:hidden;min-height:0}
+.bar-l,.bar-r,.bar-c{display:flex;align-items:center;gap:4px;min-width:0}
+.bar-r{justify-content:flex-end}
+.logo{display:grid;place-items:center;width:22px;height:22px;margin:0 8px 0 2px;border-radius:6px;background:var(--tool);color:#fff}
+.logo svg{width:14px;height:14px;stroke-width:2.2}
+.tb{display:grid;place-items:center;width:30px;height:30px;border-radius:6px;color:var(--sh-dim);transition:background-color .15s,color .15s}
+.tb:hover{background:var(--sh-2);color:var(--sh-ink)}
+.tb[aria-pressed="true"]{background:var(--sh-3);color:#fff}
+.sep{width:1px;height:16px;margin:0 6px;background:var(--sh-line)}
+.addr-wrap{position:relative}
+.addr{display:flex;align-items:center;gap:7px;height:28px;max-width:44vw;padding:0 10px 0 11px!important;border-radius:14px;background:var(--sh-2)!important;color:var(--sh-dim)!important;white-space:nowrap;transition:background-color .15s}
+.addr:hover{background:var(--sh-3)!important}
+.addr .si{width:14px;height:14px}
+.addr b{font-weight:400;color:var(--sh-ink);overflow:hidden;text-overflow:ellipsis}
+.devs{display:flex;align-items:center;gap:2px;margin-left:10px}
+#wpx{min-width:34px;margin-left:6px;font-family:"JetBrains Mono",Consolas,monospace;font-size:11px;color:var(--sh-dim)}
+.export{height:28px;padding:0 13px!important;border-radius:6px;background:#e8eae4!important;color:#191c1b!important;font-weight:500;white-space:nowrap;transition:background-color .15s}
+.export:hover{background:#fff!important}
+
+/* 舞台与网页外框 */
+.stage{display:flex;justify-content:center;min-height:0;padding:0 10px 10px;transition:padding .4s var(--ease)}
+.frame{width:100%;max-width:100%;height:100%;border-radius:10px;overflow:hidden;background:#f3f2ea;box-shadow:0 0 0 1px var(--sh-line);transition:max-width .5s var(--ease),border-radius .4s}
+.viewport{height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(31,42,39,.25) transparent}
+body.preview{grid-template-rows:0px minmax(0,1fr)}
+body.preview .stage{padding:0}
+body.preview .frame{border-radius:0}
+
+/* 编辑态：只加轮廓，不改版式 */
+body:not(.preview) .site [contenteditable="true"]{outline:none;caret-color:var(--tool)}
+body:not(.preview) .site :is(.hero,.essay-head) [contenteditable="true"]:hover{outline:1px dashed color-mix(in srgb,var(--tool) 45%,transparent);outline-offset:6px;border-radius:2px}
+body:not(.preview) .site [data-c]{outline:1px solid transparent;outline-offset:5px;transition:outline-color .15s}
+body:not(.preview) .site [data-c]:hover{outline-color:color-mix(in srgb,var(--tool) 40%,transparent)}
+body:not(.preview) .site [data-c].is-sel{outline:1.5px solid var(--tool)}
+body:not(.preview) .prose>p:is(:empty,:has(>br:only-child))::before{content:"输入文字，或按 / 插入组件";color:var(--ink-3);pointer-events:none}
+body:not(.preview) .prose>:is(h2,blockquote):is(:empty,:has(>br:only-child))::after{content:"在这里输入";color:var(--ink-3);font-weight:400}
+
+/* AI 建议在页面里的呈现 */
+.ai-target{box-shadow:-14px 0 0 -12px var(--tool)}
+.ai-busy{border-radius:3px;background:linear-gradient(90deg,transparent 0,rgba(79,110,242,.2) 50%,transparent 100%) 0 0/200% 100%;animation:aib 1s linear infinite}
+@keyframes aib{to{background-position:-200% 0}}
+.ai-diff del{color:var(--ink-3);text-decoration-color:rgba(176,58,44,.55)}
+.ai-diff ins,.ai-new{text-decoration:none;background:rgba(79,110,242,.13);box-shadow:0 0 0 3px rgba(79,110,242,.13);border-radius:1px}
+.note.ai-new{box-shadow:0 0 0 2px rgba(79,110,242,.5)}
+.prose>.ai-act{display:flex;align-items:center;gap:6px;margin-top:.7em;font-family:var(--ui);font-size:12.5px;line-height:1;letter-spacing:0;text-indent:0;color:var(--tool);user-select:none}
+.ai-act span{display:flex;align-items:center;gap:5px;margin-right:6px}
+.ai-act button{height:28px;padding:0 12px!important;border-radius:6px}
+.ai-act .ok{background:var(--tool)!important;color:#fff!important}
+.ai-act .no{border:1px solid var(--rule-2)!important;color:var(--ink-2)!important}
+.ai-act .no:hover{background:rgba(31,42,39,.06)!important}
+
+/* 浮动工具的共同外观 */
+.tool{box-sizing:border-box;position:absolute;z-index:20;border:1px solid var(--sh-line);border-radius:9px;background:#1b1f1e;color:var(--sh-ink);
+  box-shadow:0 14px 34px -10px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.2);font-family:var(--ui);font-size:12.5px;line-height:1.4;letter-spacing:0;
+  opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity .14s,transform .18s var(--ease)}
+.tool.on{opacity:1;pointer-events:auto;transform:none}
+.tool i{width:1px;height:16px;margin:0 4px;background:var(--sh-line)}
+.tool .b{display:flex;align-items:center;justify-content:center;gap:5px;min-width:28px;height:28px;padding:0 7px;border-radius:6px;color:#c3c8c1;white-space:nowrap}
+.tool .b:hover{background:var(--sh-3);color:#fff}
+.tool .b[aria-pressed="true"]{background:var(--sh-3);color:#fff}
+.tool .b.ai{color:var(--tool-l)}
+.tool .si{width:15px;height:15px}
+
+#fmt{position:fixed;display:flex;align-items:center;gap:1px;padding:4px;z-index:60}
+#props{display:flex;align-items:center;gap:1px;padding:4px;max-width:calc(100% - 16px);overflow-x:auto;scrollbar-width:none}
+#props .tl{padding:0 6px 0 8px;color:var(--tool-l);font-weight:500;white-space:nowrap}
+#props .seg{display:flex;gap:1px;padding:2px;border-radius:7px;background:rgba(255,255,255,.05)}
+#props .seg .b{height:24px;min-width:0;padding:0 9px}
+#plus{position:absolute;z-index:15;display:grid;place-items:center;width:24px;height:24px;border-radius:6px;border:0;background:none;color:var(--ink-3);cursor:pointer;opacity:0;pointer-events:none;transition:opacity .12s,background-color .12s,color .12s}
+#plus.on{opacity:1;pointer-events:auto}
+#plus:hover{background:var(--tool);color:#fff}
+
+.menu{width:236px;padding:6px}
+.menu p{margin:0;padding:5px 9px 4px;font-size:11.5px;color:var(--sh-dim)}
+.menu .mi{display:flex;align-items:center;gap:10px;width:100%;padding:7px 9px!important;border-radius:6px;text-align:left;color:#d3d7d0!important}
+.menu .mi .si{color:var(--sh-dim)}
+.menu .mi small{margin-left:auto;font-family:"JetBrains Mono",Consolas,monospace;font-size:11px;color:var(--sh-dim)}
+.menu .mi.act,.menu .mi:hover{background:var(--sh-3)!important;color:#fff!important}
+.menu .mi.is-ai,.menu .mi.is-ai .si{color:var(--tool-l)!important}
+.menu .none{padding:10px 9px;color:var(--sh-dim)}
+#pages{top:calc(100% + 8px);left:50%;width:300px;margin-left:-150px}
+#pages .mi small{font-family:var(--ui);margin:0 0 0 0;min-width:28px}
+#pages .mi{gap:8px}
+
+#ai{width:min(470px,calc(100% - 16px));padding:6px}
+.ai-row{display:flex;align-items:center;gap:8px;padding:0 8px 0 10px;color:var(--tool-l)}
+#aiIn{flex:1;min-width:0;height:36px;border:0;outline:0;background:none;color:#fff;font:inherit;font-size:13.5px}
+#aiIn::placeholder{color:var(--sh-dim)}
+kbd.k{padding:2px 6px;border:1px solid var(--sh-line);border-radius:4px;font-family:"JetBrains Mono",Consolas,monospace;font-size:10.5px;color:var(--sh-dim)}
+.ai-chips{display:flex;flex-wrap:wrap;gap:5px;padding:6px 6px 4px;border-top:1px solid var(--sh-line)}
+.ai-chips button{height:26px;padding:0 10px!important;border-radius:13px;background:rgba(255,255,255,.06)!important;color:#c3c8c1!important}
+.ai-chips button:hover{background:var(--tool)!important;color:#fff!important}
+
+/* 底部提示与预览返回 */
+.pill{position:fixed;left:50%;bottom:24px;z-index:70;display:flex;align-items:center;gap:14px;height:36px;padding:0 14px;border:1px solid var(--sh-line);border-radius:18px;background:#1b1f1e;color:#c3c8c1;
+  box-shadow:0 14px 34px -10px rgba(0,0,0,.55);white-space:nowrap;max-width:calc(100vw - 24px);overflow:hidden;
+  transform:translate(-50%,10px);opacity:0;pointer-events:none;transition:opacity .25s,transform .3s var(--ease)}
+.pill.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.pill span{display:flex;align-items:center;gap:6px}
+.pill button{color:#fff;font-weight:500}
+#back{display:none}
+body.preview #back{display:flex}
+
+/* 导出 */
+.scrim{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;background:rgba(10,12,11,.5);opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{width:min(520px,100%);padding:22px;border:1px solid var(--sh-line);border-radius:12px;background:#1b1f1e;box-shadow:0 30px 70px -20px rgba(0,0,0,.7);transform:translateY(8px);transition:transform .25s var(--ease)}
+.scrim.on .sheet{transform:none}
+.sheet h2{margin:0;font-size:15px;font-weight:500;color:#fff}
+.sheet>p{margin:6px 0 16px;color:var(--sh-dim);line-height:1.7}
+.file{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-family:"JetBrains Mono",Consolas,monospace;font-size:12px;color:var(--sh-ink)}
+.file small{margin-left:auto;color:var(--sh-dim)}
+.peek{height:148px;margin:0 0 18px;padding:12px 14px;overflow:hidden;border-radius:8px;background:#121514;font-family:"JetBrains Mono",Consolas,monospace;font-size:11.5px;line-height:1.7;color:#8f9891;white-space:pre;
+  -webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.sheet-act{display:flex;justify-content:flex-end;gap:8px}
+.sheet-act button{height:32px;padding:0 14px!important;border-radius:7px}
+.sheet-act .ghost{color:var(--sh-dim)!important}
+.sheet-act .ghost:hover{color:#fff!important;background:var(--sh-3)!important}
+.sheet-act .line{border:1px solid var(--sh-line)!important}
+.sheet-act .line:hover{background:var(--sh-3)!important}
+
+@media (max-width:760px){
+  .devs,#undo,#redo,.bar-l .sep,.addr .host{display:none}
+  .bar{grid-template-columns:auto 1fr auto;gap:6px}
+  .bar-c{justify-content:center}
+  .stage{padding:0 6px 6px}
+  #hint span:nth-child(n+2){display:none}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}.ai-busy{animation:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="s-undo" viewBox="0 0 24 24"><path d="M8 6L4 10l4 4"/><path d="M4 10h10a6 6 0 010 12h-3" transform="translate(0 -3)"/></symbol>
+  <symbol id="s-redo" viewBox="0 0 24 24"><path d="M16 6l4 4-4 4"/><path d="M20 10H10a6 6 0 000 12h3" transform="translate(0 -3)"/></symbol>
+  <symbol id="s-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.500 12h17M12 3.500c2.500 2.600 2.500 14.400 0 17M12 3.500c-2.500 2.600-2.500 14.400 0 17"/></symbol>
+  <symbol id="s-down" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></symbol>
+  <symbol id="s-desk" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="1.500"/><path d="M9 20.500h6M12 17v3.500"/></symbol>
+  <symbol id="s-tab" viewBox="0 0 24 24"><rect x="5.500" y="3.500" width="13" height="17" rx="2"/><path d="M11 17.500h2"/></symbol>
+  <symbol id="s-phone" viewBox="0 0 24 24"><rect x="7.500" y="3.500" width="9" height="17" rx="2"/><path d="M11 17.500h2"/></symbol>
+  <symbol id="s-spark" viewBox="0 0 24 24"><path d="M12 3.500l1.700 4.800 4.800 1.700-4.800 1.700L12 16.500l-1.700-4.800L5.500 10l4.800-1.700z"/><path d="M18.500 15.500l.7 1.800 1.800.7-1.800.7-.7 1.800-.7-1.800-1.800-.7 1.800-.7z"/></symbol>
+  <symbol id="s-eye" viewBox="0 0 24 24"><path d="M2.500 12s3.500-6.500 9.500-6.500S21.500 12 21.500 12s-3.500 6.500-9.500 6.500S2.500 12 2.500 12z"/><circle cx="12" cy="12" r="2.800"/></symbol>
+  <symbol id="s-plus" viewBox="0 0 24 24"><path d="M12 5.500v13M5.500 12h13"/></symbol>
+  <symbol id="s-code" viewBox="0 0 24 24"><path d="M8.500 7.500L4 12l4.500 4.500M15.500 7.500L20 12l-4.500 4.500"/></symbol>
+  <symbol id="s-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.700 0l3-3a4 4 0 00-5.700-5.700l-1 1M14 10a4 4 0 00-5.700 0l-3 3a4 4 0 005.700 5.700l1-1"/></symbol>
+  <symbol id="s-h" viewBox="0 0 24 24"><path d="M6 5v14M18 5v14M6 12h12"/></symbol>
+  <symbol id="s-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"/><path d="M12 11v5.500M12 7.800v.2"/></symbol>
+  <symbol id="s-fold" viewBox="0 0 24 24"><path d="M4.500 7h15M9 12h10.500M9 17h10.500M4.500 11l2 1.500-2 1.500"/></symbol>
+  <symbol id="s-img" viewBox="0 0 24 24"><rect x="3.500" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.500"/><path d="M4 17l5-4.500 4 3.500 3-2.500 4.500 3.500"/></symbol>
+  <symbol id="s-quote" viewBox="0 0 24 24"><path d="M5 17V11a4 4 0 014-4M14 17v-6a4 4 0 014-4M5 12h4v5H5zM14 12h4v5h-4z"/></symbol>
+  <symbol id="s-rule" viewBox="0 0 24 24"><path d="M4 12h16"/></symbol>
+  <symbol id="s-up" viewBox="0 0 24 24"><path d="M12 19V5.500M6 11l6-6 6 6"/></symbol>
+  <symbol id="s-dn" viewBox="0 0 24 24"><path d="M12 5v13.500M6 13l6 6 6-6"/></symbol>
+  <symbol id="s-dup" viewBox="0 0 24 24"><rect x="8.500" y="8.500" width="11" height="11" rx="2"/><path d="M15.500 8.500v-2a2 2 0 00-2-2h-7a2 2 0 00-2 2v7a2 2 0 002 2h2"/></symbol>
+  <symbol id="s-del" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12M10.500 11v5M13.500 11v5"/></symbol>
+  <symbol id="s-check" viewBox="0 0 24 24"><path d="M5 12.500l4.500 4.500L19 7.500"/></symbol>
+  <symbol id="s-slash" viewBox="0 0 24 24"><path d="M15 5L9 19"/></symbol>
+</svg>
+
+<!-- ════════ 编辑器顶栏 ════════ -->
+<header class="bar">
+  <div class="bar-l">
+    <span class="logo" title="网页画布"><svg class="si"><use href="#s-slash"/></svg></span>
+    <button class="tb" id="undo" title="撤销" aria-label="撤销"><svg class="si"><use href="#s-undo"/></svg></button>
+    <button class="tb" id="redo" title="重做" aria-label="重做"><svg class="si"><use href="#s-redo"/></svg></button>
+  </div>
+  <div class="bar-c">
+    <div class="addr-wrap">
+      <button class="addr" id="addr" aria-haspopup="true" title="切换页面"><svg class="si"><use href="#s-globe"/></svg><span class="host">yehangchuan.blog</span><b id="path"></b><svg class="si"><use href="#s-down"/></svg></button>
+      <div class="tool menu" id="pages">
+        <p>这个网站里的页面</p>
+        <button class="mi" data-go="tutorial"><small>长文</small>用 systemd 托管你的第一个服务</button>
+        <button class="mi" data-go="essay"><small>短文</small>慢下来的命令行</button>
+      </div>
+    </div>
+    <div class="devs" role="group" aria-label="画布宽度">
+      <button class="tb" data-dev="desk" aria-pressed="true" title="桌面宽度" aria-label="桌面宽度"><svg class="si"><use href="#s-desk"/></svg></button>
+      <button class="tb" data-dev="tab" aria-pressed="false" title="平板宽度" aria-label="平板宽度"><svg class="si"><use href="#s-tab"/></svg></button>
+      <button class="tb" data-dev="phone" aria-pressed="false" title="手机宽度" aria-label="手机宽度"><svg class="si"><use href="#s-phone"/></svg></button>
+      <span id="wpx"></span>
+    </div>
+  </div>
+  <div class="bar-r">
+    <button class="tb" id="aiBtn" title="让 AI 修改（Ctrl K）" aria-label="让 AI 修改"><svg class="si"><use href="#s-spark"/></svg></button>
+    <button class="tb" id="pvBtn" title="预览发布效果" aria-label="预览发布效果"><svg class="si"><use href="#s-eye"/></svg></button>
+    <span class="sep"></span>
+    <button class="export" id="exBtn">导出 HTML</button>
+  </div>
+</header>
+
+<!-- ════════ 舞台：里面是用户正在制作的网页 ════════ -->
+<div class="stage">
+ <div class="frame" id="frame">
+  <div class="viewport" id="vp">
+   <div class="page-root" id="root">
+
+<div class="site" id="site">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="p-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"/><path d="M12 11v5.500M12 7.800v.2"/></symbol>
+    <symbol id="p-warn" viewBox="0 0 24 24"><path d="M12 4l9 15.500H3z"/><path d="M12 10v4.500M12 17v.2"/></symbol>
+    <symbol id="p-chev" viewBox="0 0 24 24"><path d="M9.500 6l6 6-6 6"/></symbol>
+    <symbol id="p-copy" viewBox="0 0 24 24"><rect x="8.500" y="8.500" width="11" height="11" rx="2"/><path d="M15.500 8.500v-2a2 2 0 00-2-2h-7a2 2 0 00-2 2v7a2 2 0 002 2h2"/></symbol>
+    <symbol id="p-img" viewBox="0 0 24 24"><rect x="3.500" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.500"/><path d="M4 17l5-4.500 4 3.500 3-2.500 4.500 3.500"/></symbol>
+    <symbol id="p-boat" viewBox="0 0 24 24"><path d="M3 15.500h18l-2.500 4h-13z"/><path d="M12 15.500V4M12 5l6 7.500h-6M12 8l-4.500 4.500H12"/></symbol>
+  </svg>
+
+  <header class="site-head">
+    <a class="brand" href="#" data-go="tutorial"><svg class="pi"><use href="#p-boat"/></svg>夜航船</a>
+    <nav class="site-nav" aria-label="站点导航">
+      <a href="#" data-go="tutorial" aria-current="page">教程</a>
+      <a href="#" data-go="essay">随笔</a>
+      <a href="#" class="opt">归档</a>
+      <a href="#" class="opt">关于</a>
+    </nav>
+    <button class="subscribe">订阅更新</button>
+  </header>
+
+  <!-- ──────── 长文 ──────── -->
+  <main data-page="tutorial"
+    data-ai-next="如果哪天不再需要这个服务，清理同样只要三步：先用 systemctl disable --now notes.service 停止并取消自启，再删除 unit 文件，最后执行一次 daemon-reload。"
+    data-ai-note="遇到没见过的报错，先运行 journalctl -xeu notes.service。-x 会给每条记录附上解释，-e 直接跳到末尾。">
+    <div class="wrap">
+      <div class="hero">
+        <div class="crumbs"><a href="#">教程</a><span>/</span><span contenteditable="true">Linux 运维入门</span></div>
+        <h1 contenteditable="true">用 systemd 托管你的第一个服务</h1>
+        <p class="lede" contenteditable="true">把一个随手启动的程序，变成开机自启、崩溃自愈、日志可查的系统服务。整个过程只需要一个二十行以内的文本文件。</p>
+        <div class="meta">
+          <span class="who"><span class="avatar">舟</span>舟子</span>
+          <span>2026 年 11 月 10 日更新</span>
+          <span>约 8 分钟读完</span>
+          <span>适用于 Debian 12、Ubuntu 24.04、Rocky 9</span>
+        </div>
+      </div>
+
+      <div class="cols">
+        <aside class="toc" aria-label="本页目录">
+          <button class="toc-toggle">本页目录<svg class="pi"><use href="#p-chev"/></svg></button>
+          <ol></ol>
+          <a class="to-top" href="#"><svg class="pi"><use href="#p-chev"/></svg>回到顶部</a>
+        </aside>
+
+        <article class="prose" contenteditable="true" spellcheck="false">
+          <h2>为什么不继续用 nohup</h2>
+          <p data-ai="很多人的第一个「后台服务」，是 SSH 登录后敲下 &lt;code&gt;nohup python3 app.py &amp;amp;&lt;/code&gt; 再合上电脑。它能跑，但迟早要面对三件事：机器重启后没人拉起它，进程崩溃要等用户报障才知道，日志全堆在一个越写越大的 &lt;code&gt;nohup.out&lt;/code&gt; 里。">很多人的第一个「后台服务」是这样诞生的：SSH 登录服务器，敲下 <code>nohup python3 app.py &amp;</code>，然后合上电脑。它确实能跑，但你很快会遇到三个问题：机器重启后没人把它拉起来；进程崩溃了要等用户报障才知道；日志堆在一个越写越大的 <code>nohup.out</code> 里。</p>
+          <p>systemd 是如今绝大多数发行版的 1 号进程，它本来就负责启动和看护系统里的一切。把你的程序交给它，上面三个问题会一次解决，而且不需要安装任何额外的软件。</p>
+
+          <h2>准备一个可以运行的程序</h2>
+          <p data-ai="示例用的是 Python 自带的静态文件服务器，这样注意力可以全部留给 systemd。动手前先建一个专用的系统用户和目录：服务不该以 root 身份运行。">为了把注意力放在 systemd 本身，这里用 Python 自带的静态文件服务器作为示例。先创建一个专用的系统用户和目录，服务不应该以 root 身份运行。</p>
+          <div class="code" data-c="code" contenteditable="false">
+            <div class="code-head"><b contenteditable="true">终端</b><span class="lang">bash</span><button class="copy"><svg class="pi"><use href="#p-copy"/></svg><span>复制</span></button></div>
+            <div class="code-body"><pre contenteditable="true" spellcheck="false"><span class="c"># 创建不能登录的系统用户</span>
+<span class="p">$ </span><span class="f">sudo useradd</span> --system --no-create-home --shell /usr/sbin/nologin notes
+
+<span class="c"># 准备站点目录和一张首页</span>
+<span class="p">$ </span><span class="f">sudo mkdir</span> -p /opt/notes/public
+<span class="p">$ </span><span class="f">echo</span> <span class="s">'&lt;h1&gt;It works&lt;/h1&gt;'</span> | <span class="f">sudo tee</span> /opt/notes/public/index.html
+<span class="p">$ </span><span class="f">sudo chown</span> -R notes:notes /opt/notes</pre></div>
+          </div>
+          <p>在交给 systemd 之前，先手动运行一次，确认命令本身没有问题。看到监听提示后按 <kbd>Ctrl</kbd> + <kbd>C</kbd> 退出即可。</p>
+
+          <h2>编写 unit 文件</h2>
+          <p>systemd 把它管理的每一样东西称为一个 unit，服务对应的是以 <code>.service</code> 结尾的文本文件。新建 <code>/etc/systemd/system/notes.service</code>，写入下面的内容。</p>
+          <div class="code" data-c="code" contenteditable="false">
+            <div class="code-head"><b contenteditable="true">/etc/systemd/system/notes.service</b><span class="lang">ini</span><button class="copy"><svg class="pi"><use href="#p-copy"/></svg><span>复制</span></button></div>
+            <div class="code-body"><pre contenteditable="true" spellcheck="false"><span class="k">[Unit]</span>
+<span class="v">Description</span>=Notes static site
+<span class="v">After</span>=network-online.target
+<span class="v">Wants</span>=network-online.target
+
+<span class="k">[Service]</span>
+<span class="v">Type</span>=simple
+<span class="v">User</span>=notes
+<span class="v">WorkingDirectory</span>=/opt/notes
+<span class="v">ExecStart</span>=/usr/bin/python3 -m http.server 8080 --directory /opt/notes/public
+<span class="v">Restart</span>=on-failure
+<span class="v">RestartSec</span>=3
+
+<span class="k">[Install]</span>
+<span class="v">WantedBy</span>=multi-user.target</pre></div>
+          </div>
+          <div class="note" data-c="note" data-v="tip" contenteditable="false">
+            <svg class="pi"><use href="#p-info"/></svg>
+            <div><b contenteditable="true">放在哪个目录</b><p contenteditable="true">自己写的 unit 一律放在 <code>/etc/systemd/system</code>。<code>/usr/lib/systemd/system</code> 属于软件包，升级时会被覆盖。两处同名时，前者优先。</p></div>
+          </div>
+          <div class="fold" data-c="fold" contenteditable="false">
+            <div class="fold-head"><svg class="pi"><use href="#p-chev"/></svg><span contenteditable="true">逐项看懂这些字段</span></div>
+            <div class="fold-body"><div>
+              <dl contenteditable="true">
+                <dt>After / Wants</dt><dd>等网络就绪后再启动。After 只管顺序，Wants 才会把依赖拉起来，两者通常成对出现。</dd>
+                <dt>Type=simple</dt><dd>ExecStart 启动的进程就是主进程，适合所有在前台运行的程序。</dd>
+                <dt>ExecStart</dt><dd>必须写可执行文件的绝对路径，这里不经过 shell，管道和重定向都不会生效。</dd>
+                <dt>Restart</dt><dd>on-failure 表示只在异常退出时重启，用 systemctl stop 正常停止不会触发。</dd>
+                <dt>WantedBy</dt><dd>决定 enable 之后挂到哪个启动目标上，多用户模式是服务器的常规选择。</dd>
+              </dl>
+            </div></div>
+          </div>
+
+          <h2>启动、自启与状态</h2>
+          <p>每次新增或修改 unit 文件，都要先让 systemd 重新读取配置，然后再启动服务。<code>enable --now</code> 会同时完成「设为开机自启」和「立即启动」两件事。</p>
+          <div class="code" data-c="code" contenteditable="false">
+            <div class="code-head"><b contenteditable="true">终端</b><span class="lang">bash</span><button class="copy"><svg class="pi"><use href="#p-copy"/></svg><span>复制</span></button></div>
+            <div class="code-body"><pre contenteditable="true" spellcheck="false"><span class="p">$ </span><span class="f">sudo systemctl</span> daemon-reload
+<span class="p">$ </span><span class="f">sudo systemctl</span> enable --now notes.service
+<span class="p">$ </span><span class="f">systemctl</span> status notes.service
+<span class="s">●</span> notes.service - Notes static site
+     Loaded: loaded (/etc/systemd/system/notes.service; <span class="s">enabled</span>)
+     Active: <span class="s">active (running)</span> since Tue 2026-11-10 09:41:07 CST; 4s ago
+   Main PID: 2317 (python3)</pre></div>
+          </div>
+          <p>看到 <code>active (running)</code> 就成功了。服务在它的一生中会在几个状态之间流转，理解这张图，后面排错时就知道自己卡在哪一步。</p>
+          <figure data-c="figure" contenteditable="false">
+            <div class="fig">
+              <svg viewBox="0 0 680 210" role="img" aria-label="服务状态流转图：inactive 经 activating 到 active，异常退出进入 failed，等待 RestartSec 后回到 activating">
+                <defs><marker id="ah" viewBox="0 0 10 10" refX="8.500" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1.500L8.500 5 1 8.500" fill="none" stroke="#56635d" stroke-width="1.400" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+                <g fill="none" stroke="#56635d" stroke-width="1.300">
+                  <rect x="14" y="34" width="132" height="50" rx="25"/>
+                  <rect x="232" y="34" width="132" height="50" rx="25"/>
+                  <rect x="450" y="34" width="216" height="50" rx="25" stroke="#2b4c6f" stroke-width="1.800" fill="rgba(43,76,111,.08)"/>
+                  <rect x="490" y="146" width="136" height="50" rx="25" stroke="#96611a" stroke-dasharray="5 4"/>
+                  <path d="M146 59h82" marker-end="url(#ah)"/>
+                  <path d="M364 59h82" marker-end="url(#ah)"/>
+                  <path d="M558 84v58" marker-end="url(#ah)"/>
+                  <path d="M490 171H298V88" marker-end="url(#ah)" stroke-dasharray="5 4"/>
+                </g>
+                <g font-size="14" text-anchor="middle" fill="#1f2a27" font-family="JetBrains Mono,Consolas,monospace">
+                  <text x="80" y="64">inactive</text><text x="298" y="64">activating</text>
+                  <text x="558" y="64" fill="#2b4c6f" font-weight="500">active (running)</text>
+                  <text x="558" y="176" fill="#96611a">failed</text>
+                </g>
+                <g font-size="12" text-anchor="middle" fill="#8a948d">
+                  <text x="187" y="50">start</text><text x="405" y="50">进程就绪</text>
+                  <text x="604" y="118">异常退出</text><text x="392" y="162">等待 RestartSec=3 后重试</text>
+                </g>
+              </svg>
+            </div>
+            <figcaption contenteditable="true">图 1　配置了 Restart=on-failure 的服务，会在这四个状态之间流转</figcaption>
+          </figure>
+
+          <h2>查看日志与排错</h2>
+          <p>程序写到标准输出和标准错误的内容，都会被 journald 收走并打上时间戳，不再需要自己管理日志文件。最常用的是下面两条命令。</p>
+          <div class="code" data-c="code" contenteditable="false">
+            <div class="code-head"><b contenteditable="true">终端</b><span class="lang">bash</span><button class="copy"><svg class="pi"><use href="#p-copy"/></svg><span>复制</span></button></div>
+            <div class="code-body"><pre contenteditable="true" spellcheck="false"><span class="c"># 实时跟随日志，相当于 tail -f</span>
+<span class="p">$ </span><span class="f">journalctl</span> -u notes.service -f
+
+<span class="c"># 只看最近十分钟里警告及以上级别的记录</span>
+<span class="p">$ </span><span class="f">journalctl</span> -u notes.service --since <span class="s">"10 min ago"</span> -p warning</pre></div>
+          </div>
+          <p data-ai="服务起不来时，先看 &lt;code&gt;systemctl status&lt;/code&gt; 输出的最后几行，原因通常就写在那里。新手最常撞上的是下面三种。">如果服务起不来，<code>systemctl status</code> 输出的最后几行通常已经给出了原因。下面是新手最常遇到的三种情况。</p>
+          <div class="fold" data-c="fold" contenteditable="false">
+            <div class="fold-head"><svg class="pi"><use href="#p-chev"/></svg><span contenteditable="true">status=203/EXEC</span></div>
+            <div class="fold-body"><div><p contenteditable="true">systemd 找不到或无法执行 ExecStart 指向的文件。检查路径是否为绝对路径、文件是否有执行权限，脚本第一行的解释器是否存在。</p></div></div>
+          </div>
+          <div class="fold" data-c="fold" contenteditable="false">
+            <div class="fold-head"><svg class="pi"><use href="#p-chev"/></svg><span contenteditable="true">status=217/USER</span></div>
+            <div class="fold-body"><div><p contenteditable="true">User= 指定的用户不存在。回到第二节确认 useradd 已经执行，或者用 <code>id notes</code> 验证。</p></div></div>
+          </div>
+          <div class="fold" data-c="fold" contenteditable="false">
+            <div class="fold-head"><svg class="pi"><use href="#p-chev"/></svg><span contenteditable="true">Start request repeated too quickly</span></div>
+            <div class="fold-body"><div><p contenteditable="true">服务在短时间内连续失败，systemd 暂停了重试。先根据日志修掉真正的错误，再执行 <code>sudo systemctl reset-failed notes.service</code> 清除计数后重新启动。</p></div></div>
+          </div>
+          <div class="note" data-c="note" data-v="warn" contenteditable="false">
+            <svg class="pi"><use href="#p-warn"/></svg>
+            <div><b contenteditable="true">改完记得重载</b><p contenteditable="true">修改 unit 文件后直接 restart 不会生效，systemd 仍在使用内存里的旧配置。先 <code>daemon-reload</code>，再 <code>restart</code>。</p></div>
+          </div>
+
+          <h2>收尾：给服务戴上镣铐</h2>
+          <p>服务能跑之后，再花两分钟限制它能碰到的范围。在 <code>[Service]</code> 段末尾追加几行，即使程序被攻破，攻击者拿到的也只是一个几乎什么都做不了的进程。</p>
+          <div class="code" data-c="code" contenteditable="false">
+            <div class="code-head"><b contenteditable="true">追加到 [Service]</b><span class="lang">ini</span><button class="copy"><svg class="pi"><use href="#p-copy"/></svg><span>复制</span></button></div>
+            <div class="code-body"><pre contenteditable="true" spellcheck="false"><span class="v">NoNewPrivileges</span>=true
+<span class="v">ProtectSystem</span>=strict
+<span class="v">ProtectHome</span>=true
+<span class="v">PrivateTmp</span>=true</pre></div>
+          </div>
+          <p>重载并重启后，运行 <code>systemd-analyze security notes.service</code> 可以看到一份逐项打分的报告，分数越低代表暴露面越小。到这里，你已经拥有了一个会自己起床、摔倒了会自己爬起来、还会写日记的服务。</p>
+        </article>
+      </div>
+
+      <nav class="pager" aria-label="相邻文章">
+        <a href="#"><small>上一篇</small><span>读懂 journalctl 的十个参数</span></a>
+        <a href="#"><small>下一篇</small><span>用 timer 取代 crontab</span></a>
+      </nav>
+    </div>
+  </main>
+
+  <!-- ──────── 短文 ──────── -->
+  <main class="essay" data-page="essay" hidden
+    data-ai-next="后来我发现，读手册的那二十分钟里，手机一直是扣在桌上的。"
+    data-ai-note="文中提到的 -newer 选项，可以在 man find 里搜索 newer 找到原文。">
+    <div class="wrap">
+      <div class="essay-head">
+        <div class="kind">随笔</div>
+        <h1 contenteditable="true">慢下来的命令行</h1>
+        <div class="dateline" contenteditable="true">写于十一月的一个雨夜</div>
+      </div>
+      <article class="prose" contenteditable="true" spellcheck="false">
+        <figure class="w-wide" data-c="figure" contenteditable="false">
+          <div class="plate">
+            <svg viewBox="0 0 1000 360" role="img" aria-label="深色的终端窗口里只有一行 man find 和一个闪烁的光标，窗外是斜落的雨线">
+              <rect width="1000" height="360" fill="#1f2b28"/>
+              <g stroke="#dfe3d6" stroke-width="1" opacity=".13" stroke-linecap="round">
+                <path d="M640 -10l-46 150M700 30l-52 170M760 -20l-60 196M815 60l-48 158M870 -10l-70 230M925 90l-44 144M975 10l-62 204M720 210l-40 130M800 250l-36 118M880 240l-42 138M950 260l-34 110M590 180l-44 144"/>
+              </g>
+              <g font-family="JetBrains Mono,Consolas,monospace" font-size="30">
+                <text x="88" y="190" fill="#84918a">$</text>
+                <text x="126" y="190" fill="#dfe3d6">man find</text>
+              </g>
+              <rect class="cursor" x="286" y="163" width="17" height="34" fill="#e6b673"/>
+              <text x="88" y="300" font-family="JetBrains Mono,Consolas,monospace" font-size="13" fill="#84918a" opacity=".8">-newer file　　File was modified more recently than file.</text>
+            </svg>
+          </div>
+          <figcaption contenteditable="true">光标还在那里，等人开口</figcaption>
+        </figure>
+        <p>我至今记得第一次在终端里敲下 <code>ls</code> 的那个下午。屏幕上什么图标也没有，只有一个闪烁的光标，像是在耐心地等我开口。</p>
+        <p data-ai="此后十年，工具越来越快：补全总在我想清楚之前给出答案，脚本替我跑完了曾经逐行敲过的命令。我感激这一切，也时常怀念那个凡事要查手册的年代。">后来的十年里，工具越来越快。补全在我想清楚之前就给出了答案，脚本替我跑完了我曾经逐行敲过的命令。我很感激这些，却也时常怀念那个需要查手册的年代。</p>
+        <h2>等待是一种阅读</h2>
+        <p>编译内核要四十分钟的时候，人会去读配置项旁边的说明。现在一切只要四秒，我们便只读报错。速度省下来的时间，并没有自动变成理解。</p>
+        <blockquote><p>快让我们抵达，慢让我们知道自己到了哪里。</p></blockquote>
+        <h2>留一条命令给自己</h2>
+        <p data-ai="于是我给自己立了个小规矩：每周挑一条用了很多年的命令，把它的 man 手册从头读到尾。上周轮到 &lt;code&gt;find&lt;/code&gt;，我才发现 &lt;code&gt;-newer&lt;/code&gt; 已经在那里等了我十年。">所以我给自己定了一个小规矩：每周挑一条已经用了很多年的命令，完整地读一遍它的 man 手册。上周是 <code>find</code>，我才知道它的 <code>-newer</code> 已经在那里等了我十年。</p>
+        <p>这不是怀旧，只是想在一切都被加速的日子里，保留一小块按自己步速走路的地方。</p>
+        <p class="sign">于灯下</p>
+      </article>
+      <nav class="more" aria-label="更多随笔">
+        <h3>继续读</h3>
+        <a href="#"><span>键盘上磨平的那几个键</span><time>2026 年 10 月</time></a>
+        <a href="#"><span>给十年前的自己留一份 dotfiles</span><time>2026 年 9 月</time></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="site-foot"><span>© 2026 夜航船，写给深夜还亮着终端的人</span><span>RSS　邮件订阅　GitHub</span></footer>
+</div>
+
+<!-- 编辑器浮层：跟随网页滚动，不进入导出 -->
+<button id="plus" aria-label="在下方插入" title="在下方插入"><svg class="si"><use href="#s-plus"/></svg></button>
+<div class="tool" id="props"></div>
+<div class="tool menu" id="slash" role="listbox"></div>
+<div class="tool" id="ai">
+  <div class="ai-row"><svg class="si"><use href="#s-spark"/></svg><input id="aiIn" placeholder="告诉 AI 想怎么改这一段，回车发送" aria-label="给 AI 的指令" autocomplete="off"><kbd class="k">Esc</kbd></div>
+  <div class="ai-chips"><button data-k="polish">润色这一段</button><button data-k="short">改得更简洁</button><button data-k="next">往下续写</button><button data-k="note">补一张提示卡</button></div>
+</div>
+
+   </div>
+  </div>
+ </div>
+</div>
+
+<div class="tool" id="fmt">
+  <button class="b" data-cmd="bold" aria-label="加粗"><b>B</b></button>
+  <button class="b" data-cmd="italic" aria-label="斜体"><em style="font-family:serif">I</em></button>
+  <button class="b" data-cmd="code" aria-label="行内代码"><svg class="si"><use href="#s-code"/></svg></button>
+  <button class="b" data-cmd="link" aria-label="链接"><svg class="si"><use href="#s-link"/></svg></button>
+  <i></i>
+  <button class="b ai" data-cmd="ai"><svg class="si"><use href="#s-spark"/></svg>让 AI 改</button>
+</div>
+
+<div class="pill" id="hint"><span>点击网页上的文字直接修改</span><span><kbd class="k">/</kbd>插入组件</span><span><kbd class="k">Ctrl K</kbd>让 AI 改</span></div>
+<div class="pill" id="back"><span>这是发布后的样子</span><button id="backBtn">返回编辑</button><kbd class="k">Esc</kbd></div>
+
+<div class="scrim" id="scrim">
+  <div class="sheet" role="dialog" aria-labelledby="exT">
+    <h2 id="exT">导出 HTML</h2>
+    <p>一个独立的 .html 文件，自带样式以及目录、折叠、复制所需的脚本，脱离本工具也能直接打开和部署。</p>
+    <div class="file"><svg class="si"><use href="#s-code"/></svg><span id="exName"></span><small id="exSize"></small></div>
+    <div class="peek" id="exPeek"></div>
+    <div class="sheet-act"><button class="ghost" id="exClose">取消</button><button class="line" id="exCopy">复制代码</button><button class="export" id="exDown">下载文件</button></div>
+  </div>
+</div>
+
+<script>
+/* 网页自带的运行脚本：编辑器里直接运行，导出时原样写进文件 */
+function pageRuntime(site){
+  var sc=site.closest('.viewport'),tgt=sc||window;
+  var smooth=!window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function rel(el){return el.getBoundingClientRect().top-(sc?sc.getBoundingClientRect().top:0)}
+  function cur(){return sc?sc.scrollTop:window.pageYOffset}
+  site.addEventListener('click',function(e){
+    var t=e.target,a;
+    if((a=t.closest('.toc a,.to-top'))){
+      e.preventDefault();
+      var toc=a.closest('.toc');if(toc)toc.classList.remove('open');
+      var id=a.getAttribute('href').slice(1),h=id?document.getElementById(id):null;
+      tgt.scrollTo({top:h?cur()+rel(h)-84:0,behavior:smooth?'smooth':'auto'});return;
+    }
+    if((a=t.closest('.toc-toggle'))){a.parentElement.classList.toggle('open');return}
+    if((a=t.closest('.fold-head'))){if(t.closest('[contenteditable="true"]'))return;a.parentElement.classList.toggle('open');return}
+    if((a=t.closest('.copy'))){
+      var text=a.closest('.code').querySelector('pre').innerText.replace(/^\$ /gm,''),s=a.querySelector('span');
+      if(navigator.clipboard)navigator.clipboard.writeText(text).catch(function(){});
+      s.textContent='已复制';setTimeout(function(){s.textContent='复制'},1500);
+    }
+  });
+  function spy(){
+    var hs=site.querySelectorAll('main:not([hidden]) .prose>h2'),ls=site.querySelectorAll('main:not([hidden]) .toc ol a'),idx=-1;
+    hs.forEach(function(h,i){if(rel(h)<150)idx=i});
+    ls.forEach(function(l,i){l.classList.toggle('on',i===idx)});
+  }
+  tgt.addEventListener('scroll',spy,{passive:true});spy();
+}
+</script>
+
+<script>
+(() => {
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const body=document.body, vp=$('#vp'), root=$('#root'), site=$('#site'), frame=$('#frame');
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const pi=n=>`<svg class="pi"><use href="#p-${n}"/></svg>`, si=n=>`<svg class="si"><use href="#s-${n}"/></svg>`;
+  const PAGES={tutorial:{path:'/tutorial/systemd-first-service',file:'systemd-first-service.html'},essay:{path:'/essay/slow-command-line',file:'slow-command-line.html'}};
+  let page='tutorial';
+  const main=()=>$(`main[data-page="${page}"]`,site), prose=()=>$('.prose',main());
+  const preview=()=>body.classList.contains('preview');
+  try{document.execCommand('defaultParagraphSeparator',false,'p')}catch(e){}
+
+  pageRuntime(site);
+
+  /* ── 提示条 ── */
+  const hint=$('#hint'); let hintT;
+  function toast(html,ms){hint.innerHTML=html;hint.classList.add('on');clearTimeout(hintT);if(ms)hintT=setTimeout(()=>hint.classList.remove('on'),ms)}
+  hint.classList.add('on');
+  site.addEventListener('pointerdown',()=>hint.classList.remove('on'),{once:true});
+
+  /* ── 页面切换与页内目录 ── */
+  function buildToc(){
+    const ol=$('.toc ol',main()); if(!ol) return;
+    ol.innerHTML=$$('.prose>h2',main()).map((h,i)=>{h.id='s'+(i+1);return `<li><a href="#${h.id}">${esc(h.textContent.trim()||'未命名小节')}</a></li>`}).join('');
+    vp.dispatchEvent(new Event('scroll'));
+  }
+  function setPage(p){
+    if(!PAGES[p]) return; closeTools(); page=p;
+    $$('main',site).forEach(m=>m.hidden=m.dataset.page!==p);
+    $$('.site-nav a[data-go]',site).forEach(a=>a.dataset.go===p?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+    $('#path').textContent=PAGES[p].path; vp.scrollTop=0; buildToc();
+  }
+  document.addEventListener('click',e=>{
+    const g=e.target.closest('[data-go]');
+    if(g){e.preventDefault();setPage(g.dataset.go);$('#pages').classList.remove('on');return}
+    if(e.target.closest('.site a[href="#"]')&&!e.target.closest('.toc,.to-top')) e.preventDefault();
+    if(!e.target.closest('.addr-wrap')) $('#pages').classList.remove('on');
+  });
+  $('#addr').onclick=()=>$('#pages').classList.toggle('on');
+
+  const ai=$('#ai'), aiIn=$('#aiIn'); let aiT=null;
+  /* ── 画布宽度 ── */
+  function setDev(d){
+    const w={desk:'100%',tab:'834px',phone:'390px'}[d]; if(!w) return;
+    closeTools(); frame.style.maxWidth=w;
+    $$('[data-dev]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.dev===d));
+  }
+  $$('[data-dev]').forEach(b=>b.onclick=()=>setDev(b.dataset.dev));
+  new ResizeObserver(()=>{$('#wpx').textContent=Math.round(frame.clientWidth);hidePlus();if(sel)placeProps();if(ai.classList.contains('on')&&aiT){const r=aiT.getBoundingClientRect();at(ai,r.left,r.bottom+10)}}).observe(frame);
+
+  /* ── 预览 ── */
+  function setPreview(on){
+    if(on===preview()) return;
+    if(on){closeTools();hint.classList.remove('on');$$('[contenteditable]',site).forEach(n=>{n.dataset.ce=n.getAttribute('contenteditable');n.removeAttribute('contenteditable')})}
+    else $$('[data-ce]',site).forEach(n=>{n.setAttribute('contenteditable',n.dataset.ce);delete n.dataset.ce});
+    body.classList.toggle('preview',on);
+    $('#back').classList.toggle('on',on);
+  }
+  $('#pvBtn').onclick=()=>setPreview(true);
+  $('#backBtn').onclick=()=>setPreview(false);
+  $('#undo').onclick=()=>document.execCommand('undo');
+  $('#redo').onclick=()=>document.execCommand('redo');
+
+  /* ── 工具函数 ── */
+  function blockOf(n){
+    if(!n) return null; let el=n.nodeType===1?n:n.parentElement; const p=el&&el.closest('.prose');
+    if(!p||el===p) return null; while(el.parentElement!==p) el=el.parentElement; return el;
+  }
+  function caret(el,atEnd=true){const r=document.createRange();r.selectNodeContents(el);r.collapse(!atEnd);const s=getSelection();s.removeAllRanges();s.addRange(r)}
+  function at(el,x,y){const R=root.getBoundingClientRect();el.style.left=Math.max(8,Math.min(x-R.left,R.width-el.offsetWidth-8))+'px';el.style.top=(y-R.top)+'px'}
+  const newP=()=>{const p=document.createElement('p');p.innerHTML='<br>';return p};
+  const isEmpty=el=>el.tagName==='P'&&!el.textContent.trim()&&!el.querySelector('img,svg');
+  function closeTools(){closeSlash();closeAI();hideFmt();hidePlus();select(null)}
+
+  /* ── 组件模板 ── */
+  const TPL={
+    note:(t='写下需要读者留意的内容。')=>`<div class="note" data-c="note" data-v="tip" contenteditable="false">${pi('info')}<div><b contenteditable="true">提示</b><p contenteditable="true">${t}</p></div></div>`,
+    code:()=>`<div class="code" data-c="code" contenteditable="false"><div class="code-head"><b contenteditable="true">未命名片段</b><span class="lang">bash</span><button class="copy">${pi('copy')}<span>复制</span></button></div><div class="code-body"><pre contenteditable="true" spellcheck="false"><span class="c"># 在这里粘贴或输入代码</span></pre></div></div>`,
+    fold:()=>`<div class="fold open" data-c="fold" contenteditable="false"><div class="fold-head">${pi('chev')}<span contenteditable="true">折叠块标题</span></div><div class="fold-body"><div><p contenteditable="true">收起来的补充说明写在这里。</p></div></div></div>`,
+    figure:()=>`<figure data-c="figure" contenteditable="false"><div class="ph">${pi('img')}<span>拖入图片，或粘贴图片地址</span></div><figcaption contenteditable="true">图片说明</figcaption></figure>`,
+    h2:()=>`<h2><br></h2>`, quote:()=>`<blockquote><p><br></p></blockquote>`, hr:()=>`<hr>`
+  };
+  function make(kind,arg){const t=document.createElement('template');t.innerHTML=TPL[kind](arg);return t.content.firstChild}
+
+  /* ── 左侧 + 手柄 ── */
+  const plus=$('#plus'); let hov=null;
+  function hidePlus(){plus.classList.remove('on')}
+  site.addEventListener('mousemove',e=>{
+    if(preview()||slashP||root.clientWidth<640) return;
+    const b=blockOf(e.target); if(!b||b.classList.contains('ai-act')||b===hov&&plus.classList.contains('on')) return;
+    hov=b; const r=b.getBoundingClientRect(), text=b.matches('p,h2,h3,blockquote');
+    const hang=b.tagName==='H2'&&page==='tutorial'&&root.clientWidth>=1000;
+    const y=r.top+(text?parseFloat(getComputedStyle(b).lineHeight)/2-12:4), R=root.getBoundingClientRect();
+    plus.style.left=(r.left-R.left-(hang?70:34))+'px'; plus.style.top=(y-R.top)+'px'; plus.classList.add('on');
+  });
+  root.addEventListener('mouseleave',hidePlus);
+  plus.addEventListener('mousedown',e=>e.preventDefault());
+  plus.onclick=()=>{ if(!hov) return; const p=document.createElement('p'); p.textContent='/'; hov.after(p); caret(p); hidePlus(); select(null); checkSlash(); };
+
+  /* ── / 菜单 ── */
+  const slash=$('#slash'); let slashP=null, slashIdx=0, slashList=[];
+  const ITEMS=[
+    {k:'ai',n:'让 AI 往下写',i:'spark',s:'/ai'},{k:'h2',n:'小节标题',i:'h',s:'/h2'},{k:'note',n:'提示卡',i:'info',s:'/tip'},
+    {k:'code',n:'代码块',i:'code',s:'/code'},{k:'fold',n:'折叠块',i:'fold',s:'/fold'},{k:'figure',n:'图片',i:'img',s:'/img'},
+    {k:'quote',n:'引用',i:'quote',s:'/quote'},{k:'hr',n:'分隔线',i:'rule',s:'/hr'}];
+  function closeSlash(){slash.classList.remove('on');slashP=null}
+  function checkSlash(){
+    const b=blockOf(getSelection().anchorNode);
+    if(b&&b.tagName==='P'&&/^\/\S{0,10}$/.test(b.textContent)){
+      const q=b.textContent.slice(1).toLowerCase();
+      if(slashP!==b) slashIdx=0; slashP=b;
+      slashList=ITEMS.filter(x=>!q||x.s.slice(1).startsWith(q)||x.n.includes(q));
+      slashIdx=Math.min(slashIdx,Math.max(0,slashList.length-1));
+      slash.innerHTML='<p>插入到网页</p>'+(slashList.map((x,i)=>`<button class="mi${i===slashIdx?' act':''}${x.k==='ai'?' is-ai':''}" data-i="${i}">${si(x.i)}${x.n}<small>${x.s}</small></button>`).join('')||'<div class="none">没有匹配的组件</div>');
+      const r=b.getBoundingClientRect(), low=r.bottom+6+slash.offsetHeight>vp.getBoundingClientRect().bottom-8; at(slash,r.left,low?r.top-slash.offsetHeight-6:r.bottom+6); slash.classList.add('on'); hideFmt();
+    } else closeSlash();
+  }
+  function choose(x){
+    const p=slashP; closeSlash(); if(!p||!x) return;
+    if(x.k==='ai'){p.innerHTML='<br>';caret(p);openAI(p);return}
+    const el=make(x.k); p.replaceWith(el);
+    if(!el.nextElementSibling||x.k==='hr') el.after(newP());
+    if(el.dataset.c){select(el);const ed=$('pre,p[contenteditable],figcaption',el);if(ed)caret(ed)}
+    else if(x.k==='hr') caret(el.nextElementSibling,false);
+    else caret(x.k==='quote'?el.firstChild:el,false);
+    buildToc();
+  }
+  slash.addEventListener('mousedown',e=>{e.preventDefault();const b=e.target.closest('.mi');if(b)choose(slashList[+b.dataset.i])});
+  let tocT;
+  site.addEventListener('input',()=>{checkSlash();clearTimeout(tocT);tocT=setTimeout(buildToc,300);if(sel)placeProps()});
+
+  /* ── 组件选中与属性条 ── */
+  const props=$('#props'); let sel=null;
+  const LABEL={note:'提示卡',code:'代码块',figure:'图片',fold:'折叠块'}, LANGS=['bash','ini','yaml','json','text'];
+  const NOTE={tip:['提示','info'],warn:['注意','warn'],danger:['危险','warn']};
+  function select(c){
+    if(sel) sel.classList.remove('is-sel'); sel=c;
+    if(!c){props.classList.remove('on');return}
+    c.classList.add('is-sel'); buildProps(); placeProps(); props.classList.add('on');
+  }
+  function placeProps(){const r=sel.getBoundingClientRect();at(props,r.left-6,r.top-46)}
+  function buildProps(){
+    const c=sel,t=c.dataset.c, tog=(p,label,on)=>`<button class="b" data-p="${p}" aria-pressed="${on}">${label}</button>`;
+    const seg=(p,opts,curv)=>`<span class="seg">${opts.map(([v,l])=>`<button class="b" data-p="${p}" data-v="${v}" aria-pressed="${v===curv}">${l}</button>`).join('')}</span>`;
+    let h=`<span class="tl">${LABEL[t]}</span><i></i>`;
+    if(t==='note') h+=seg('v',[['tip','提示'],['warn','注意'],['danger','危险']],c.dataset.v);
+    if(t==='code') h+=`<button class="b" data-p="lang" title="切换语言">${$('.lang',c).textContent}${si('down')}</button>`+tog('nums','行号',!!$('.ln',c))+tog('head','标题栏',!c.classList.contains('no-head'));
+    if(t==='figure') h+=seg('w',[['w-narrow','窄'],['','正文'],['w-wide','加宽']],c.classList.contains('w-wide')?'w-wide':c.classList.contains('w-narrow')?'w-narrow':'')+tog('cap','图注',!c.classList.contains('no-cap'));
+    if(t==='fold') h+=tog('open','默认展开',c.classList.contains('open'));
+    h+=`<i></i><button class="b ai" data-p="ai" title="让 AI 修改">${si('spark')}</button><button class="b" data-p="up" title="上移">${si('up')}</button><button class="b" data-p="dn" title="下移">${si('dn')}</button><button class="b" data-p="dup" title="复制一份">${si('dup')}</button><button class="b" data-p="del" title="删除">${si('del')}</button>`;
+    props.innerHTML=h;
+  }
+  props.addEventListener('mousedown',e=>e.preventDefault());
+  props.addEventListener('click',e=>{
+    const b=e.target.closest('[data-p]'); if(!b||!sel) return; const c=sel,p=b.dataset.p,v=b.dataset.v;
+    if(p==='v'){const old=NOTE[c.dataset.v][0],t=$('b',c);c.dataset.v=v;$('use',c).setAttribute('href','#p-'+NOTE[v][1]);if(t.textContent.trim()===old)t.textContent=NOTE[v][0]}
+    else if(p==='lang'){const l=$('.lang',c);l.textContent=LANGS[(LANGS.indexOf(l.textContent)+1)%LANGS.length]}
+    else if(p==='nums'){let g=$('.ln',c);if(g)g.remove();else{const n=$('pre',c).innerText.replace(/\n$/,'').split('\n').length;g=document.createElement('div');g.className='ln';g.setAttribute('aria-hidden','true');g.textContent=Array.from({length:n},(_,i)=>i+1).join('\n');$('.code-body',c).prepend(g)}}
+    else if(p==='head') c.classList.toggle('no-head');
+    else if(p==='w'){c.classList.remove('w-narrow','w-wide');if(v)c.classList.add(v)}
+    else if(p==='cap') c.classList.toggle('no-cap');
+    else if(p==='open') c.classList.toggle('open');
+    else if(p==='up'){const s=c.previousElementSibling;if(s)s.before(c)}
+    else if(p==='dn'){const s=c.nextElementSibling;if(s)s.after(c)}
+    else if(p==='dup'){const d=c.cloneNode(true);d.classList.remove('is-sel');c.after(d);select(d);return}
+    else if(p==='del'){select(null);c.remove();buildToc();return}
+    else if(p==='ai'){select(null);openAI(c);return}
+    buildProps(); placeProps();
+  });
+  site.addEventListener('click',e=>{
+    if(preview()) return;
+    const act=e.target.closest('.ai-act button'); if(act){resolveAI(act.parentElement,act.classList.contains('ok'));return}
+    const c=e.target.closest('[data-c]');
+    if(c!==sel) select(c&&c.closest('.prose')?c:null);
+  });
+
+  /* ── 选区浮动格式栏 ── */
+  const fmt=$('#fmt');
+  function hideFmt(){fmt.classList.remove('on')}
+  function showFmt(){
+    const s=getSelection();
+    if(preview()||slashP||!s.rangeCount||s.isCollapsed||!site.contains(s.anchorNode)) return hideFmt();
+    const host=(s.anchorNode.nodeType===1?s.anchorNode:s.anchorNode.parentElement).closest('[contenteditable="true"]');
+    if(!host||host.tagName==='PRE') return hideFmt();
+    const r=s.getRangeAt(0).getBoundingClientRect(); if(!r.width) return hideFmt();
+    fmt.style.left=Math.max(8,Math.min(innerWidth-fmt.offsetWidth-8,r.left+r.width/2-fmt.offsetWidth/2))+'px';
+    fmt.style.top=Math.max(52,r.top-fmt.offsetHeight-10)+'px'; fmt.classList.add('on');
+  }
+  document.addEventListener('mouseup',e=>{if(!fmt.contains(e.target))setTimeout(showFmt,0)});
+  document.addEventListener('keyup',e=>{if(e.shiftKey||e.key==='Shift')showFmt()});
+  fmt.addEventListener('mousedown',e=>e.preventDefault());
+  fmt.addEventListener('click',e=>{
+    const b=e.target.closest('[data-cmd]'); if(!b) return; const c=b.dataset.cmd, s=getSelection(), text=s.toString();
+    if(c==='bold'||c==='italic') document.execCommand(c);
+    else if(c==='code') document.execCommand('insertHTML',false,'<code>'+esc(text)+'</code>');
+    else if(c==='link') document.execCommand('createLink',false,'#');
+    else if(c==='ai'){const blk=blockOf(s.anchorNode);hideFmt();openAI(blk)}
+  });
+  vp.addEventListener('scroll',()=>{hideFmt();hidePlus()},{passive:true});
+
+  /* ── AI：就地输入框与页面内的建议 ── */
+  function closeAI(){ai.classList.remove('on');if(aiT)aiT.classList.remove('ai-target')}
+  function openAI(b){
+    if(preview()) return; closeSlash(); hideFmt(); hidePlus();
+    if(!b||!prose().contains(b)){
+      const vr=vp.getBoundingClientRect();
+      b=$$('p[data-ai]',prose()).find(p=>{const r=p.getBoundingClientRect();return r.top>vr.top+70&&r.bottom<vr.bottom-150})||$$(':scope>p',prose()).find(p=>{const r=p.getBoundingClientRect();return r.top>vr.top+70})||prose().firstElementChild;
+    }
+    if(aiT) aiT.classList.remove('ai-target'); aiT=b; b.classList.add('ai-target');
+    const r=b.getBoundingClientRect(); at(ai,r.left,r.bottom+10); ai.classList.add('on');
+    const over=r.bottom+130-vp.getBoundingClientRect().bottom; if(over>0) vp.scrollBy({top:over,behavior:reduce?'auto':'smooth'});
+    aiIn.value=''; aiIn.focus({preventScroll:true});
+  }
+  function runAI(kind){
+    let t=aiT; closeAI(); if(!t) return;
+    const rewrite=kind==='polish'||kind==='short';
+    if(rewrite&&!t.matches('p[data-ai]')){
+      const all=$$('p[data-ai]',prose()); const near=all.find(p=>t.compareDocumentPosition(p)&4)||all[0];
+      if(!near){toast('<span>这一页预置的示例改写已经用完了</span>',3200);return}
+      t=near; t.scrollIntoView({block:'center',behavior:reduce?'auto':'smooth'});
+      toast('<span>原型只为部分段落准备了示例改写，已定位到最近的一段</span>',3600);
+    }
+    t.classList.add('ai-busy');
+    setTimeout(()=>{
+      t.classList.remove('ai-busy'); let node;
+      if(rewrite){t.dataset.orig=t.innerHTML;t.innerHTML=`<del>${t.innerHTML}</del> <ins>${t.dataset.ai}</ins>`;t.classList.add('ai-diff');node=t}
+      else{
+        if(kind==='note') node=make('note',esc(main().dataset.aiNote)); else{node=document.createElement('p');node.textContent=main().dataset.aiNext}
+        node.classList.add('ai-new'); t.after(node); if(isEmpty(t)) t.remove();
+      }
+      const act=document.createElement('div'); act.className='ai-act'; act.contentEditable='false';
+      act.innerHTML=`<span>${si('spark')}AI 建议</span><button class="ok">采纳</button><button class="no">放弃</button>`;
+      node.after(act);
+    },reduce?0:900);
+  }
+  function resolveAI(act,ok){
+    const n=act.previousElementSibling; act.remove(); if(!n) return;
+    if(n.classList.contains('ai-diff')){n.innerHTML=ok?n.dataset.ai:n.dataset.orig;n.classList.remove('ai-diff');delete n.dataset.orig;if(ok)delete n.dataset.ai}
+    else if(ok) n.classList.remove('ai-new'); else n.remove();
+    buildToc();
+  }
+  ai.addEventListener('mousedown',e=>{if(e.target!==aiIn)e.preventDefault()});
+  $('.ai-chips').addEventListener('click',e=>{const b=e.target.closest('button');if(b)runAI(b.dataset.k)});
+  aiIn.addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&!e.isComposing){e.preventDefault();const v=aiIn.value;runAI(/续|接着|往下|下一段/.test(v)?'next':/提示|卡|提醒/.test(v)?'note':'polish')}
+  });
+  $('#aiBtn').onclick=()=>openAI(sel||blockOf(getSelection().anchorNode));
+
+  /* ── 键盘 ── */
+  document.addEventListener('keydown',e=>{
+    if(slashP){
+      if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const n=slashList.length;if(n){slashIdx=(slashIdx+(e.key==='ArrowDown'?1:n-1))%n;$$('.mi',slash).forEach((m,i)=>m.classList.toggle('act',i===slashIdx))}return}
+      if(e.key==='Enter'&&!e.isComposing){e.preventDefault();slashList.length?choose(slashList[slashIdx]):closeSlash();return}
+      if(e.key==='Escape'){e.preventDefault();closeSlash();return}
+    }
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();if(preview())return;ai.classList.contains('on')?closeAI():openAI(sel||blockOf(getSelection().anchorNode))}
+    if(e.key==='Escape'){
+      if($('#scrim').classList.contains('on')) $('#scrim').classList.remove('on');
+      else if(ai.classList.contains('on')) closeAI();
+      else if(preview()) setPreview(false);
+      else{hideFmt();select(null);$('#pages').classList.remove('on')}
+    }
+  },true);
+
+  /* ── 导出真正的 HTML ── */
+  let exHTML='';
+  function buildHTML(){
+    $$('.ai-act',site).forEach(a=>resolveAI(a,false));
+    const c=site.cloneNode(true);
+    $$('main[hidden]',c).forEach(n=>n.remove());
+    $$('*',c).forEach(n=>{
+      ['contenteditable','spellcheck','data-c','data-ce','data-ai','data-ai-next','data-ai-note','data-orig','data-go','data-page'].forEach(a=>n.removeAttribute(a));
+      n.classList.remove('is-sel','ai-target','ai-busy'); if(n.getAttribute('class')==='') n.removeAttribute('class');
+    });
+    $$('p',c).forEach(p=>{if(!p.textContent.trim()&&!p.children.length||p.innerHTML==='<br>')p.remove()});
+    c.removeAttribute('id');
+    const title=$('h1',c).textContent.trim();
+    return `<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}｜夜航船</title>
+
+
+<link href="${$('#fontLink').getAttribute('href').replace(/&/g,'&amp;')}" rel="stylesheet">
+<style>
+body{margin:0}
+${$('#page-css').textContent.trim()}
+</style>
+</head>
+<body>
+<div class="page-root">
+${c.outerHTML}
+</div>
+<script>
+(${pageRuntime.toString()})(document.querySelector('.site'));
+<\/script>
+</body>
+</html>
+`;
+  }
+  function openExport(){
+    closeTools(); exHTML=buildHTML();
+    $('#exName').textContent=PAGES[page].file;
+    $('#exSize').textContent=(new Blob([exHTML]).size/1024).toFixed(1)+' KB';
+    $('#exPeek').textContent=exHTML.split('\n').slice(0,9).map(l=>l.length>74?l.slice(0,74)+'…':l).join('\n');
+    $('#scrim').classList.add('on');
+  }
+  $('#exBtn').onclick=openExport;
+  $('#exClose').onclick=()=>$('#scrim').classList.remove('on');
+  $('#scrim').addEventListener('click',e=>{if(e.target.id==='scrim')e.target.classList.remove('on')});
+  $('#exDown').onclick=()=>{
+    const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([exHTML],{type:'text/html;charset=utf-8'})); a.download=PAGES[page].file;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+    $('#scrim').classList.remove('on'); toast('<span>已导出 '+PAGES[page].file+'</span>',2600);
+  };
+  $('#exCopy').onclick=function(){(navigator.clipboard?navigator.clipboard.writeText(exHTML):Promise.reject()).then(()=>{this.textContent='已复制';setTimeout(()=>this.textContent='复制代码',1500)}).catch(()=>{this.textContent='复制失败，请下载文件'})};
+
+  /* ── 启动；URL 参数用于直达某个状态 ── */
+  setPage('tutorial');
+  const q=new URLSearchParams(location.search);
+  if(q.get('page')) setPage(q.get('page'));
+  if(q.get('dev')) setDev(q.get('dev'));
+  const demo=q.get('demo'), show=el=>el.scrollIntoView({block:'center'});
+  if(demo) hint.classList.remove('on');
+  if(demo==='props'){const n=$('.note',prose())||$('[data-c]',prose());show(n);select(n)}
+  if(demo==='ai'){aiT=$('p[data-ai]',prose());runAI('polish')}
+  if(demo==='aibar') setTimeout(()=>openAI($$('p[data-ai]',prose())[0]),900);
+  if(demo==='slash'){hov=$$(':scope>p',prose())[0];plus.onclick()}
+  if(demo==='preview') setPreview(true);
+  if(demo==='export') openExport();
+  if(demo==='dump'){document.title='DUMP';document.documentElement.setAttribute('data-export',btoa(unescape(encodeURIComponent(buildHTML()))))}
+})();
+</script>
+</body>
+</html>

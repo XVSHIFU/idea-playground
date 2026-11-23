@@ -1,0 +1,25 @@
+{
+  "id": "voxel-waterfall",
+  "name": "体素山瀑",
+  "category": "场景与漫游",
+  "description": "环绕镜头掠过山脊、瀑布和低云，展示体素地貌的层次。",
+  "hint": "打开页面，观察镜头绕行时山体的遮挡变化。",
+  "label": "体素 · 自动环绕",
+  "color": "#dce8df",
+  "directory": "../voxel-waterfall",
+  "port": 4342,
+  "entry": "index.html",
+  "required": [
+    "assets/index-DULm_t-U.js",
+    "index.html",
+    "licenses/three.txt"
+  ],
+  "files": [
+    "assets/index-DULm_t-U.js",
+    "index.html",
+    "licenses/three.txt"
+  ],
+  "publicDirectories": [],
+  "identity": "Voxel Mountain",
+  "enabled": true
+}

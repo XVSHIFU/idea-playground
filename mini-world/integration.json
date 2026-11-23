@@ -1,0 +1,37 @@
+{
+  "id": "mini-world",
+  "name": "Mini World · 小小探险星球",
+  "category": "场景与漫游",
+  "description": "在一颗小星球上穿越森林、沙漠与海岸，把发现收入探险手册。",
+  "hint": "进入星球，使用方向键走向附近的发现点。",
+  "label": "微型星球 · 收集",
+  "color": "#dce8df",
+  "directory": "../mini-world",
+  "port": 4339,
+  "entry": "index.html",
+  "required": [
+    "assets/engine-BLxyStzf.js",
+    "assets/index-CcniKGFp.css",
+    "assets/index-CkUOvYWS.js",
+    "favicon.svg",
+    "index.html",
+    "licenses/lucide-react.txt",
+    "licenses/react-dom.txt",
+    "licenses/react.txt",
+    "licenses/three.txt"
+  ],
+  "files": [
+    "assets/engine-BLxyStzf.js",
+    "assets/index-CcniKGFp.css",
+    "assets/index-CkUOvYWS.js",
+    "favicon.svg",
+    "index.html",
+    "licenses/lucide-react.txt",
+    "licenses/react-dom.txt",
+    "licenses/react.txt",
+    "licenses/three.txt"
+  ],
+  "publicDirectories": [],
+  "identity": "Mini World · A little planet, a big adventure",
+  "enabled": true
+}

@@ -1,0 +1,23 @@
+{
+  "id": "fengshen-chronicle",
+  "name": "封神大劫 · 山河故人",
+  "category": "互动叙事",
+  "description": "进入封神时代的山河，在旅途、人物与阵营之间留下选择。",
+  "hint": "从封面开启新故事，选择人物来路。",
+  "label": "同人 · 群像叙事",
+  "color": "#eadfeb",
+  "directory": "../fengshen-chronicle",
+  "port": 4349,
+  "entry": "index.html",
+  "required": [
+    "index.html",
+    "licenses/font.txt"
+  ],
+  "files": [
+    "index.html",
+    "licenses/font.txt"
+  ],
+  "publicDirectories": [],
+  "identity": "封神大劫 · 山河故人",
+  "enabled": true
+}

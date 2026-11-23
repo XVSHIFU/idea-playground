@@ -1,0 +1,229 @@
+/* The HUD is a small wooden object in the same handmade world as the farm. */
+:root {
+  --ink: #553d28;
+  --paper: #faecd0;
+  --wood: #a46f43;
+  --green: #829c4e;
+  --wood-grain: linear-gradient(#8f562c46, #613b2559), url('assets/ui-wood.png');
+  --paper-grain: linear-gradient(#fff8e93d, #e8c59130), url('assets/ui-paper.png');
+  --hud-edge: 22px;
+  --tool-size: 62px;
+  --tool-height: 66px;
+  --tool-icon: 48px;
+  --tool-gap: 6px;
+}
+html, body { background: #809652; color: var(--ink); font-family: 'Trebuchet MS', 'Microsoft YaHei', sans-serif; }
+canvas { image-rendering: auto !important; }
+canvas[data-icon] { width: var(--icon-size, 32px); height: var(--icon-size, 32px); flex: none; }
+button, input { font: inherit; }
+button { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button:focus-visible { outline: 3px solid #fff4bf; outline-offset: 4px; }
+.hidden { display: none !important; }
+#world { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
+.vignette { background: radial-gradient(ellipse at 50% 45%, transparent 65%, #33452a13); box-shadow: none; pointer-events: none; }
+
+/* A single two-line calendar board, with a matching leaf stamina gauge. */
+.hud { position: absolute; inset: var(--hud-edge) var(--hud-edge) auto; pointer-events: none; z-index: 4; }
+.top-right { display: flex; flex-direction: column; align-items: stretch; gap: 5px; width: 250px; min-width: 0; margin-left: auto; padding: 9px; border: 2px solid #80522e; border-radius: 7px; background: var(--wood-grain); background-size: 620px; box-shadow: inset 0 2px 1px #edbd80, inset 0 -3px 1px #704627, 0 4px 0 #68482bc7, 0 7px 12px #263c2c25; }
+.plaque { display: flex; align-items: center; border: 1px solid #b18655; border-radius: 4px; color: #614326; background: var(--paper-grain); background-size: 380px; padding: 4px 9px; box-shadow: inset 0 1px 2px #fffbea, inset 0 -1px 2px #c4a171, 0 1px 1px #6c452b7d; }
+.calendar { min-height: 38px; gap: 7px; }
+.calendar-line { display: flex; align-items: baseline; justify-content: space-between; flex: 1; gap: 8px; white-space: nowrap; }
+.calendar strong { font-size: 18px; letter-spacing: 1px; line-height: 1.2; }
+.calendar small { display: block; color: #6d4a2d; font-size: 18px; font-weight: 700; margin: 0; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.coins { min-height: 35px; height: auto; gap: 9px; }
+.coins b { font-size: 23px; line-height: 1; font-variant-numeric: tabular-nums; }
+.coins > span { margin-left: auto; font-size: 11px; color: #9c805c; letter-spacing: 1px; }
+.energy { position: absolute; z-index: 4; top: var(--hud-edge); left: var(--hud-edge); display: flex; align-items: center; gap: 4px; width: 250px; height: 47px; padding: 4px 7px 4px 5px; color: #364a21; text-shadow: none; border: 2px solid #a17a4c; border-radius: 7px; background: var(--paper-grain); background-size: 400px; box-shadow: inset 0 2px 1px #fff9e5, inset 0 -2px 1px #d0b17f, 0 3px 0 #806037, 0 5px 9px #263b2624; pointer-events: none; }
+.energy .energy-leaf { width: 34px; height: 36px; }
+.energy-track { position: relative; flex: 1; width: auto; height: 27px; padding: 2px; border: 1px solid #735839; border-radius: 6px; overflow: hidden; background: #756044; box-shadow: inset 0 2px 3px #3c342d69, 0 1px #fff9dc; }
+.energy-track i { display: block; height: 100%; width: 100%; border: 1px solid #6e8b36; border-radius: 4px; background: linear-gradient(#b7d476, #96b858 58%, #91ac50); box-shadow: inset 0 2px #d8eaa1b3, inset 0 -2px #6d913e50; transition: width .3s; }
+.energy-value { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; color: #354923; font-size: 16px; font-weight: 700; text-shadow: 0 1px #d3e7a079; font-variant-numeric: tabular-nums; }
+.energy b { font-size: inherit; }
+.energy-max { opacity: 1; font-size: inherit; margin: 0 0 0 4px; }
+
+/* The current errand is a quiet scene annotation, never a second dashboard. */
+.quest { position: absolute; left: calc(var(--hud-edge) + 3px); top: calc(var(--hud-edge) + 63px); width: 245px; max-width: 30vw; border: 0; color: #fff8e8; filter: none; text-shadow: 0 1px 2px #354c2d, 0 1px 6px #354c2d; font-size: 12px; }
+.quest > button { gap: 7px; padding: 0; font-size: 13px; font-weight: 600; color: inherit; }
+.quest > button > span:last-child { font-size: 18px; margin-left: 2px; }
+.tiny-flower { color: #f9e9b3; }
+.quest #questDetail { font-size: 11px; padding: 5px 0 0 19px; line-height: 1.7; opacity: .9; }
+.quest .claim-mini { padding: 4px 9px; border-radius: 4px; background: var(--paper-grain); background-size: 380px; color: #5e472d; text-shadow: none; border: 1px solid #b09465; }
+
+/* Substantial cream inset slots sit inside one continuous wooden tool tray. */
+.bottom-ui { position: absolute; z-index: 5; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; align-items: center; gap: 0; }
+.tool-row { display: flex; gap: var(--tool-gap); padding: 10px 12px 25px; border: 2px solid #7e5130; border-radius: 7px; background: var(--wood-grain); background-size: 720px; box-shadow: inset 0 2px 1px #e2b37d, inset 0 -4px 1px #764c2e, 0 4px 0 #67472cbf, 0 9px 15px #263b2b36; }
+.tool { position: relative; display: grid; place-items: center; flex: 0 0 var(--tool-size); width: var(--tool-size); height: var(--tool-height); padding: 10px 3px 3px; border: 1px solid #9d754a; border-radius: 5px; background: var(--paper-grain); background-size: 360px; box-shadow: inset 0 1px 1px #fffbea, inset 0 -2px 1px #d3b88d, 0 2px 2px #5f3e2790; transition: border-color .12s, filter .12s, transform .12s; }
+.tool:nth-child(2n) { background-position: 58px 21px; }
+.tool:nth-child(3n) { background-position: 124px 66px; }
+.tool canvas { width: var(--tool-icon); height: var(--tool-icon); filter: drop-shadow(0 1px 1px #76512a20); }
+.tool:hover { background: var(--paper-grain); background-size: 360px; filter: brightness(1.06); transform: translateY(-2px); }
+.tool.active { border: 2px solid #fff7d8; border-radius: 5px; transform: translateY(-1px); background: linear-gradient(#c5dc93c7, #94b660e6), url('assets/ui-paper.png'); background-size: 360px; box-shadow: inset 0 1px #eaf4c8, inset 0 -2px #769b4c, 0 0 0 1px #657e3d, 0 3px 2px #60432470; }
+.tool kbd { position: absolute; top: 3px; left: 6px; padding: 0; border: 0; background: none; color: #6e4d2d; font-family: Georgia, 'Microsoft YaHei', serif; font-size: 13px; font-weight: 700; line-height: 1; }
+.tool .quantity { position: absolute; right: 5px; bottom: 3px; font-size: 13px; line-height: 1; color: #593d23; text-shadow: 0 1px #fff6d9, 1px 0 #fff6d9; }
+.tool-caption { position: absolute; left: 15px; right: 15px; bottom: 5px; height: 16px; text-align: center; font-size: 12px; line-height: 16px; letter-spacing: 2px; color: #fbe4ba; text-shadow: 0 1px #754724; pointer-events: none; }
+.key-guide, .brand { display: none; }
+
+/* Four familiar destinations, with secondary controls in a little pull-out drawer. */
+.side-buttons { position: absolute; z-index: 6; top: auto; right: var(--hud-edge); bottom: 22px; display: block; padding: 7px; border: 1px solid #795032; border-radius: 5px; background: var(--wood-grain); background-size: 640px; box-shadow: inset 0 1px #e2b481, inset 0 -2px #70482d, 0 3px 0 #61452bbd, 0 6px 10px #233b2c28; }
+.primary-buttons { display: flex; align-items: stretch; gap: 4px; }
+.side-buttons button { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 0; width: 46px; height: 58px; padding: 3px 2px 4px; border: 1px solid #a17a4f; border-radius: 4px; color: #684a2d; background: var(--paper-grain); background-size: 360px; box-shadow: inset 0 1px #fff8e1, inset 0 -1px #d7bd90, 0 1px 2px #5b3e2b50; font-size: 12px; font-weight: 600; line-height: 1.2; }
+.side-buttons button:hover { transform: translateY(-1px); background: var(--paper-grain); background-size: 360px; filter: brightness(1.07); }
+.side-buttons button:active { transform: translateY(1px); }
+.side-buttons button canvas { width: 34px; height: 34px; }
+.side-buttons button > span { font-size: 11px; line-height: 15px; }
+.side-buttons kbd { position: absolute; top: 3px; right: 3px; bottom: auto; font-size: 8px; color: #a2835b; background: none; border: none; padding: 0; font-weight: 400; }
+.side-buttons #menuToggle { width: 28px; padding: 0; background: #efdbb555; box-shadow: inset 0 1px #f7dfb760; }
+#menuToggle .menu-dots { font: 700 23px/1 Georgia, serif; letter-spacing: 1px; color: #604027; transform: translateY(-3px); }
+.side-buttons.expanded #menuToggle { background: #c0cf8d; border-color: #758647; }
+.utility-buttons { display: none; position: absolute; right: -1px; bottom: calc(100% + 9px); gap: 5px; padding: 7px; border: 1px solid #795032; border-radius: 5px; background: var(--wood-grain); background-size: 640px; box-shadow: inset 0 1px #e2b481, inset 0 -2px #70482d, 0 3px 0 #61452bbd, 0 6px 10px #233b2c28; }
+.side-buttons.expanded .utility-buttons { display: flex; }
+.utility-buttons button { width: 54px; }
+#soundButton.muted canvas { opacity: .5; }
+#soundButton.muted::after { content: ''; position: absolute; width: 27px; height: 2px; top: 21px; left: 13px; transform: rotate(-42deg); border-radius: 2px; background: #9c6751; box-shadow: 0 1px #fff3d5; }
+
+/* Scene information is light and only contextual actions have a paper backing. */
+.location { position: absolute; left: var(--hud-edge); bottom: 27px; display: flex; align-items: center; gap: 8px; color: #fff3dd; font-size: 12px; text-shadow: 0 1px 3px #2d442d, 0 1px 7px #2d442d66; pointer-events: none; }
+.location-dot { width: 5px; height: 5px; background: #f4dfa6; transform: rotate(45deg); }
+.location-rule { width: 13px; height: 1px; background: #eee2bf88; }
+.location small { display: block; color: #f3e7c8; font-size: 10px; opacity: .7; }
+.context-hint { position: absolute; z-index: 5; left: 50%; bottom: 134px; transform: translateX(-50%); max-width: min(640px, 80vw); padding: 5px 11px; border: 1px solid #b9996d; border-radius: 4px; background: var(--paper-grain); background-size: 420px; box-shadow: 0 2px 4px #32432b24; color: #674e33; font-size: 12px; line-height: 20px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+.context-hint:empty { display: none; }
+.context-hint kbd { padding: 1px 5px; margin-right: 5px; border: 1px solid #ba9c6c; border-radius: 3px; background: #ead5ab; box-shadow: 0 1px #c8a773; color: #695030; font: inherit; font-size: 11px; }
+.hover-tooltip { z-index: 8; padding: 9px 12px; border: 1px solid #ad8959; border-radius: 4px; background: var(--paper-grain); background-size: 420px; box-shadow: 0 3px 8px #32432b28; color: #61492e; font-size: 12px; }
+.hover-tooltip small { color: #937b56; line-height: 1.5; }
+.tooltip-progress { height: 4px; border-radius: 2px; overflow: hidden; background: #decca9; }
+.tooltip-progress i { background: #8ca858; }
+.toast-stack { top: 126px; max-width: 80vw; z-index: 15; }
+.toast { padding: 9px 14px; border: 1px solid #b89a6b; border-radius: 4px; background: var(--paper-grain); background-size: 420px; box-shadow: 0 3px 9px #263b2b2b; color: #61492e; font-size: 12px; }
+.toast.bad { border-color: #b67f61; background: #f1dfc7; }
+
+/* Loading uses the same materials as the world, without a separate app skin. */
+#loadingScreen { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #e8ddc7; color: #654b31; }
+#loadingScreen .loading-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.62); }
+.loading-label { position: relative; width: min(360px, calc(100vw - 36px)); padding: 28px 25px; border: 6px solid #9a6d43; border-radius: 6px; background: var(--paper-grain); background-size: 650px; box-shadow: inset 0 1px #fff9e6, 0 4px #67472d, 0 10px 30px #23352a55; text-align: center; }
+.loading-label h2 { font-family: Georgia, 'Songti SC', serif; font-size: 28px; letter-spacing: 5px; margin: 0 0 14px; }
+.loading-label p { font-size: 12px; margin: 8px 0; line-height: 1.6; }
+.loading-dots { width: 120px; height: 5px; margin: 21px auto 0; background: #dfcaa2; border-radius: 3px; overflow: hidden; }
+.loading-dots::before { content: ''; display: block; width: 40%; height: 100%; background: #8da45c; animation: loading 1.5s ease-in-out infinite; }
+@keyframes loading { 50% { transform: translateX(150%); } }
+
+/* The tray keeps all nine tools visible; smaller screens relocate the menu. */
+@media (max-width: 1200px) {
+  .side-buttons { bottom: 136px; }
+  .quest { max-width: 230px; }
+  .location { bottom: 24px; max-width: 160px; flex-wrap: wrap; }
+  .location small, .location-rule { display: none; }
+}
+@media (max-width: 900px) {
+  :root { --hud-edge: 16px; --tool-size: 56px; --tool-height: 62px; --tool-icon: 45px; --tool-gap: 4px; }
+  .tool-row { padding: 8px 9px 24px; }
+  .bottom-ui { bottom: 16px; }
+  .side-buttons { bottom: 126px; }
+  .context-hint { bottom: 213px; max-width: calc(100vw - 36px); left: 50%; transform: translateX(-50%); text-align: center; }
+  .location { bottom: 126px; left: 18px; }
+  .top-right { width: 228px; }
+  .calendar strong, .calendar small { font-size: 16px; }
+  .energy { width: 228px; }
+  .quest { width: 220px; }
+}
+@media (pointer: coarse) {
+  .mobile-controls { display: block; pointer-events: none; position: absolute; inset: 0; z-index: 3; }
+  #joystick { position: absolute; left: 22px; bottom: 125px; width: 86px; height: 86px; border: 2px solid #e9dcba88; border-radius: 50%; background: #5b69484d; box-shadow: inset 0 2px 9px #314a3230; touch-action: none; pointer-events: auto; }
+  #joystick i { position: absolute; left: 21px; top: 21px; width: 40px; height: 40px; border: 2px solid #f0dfb8bb; border-radius: 50%; background: #f3e5c6a8; box-shadow: 0 2px 4px #3c4f2e2b; }
+  #mobileAction { position: absolute; right: 24px; bottom: 220px; width: 62px; height: 62px; border: 2px solid #a57f51; border-radius: 7px; background: var(--paper-grain); background-size: 350px; box-shadow: inset 0 1px #fff8dd, 0 3px #795d39; color: #6b4e2d; font-size: 13px; font-weight: 700; pointer-events: auto; }
+  .location { bottom: 221px; }
+}
+@media (max-width: 600px) {
+  :root { --hud-edge: 10px; --tool-size: calc((100vw - 40px) / 9); --tool-height: 50px; --tool-icon: min(35px, calc((100vw - 42px) / 9)); --tool-gap: 2px; }
+  .hud { inset: max(10px, env(safe-area-inset-top)) 10px auto; }
+  .top-right { width: 184px; padding: 5px; gap: 3px; border-radius: 5px; }
+  .plaque { padding: 3px 6px; border-radius: 3px; }
+  .calendar { min-height: 31px; gap: 4px; }
+  .calendar canvas { width: 24px; height: 24px; display: block; }
+  .calendar-line { gap: 5px; }
+  .calendar strong, .calendar small { font-size: 14px; letter-spacing: 0; }
+  .coins { min-height: 29px; height: auto; gap: 7px; }
+  .coins canvas { width: 23px; height: 23px; }
+  .coins b { font-size: 20px; }
+  .coins > span { font-size: 9px; }
+  .energy { top: max(10px, env(safe-area-inset-top)); width: 164px; height: 38px; gap: 2px; padding: 4px; border-radius: 5px; }
+  .energy .energy-leaf { display: block; width: 25px; height: 28px; }
+  .energy-track { height: 23px; padding: 1px; }
+  .energy-value { font-size: 13px; }
+  .quest { top: 62px; left: 12px; width: 163px; max-width: none; }
+  .quest > button { font-size: 10px; gap: 4px; }
+  .quest #questDetail { display: none; }
+  .quest > button > span:last-child { font-size: 15px; }
+  .bottom-ui { width: calc(100vw - 12px); bottom: max(10px, env(safe-area-inset-bottom)); }
+  .tool-row { width: 100%; gap: var(--tool-gap); padding: 6px 4px 22px; border-radius: 5px; }
+  .tool { flex-basis: var(--tool-size); width: var(--tool-size); height: var(--tool-height); padding: 9px 0 3px; border-radius: 4px; }
+  .tool.active { border-radius: 4px; }
+  .tool kbd { top: 3px; left: 3px; font-size: 10px; }
+  .tool .quantity { right: 3px; bottom: 3px; font-size: 10px; }
+  .tool-caption { bottom: 4px; font-size: 10px; letter-spacing: 1px; }
+  .side-buttons { right: 10px; bottom: calc(100px + env(safe-area-inset-bottom)); padding: 5px; }
+  .primary-buttons { gap: 3px; }
+  .side-buttons button { width: 42px; height: 48px; padding: 2px 1px; }
+  .side-buttons button canvas { width: 29px; height: 29px; }
+  .side-buttons button > span { font-size: 10px; line-height: 13px; }
+  .side-buttons kbd { display: none; }
+  .side-buttons #menuToggle { width: 26px; }
+  .utility-buttons { bottom: calc(100% + 8px); padding: 5px; gap: 4px; }
+  .utility-buttons button { width: 49px; }
+  #soundButton.muted::after { top: 18px; left: 11px; }
+  .context-hint { left: 50%; bottom: calc(171px + env(safe-area-inset-bottom)); transform: translateX(-50%); max-width: calc(100vw - 24px); padding: 4px 8px; font-size: 10px; line-height: 17px; text-align: center; }
+  .context-hint kbd { font-size: 10px; }
+  .location { left: 13px; bottom: calc(119px + env(safe-area-inset-bottom)); max-width: 112px; font-size: 10px; gap: 5px; }
+  .location small, .location-rule { display: none; }
+  .location-dot { width: 4px; height: 4px; }
+  .toast-stack { top: 112px; max-width: calc(100vw - 24px); width: max-content; }
+  .toast { font-size: 11px; min-width: 0; white-space: normal; }
+  .hover-tooltip { max-width: 175px; font-size: 11px; }
+  #joystick { left: 18px; bottom: calc(191px + env(safe-area-inset-bottom)); width: 80px; height: 80px; }
+  #joystick i { left: 18px; top: 18px; }
+  #mobileAction { right: 21px; bottom: calc(201px + env(safe-area-inset-bottom)); width: 57px; height: 57px; }
+}
+@media (max-width: 374px) {
+  .energy { width: 144px; }
+  .top-right { width: 174px; }
+  .calendar strong, .calendar small { font-size: 13px; }
+  .quest { width: 144px; }
+  .side-buttons button { width: 38px; }
+  .side-buttons button canvas { width: 27px; height: 27px; }
+  .location { max-width: 95px; font-size: 9px; }
+}
+@media (max-height: 520px) and (min-width: 601px) {
+  :root { --hud-edge: 10px; --tool-size: 47px; --tool-height: 49px; --tool-icon: 37px; --tool-gap: 4px; }
+  .energy { width: 210px; height: 39px; }
+  .energy .energy-leaf { width: 29px; height: 31px; }
+  .energy-track { height: 24px; }
+  .energy-value { font-size: 14px; }
+  .top-right { width: 214px; padding: 5px; gap: 3px; }
+  .plaque { padding: 2px 6px; }
+  .calendar, .coins { min-height: 30px; }
+  .calendar canvas, .coins canvas { width: 24px; height: 24px; }
+  .calendar strong, .calendar small { font-size: 15px; }
+  .coins b { font-size: 20px; }
+  .quest { display: none; }
+  .bottom-ui { bottom: 8px; }
+  .tool-row { padding: 6px 7px 21px; }
+  .tool kbd { font-size: 10px; }
+  .tool .quantity { font-size: 11px; }
+  .tool-caption { bottom: 3px; font-size: 10px; }
+  .side-buttons { bottom: 96px; right: 10px; padding: 4px; }
+  .side-buttons button { width: 38px; height: 44px; }
+  .side-buttons button canvas { width: 27px; height: 27px; }
+  .side-buttons button > span { font-size: 9px; line-height: 11px; }
+  .side-buttons kbd { display: none; }
+  .side-buttons #menuToggle { width: 24px; }
+  .context-hint { bottom: 96px; left: 50%; transform: translateX(-50%); max-width: 40vw; font-size: 10px; line-height: 17px; padding: 3px 8px; }
+  .location { bottom: 13px; font-size: 10px; }
+  .toast-stack { top: 67px; }
+  #joystick { left: 16px; bottom: 66px; width: 72px; height: 72px; }
+  #joystick i { left: 14px; top: 14px; }
+  #mobileAction { right: 18px; bottom: 163px; width: 49px; height: 49px; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tool, .energy-track i { transition: none; }
+  .loading-dots::before { animation: none; }
+}

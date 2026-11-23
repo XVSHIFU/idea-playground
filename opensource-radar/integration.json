@@ -1,0 +1,21 @@
+{
+  "id": "opensource-radar",
+  "name": "中国开源项目雷达",
+  "category": "工具与原型",
+  "description": "按公司和层级筛选项目，回看 2026 年 10 月的开源生态快照。",
+  "hint": "在项目库中选择一个公司，查看条目与来源。",
+  "label": "项目目录 · 历史快照",
+  "color": "#e4e8ef",
+  "directory": "../opensource-radar",
+  "port": 4373,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "中国大型科技公司开源项目雷达",
+  "enabled": true
+}

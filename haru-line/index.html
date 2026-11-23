@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#d8e7e2">
+<title>夏日环线 · HARU LINE — Japanese Countryside Railway</title>
+<style>
+  :root { --ink:#18352f; --sub:#56756f; --mint:#e9f4ee; --glass:rgba(250,252,246,.84); --line:rgba(35,65,55,.12); --orange:#db8d4f; }
+  * {box-sizing:border-box}
+  html,body{width:100%;height:100%;margin:0;overflow:hidden;font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;background:#a8cec8;color:var(--ink)}
+  button,input{font:inherit}
+  button:focus-visible,input:focus-visible{outline:2px solid #c98747;outline-offset:3px}
+  #world{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+  #world:active{cursor:grabbing}
+  #sky{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 29% 18%,rgba(255,230,169,.80),transparent 26%),linear-gradient(180deg,#86b4c0 0%,#b2d3ca 41%,#e1dfbc 80%,#e7e8ce 100%)}
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:4;opacity:.11;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 150 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E")}
+  .vignette{position:fixed;inset:0;pointer-events:none;z-index:3;background:linear-gradient(90deg,rgba(15,38,32,.10),transparent 28%,transparent 78%,rgba(32,45,31,.07)),linear-gradient(0deg,rgba(22,50,40,.23),transparent 25%)}
+  #app{position:fixed;inset:0;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:30px 36px 27px}
+  #app button,#app input,#app .interactive{pointer-events:auto}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .brand{display:flex;align-items:center;gap:12px;color:#173d34}
+  .brand-icon{width:40px;height:40px;border:1.5px solid rgba(25,63,52,.45);border-radius:12px;display:grid;place-items:center;background:rgba(252,255,245,.54);box-shadow:0 5px 25px rgba(35,67,51,.08)}
+  .brand-icon svg{width:22px;height:22px}
+  .brand-name{font-size:14px;font-weight:800;letter-spacing:.19em;line-height:1.1}
+  .brand-sub{font-size:9px;letter-spacing:.19em;margin-top:5px;font-weight:600;opacity:.73}
+  .topright{display:flex;align-items:center;gap:10px}
+  .top-label{padding:10px 14px;border:1px solid rgba(25,60,48,.12);background:rgba(249,253,246,.67);backdrop-filter:blur(18px);border-radius:100px;font-size:10px;letter-spacing:.10em;font-weight:700;color:#3a6355}
+  .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#68a98c;box-shadow:0 0 0 4px rgba(104,169,140,.16);margin-right:8px}
+  .mainline{flex:1;display:flex;align-items:center;justify-content:space-between;min-height:0;gap:24px}
+  .intro{margin-top:-60px;max-width:450px;filter:drop-shadow(0 2px 18px rgba(241,247,233,.28))}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.28em;display:flex;gap:12px;align-items:center;color:#476d60;margin-bottom:21px}
+  .eyebrow:before{content:'';width:28px;height:1px;background:#7c9c8b}
+  .intro h1{margin:0;font-family:'Noto Serif SC',serif;font-weight:600;font-size:clamp(32px,3.9vw,60px);letter-spacing:.10em;line-height:1.43;color:#173d31;text-shadow:0 2px 23px rgba(243,250,236,.45)}
+  .intro .subtitle{font-size:13px;letter-spacing:.16em;line-height:2.25;color:#486c5c;margin:19px 0 26px;font-weight:500}
+  .intro .stroke{width:54px;height:2px;background:#d7a169;margin-bottom:19px}
+  .intro .desc{font-size:11px;line-height:1.9;color:#507669;letter-spacing:.08em}
+  .views{display:flex;flex-direction:column;gap:9px;align-items:flex-end;flex-shrink:0;margin-top:24px}
+  .views-title{font-size:10px;letter-spacing:.20em;color:#2d554a;font-weight:800;margin-bottom:9px;text-shadow:0 1px 5px #e4f2df}
+  .view-btn{width:158px;height:52px;border:1px solid rgba(255,255,255,.60);background:rgba(249,251,242,.72);color:#46665c;display:flex;align-items:center;gap:12px;border-radius:13px;padding:0 14px;backdrop-filter:blur(13px);box-shadow:0 6px 22px rgba(40,72,62,.07);cursor:pointer;transition:.2s ease}
+  .view-btn svg{width:18px;height:18px;stroke-width:1.6;flex-shrink:0}
+  .view-btn span{font-size:12px;font-weight:700;letter-spacing:.07em;flex:1;text-align:left}
+  .view-btn kbd{font-family:inherit;font-size:10px;color:#819a8c}
+  .view-btn:hover{background:rgba(255,255,255,.92);transform:translateX(-4px)}
+  .view-btn.active{background:#224a40;color:#f6f9e9;border-color:#224a40;box-shadow:0 12px 32px rgba(20,65,54,.28);transform:translateX(-4px)}
+  .view-btn.active kbd{color:#a6c4ae}
+  .bottomrow{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+  .player{width:min(735px,calc(100vw - 440px));min-height:103px;display:flex;align-items:center;gap:18px;padding:18px 21px;background:rgba(250,253,246,.89);border:1px solid rgba(255,255,255,.80);border-radius:19px;box-shadow:0 15px 60px rgba(35,67,55,.20);backdrop-filter:blur(18px)}
+  .play{height:48px;width:48px;border-radius:15px;display:grid;place-items:center;flex-shrink:0;color:white;background:#285d4f;border:0;cursor:pointer;transition:transform .2s}
+  .play:hover{transform:scale(1.06)}
+  .play svg{width:20px;height:20px}
+  .player-center{flex:1;min-width:80px}
+  .player-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:15px}
+  .route-name{font-size:14px;letter-spacing:.08em;font-weight:800;color:#24463d}
+  .route-sub{font-size:10px;color:#8d9f96;font-weight:600;letter-spacing:.04em}
+  .timeline{height:4px;background:#d6e2d8;border-radius:5px;position:relative}
+  #progress-bar{width:0%;height:100%;border-radius:5px;background:linear-gradient(90deg,#72a58e,#c7925a);position:relative}
+  #progress-bar:after{content:'';position:absolute;right:-5px;top:-3px;width:10px;height:10px;background:#e5a76d;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 5px #567}
+  .meta{display:flex;gap:21px;flex-shrink:0;align-items:center;border-left:1px solid #d9e5dd;padding-left:19px}
+  .metric small{display:block;font-size:9px;letter-spacing:.1em;color:#91a39a;margin-bottom:7px;font-weight:700}
+  .metric strong{font-size:14px;color:#2c5b4c;font-weight:800}
+  .speed-area{min-width:108px}
+  .speed-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .speed-title small{font-size:9px;font-weight:700;letter-spacing:.12em;color:#91a39a}
+  .speed-title strong{font-size:11px;color:#396457}
+  .speed{width:100%;height:4px;accent-color:#4a7c69;cursor:pointer}
+  .mapcard{width:256px;padding:13px 15px 11px;background:rgba(250,253,246,.86);border:1px solid rgba(255,255,255,.72);backdrop-filter:blur(18px);box-shadow:0 14px 50px rgba(30,75,64,.16);border-radius:18px}
+  .maptop{display:flex;justify-content:space-between;align-items:center}
+  .maptitle{font-size:10px;letter-spacing:.16em;font-weight:800;color:#345d4e}
+  .maplegend{font-size:9px;color:#8da499}
+  #route-map{width:100%;height:88px;display:block;margin-top:4px}
+  #mapTrain{transition:none}
+  .mapbottom{display:flex;align-items:center;justify-content:space-between;padding-top:7px;border-top:1px solid rgba(34,70,56,.10)}
+  .mapbottom span{font-size:10px;font-weight:700;color:#638476}
+  .mapbottom strong{font-size:10px;color:#2e5849}
+  .hint{position:fixed;bottom:145px;left:36px;display:flex;align-items:center;gap:9px;color:rgba(40,74,61,.75);font-size:10px;font-weight:600;letter-spacing:.05em;text-shadow:0 1px 10px rgba(255,255,255,.9)}
+  .hint svg{width:16px;height:16px}
+  .toast{position:fixed;left:50%;top:30px;transform:translate(-50%,-15px);background:rgba(26,64,51,.95);border:1px solid rgba(255,255,255,.2);color:#edf8e9;border-radius:60px;padding:12px 21px;font-size:12px;letter-spacing:.04em;opacity:0;transition:.35s;pointer-events:none;box-shadow:0 7px 30px rgba(0,0,0,.20)}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  #fallback{display:none;position:fixed;z-index:100;inset:0;align-items:center;justify-content:center;background:#e5efe8;text-align:center;padding:28px}
+  #fallback .error{max-width:480px;background:#fff;border-radius:18px;padding:35px;line-height:1.8}
+  #fallback h2{margin:0 0 9px;font-size:23px}
+  .mobile-title{display:none}
+  @media (max-width:950px){#app{padding:22px 24px}.intro h1{font-size:35px}.intro{max-width:330px}.intro .subtitle{font-size:11px}.view-btn{width:135px}.player{width:calc(100vw - 330px);padding:14px;gap:12px}.route-sub{display:none}.meta{gap:13px;padding-left:13px}.mapcard{width:230px}.hint{bottom:140px;left:24px}}
+  @media (max-width:700px){#app{padding:16px 15px 20px}.brand-name{font-size:12px}.brand-sub{font-size:8px}.top-label:nth-child(1){display:none}.top-label{font-size:9px;padding:9px 11px}.mainline{align-items:flex-start}.intro{margin-top:40px}.intro h1{font-size:32px;line-height:1.45}.intro .desc,.intro .stroke,.intro .subtitle{display:none}.eyebrow{font-size:9px;margin-bottom:12px}.views{position:absolute;top:30%;right:15px;margin:0;gap:7px}.views-title{display:none}.view-btn{width:49px;height:46px;border-radius:13px;padding:0;justify-content:center}.view-btn span,.view-btn kbd{display:none}.view-btn svg{width:20px;height:20px}.bottomrow{display:block}.player{width:100%;min-height:auto;padding:12px;border-radius:16px;gap:12px}.play{width:42px;height:42px;border-radius:13px}.route-name{font-size:12px}.player-heading{margin-bottom:10px}.meta{gap:12px;padding-left:11px}.metric small{display:none}.metric strong{font-size:11px}.speed-area{display:none}.mapcard{position:absolute;right:15px;bottom:105px;width:164px;padding:10px;border-radius:13px}.maptop{gap:3px}.maptitle{font-size:9px}.maplegend{display:none}#route-map{height:60px}.mapbottom span,.mapbottom strong{font-size:9px}.hint{bottom:105px;left:16px;max-width:160px;line-height:1.5;font-size:9px}.intro{pointer-events:none}}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<canvas id="world" aria-label="日本乡村列车 3D 实时场景"></canvas>
+<div class="vignette"></div><div class="grain"></div>
+<div id="app">
+ <header class="topbar">
+  <div class="brand"><div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2.8" width="14" height="16" rx="4"/><path d="M5 10h14M8.5 19l-2 3M15.5 19l2 3M8 6h1m6 0h1"/><circle cx="9" cy="15" r="1"/><circle cx="15" cy="15" r="1"/></svg></div><div><div class="brand-name">HARU LINE</div><div class="brand-sub">夏 日 乡 间 铁 道</div></div></div>
+  <div class="topright"><div class="top-label">1999 · 日本乡间 / SUMMER</div><div class="top-label"><span class="live-dot"></span>实时 3D 场景</div></div>
+ </header>
+ <section class="mainline">
+  <div class="intro"><div class="eyebrow">SCENE 01 &nbsp; / &nbsp; 夏日环线</div><h1>沿着夏天，<br>慢慢前行。</h1><div class="subtitle">在稻田与远山之间，遇见一段缓慢的旅程。</div><div class="stroke"></div><div class="desc">一列车，一座小站，一整个盛夏。<br>Japanese Countryside Railway · Interactive MVP</div></div>
+  <nav class="views" aria-label="切换观察视角"><div class="views-title">CAMERA / 视角切换</div>
+   <button class="view-btn active" data-view="overview" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m3 7 9-4 9 4-9 4-9-4Zm0 0v10l9 4 9-4V7M12 11v10"/></svg><span>全景俯瞰</span><kbd>1</kbd></button>
+   <button class="view-btn" data-view="follow" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="11" rx="3"/><path d="M5 10h14M6 18v3m12-3v3M7 7V4m10 3V4"/><circle cx="7" cy="15" r="1"/><circle cx="17" cy="15" r="1"/></svg><span>列车跟随</span><kbd>2</kbd></button>
+   <button class="view-btn" data-view="cabin" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 18V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12M4 13h16M8 17v4m8-4v4M2 21h20"/></svg><span>乘客车窗</span><kbd>3</kbd></button>
+   <button class="view-btn" data-view="platform" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 20h20M5 20V9l7-5 7 5v11M4 10h16M9 20v-6h6v6M9 10h6"/></svg><span>车站站台</span><kbd>4</kbd></button>
+  </nav>
+ </section>
+ <div class="bottomrow">
+  <section class="player" aria-label="列车播放控制">
+   <button id="play" class="play" title="暂停 / 播放 (空格)" aria-label="暂停列车"><svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg></button>
+   <div class="player-center"><div class="player-heading"><span class="route-name" id="routeTitle">夏日环线 <span style="font-weight:400;color:#729185">/ 青野駅</span></span><span class="route-sub" id="routeStatus">行驶中 · 田园路段</span></div><div class="timeline"><div id="progress-bar"></div></div></div>
+   <div class="meta"><div class="metric"><small>运行状态</small><strong id="motionState">运行中</strong></div><div class="speed-area"><div class="speed-title"><small>列车速度</small><strong id="speedVal">1.0×</strong></div><input id="speed" class="speed" type="range" min="0.5" max="2" step="0.25" value="1" aria-label="列车运行速度"></div></div>
+  </section>
+  <section class="mapcard" aria-label="铁路线图"><div class="maptop"><div class="maptitle">田园环线 · ROUTE MAP</div><div class="maplegend">全长约 280m</div></div>
+  <svg id="route-map" viewBox="0 0 224 88" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="椭圆形闭环铁路线路图"><path d="M38 44 C39 19 64 13 112 13 S184 18 186 44 S164 75 112 75 S37 69 38 44Z" fill="#e8f0e4" stroke="#91ae98" stroke-width="2" stroke-dasharray="4 4"/><path d="M38 44 C39 19 64 13 112 13 S184 18 186 44 S164 75 112 75 S37 69 38 44Z" fill="none" stroke="#5a8975" stroke-width="1.4"/><circle cx="112" cy="75" r="5" fill="#db9860" stroke="#fff" stroke-width="2"/><text x="112" y="87" font-size="8.5" text-anchor="middle" fill="#618171" font-family="sans-serif">青野駅</text><circle id="mapTrain" cx="165" cy="67" r="6" fill="#285e50" stroke="white" stroke-width="2.3"/></svg>
+  <div class="mapbottom"><span>LOCAL RAILWAY</span><strong id="distance">已行驶 0 m</strong></div></section>
+ </div>
+ <div class="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="2" width="12" height="20" rx="6"/><path d="M12 2v8M6 12h12"/></svg><span>拖动旋转 · 滚轮缩放 · 数字键切换镜头</span></div>
+ <div class="toast" id="toast" role="status"></div>
+</div>
+<div id="fallback"><div class="error"><h2>无法启动 3D 场景</h2><p>请使用支持 WebGL 的 Chrome / Edge / Firefox 浏览器，并尝试开启硬件加速。</p><p id="errorDetail"></p></div></div>
+<script>
+// A self-contained Canvas2D compatibility renderer for browsers where WebGL is unavailable.
+window.startRailFallback=(canvas)=>{
+ const ctx=canvas.getContext('2d');if(!ctx){document.querySelector('#fallback').style.display='flex';return}
+ document.querySelectorAll('.top-label').forEach(x=>{if(x.textContent.includes('实时'))x.innerHTML='<span class="live-dot"></span>兼容场景预览'});
+ document.querySelector('.hint span').textContent='拖动平移 · 滚轮缩放 · 数字键切换镜头';
+ const PI=Math.PI,TAU=2*PI;
+ let seed=1501;const rnd=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};
+ const mix=(a,b,t)=>a+(b-a)*t,range=(a,b)=>mix(a,b,rnd());
+ function route(t){return [56*Math.cos(t)+2*Math.cos(2*t+.9),32*Math.sin(t)+1.4*Math.sin(2*t+.6)]}
+ const N=1024,path=[0];let last=route(0);const pts=[last];for(let i=1;i<=N;i++){let p=route(i*TAU/N);path.push(path.at(-1)+Math.hypot(p[0]-last[0],p[1]-last[1]));pts.push(p);last=p}
+ const total=path.at(-1),station=path[Math.round(N/4)];
+ function pos(s){s=(s%total+total)%total;let lo=0,hi=N;while(lo<hi){let i=(lo+hi)>>1;if(path[i]<s)lo=i+1;else hi=i}let i=Math.max(0,lo-1),t=(s-path[i])/(path[i+1]-path[i]||1);return [mix(pts[i][0],pts[i+1][0],t),mix(pts[i][1],pts[i+1][1],t)]}
+ function front(s){let p=pos(s),a=pos(s-.1),b=pos(s+.1),dx=b[0]-a[0],dz=b[1]-a[1],m=Math.hypot(dx,dz)||1;return {p,d:[dx/m,dz/m],r:[-dz/m,dx/m]}}
+ const fields=[[-90,46,18,21],[-68,53,23,24],[-43,58,21,20],[-17,65,24,18],[10,64,25,17],[43,59,28,23],[75,48,18,25],[-30,3,24,18],[-6,-11,23,17],[24,1,21,18],[0,14,19,14],[40,13,17,13],[74,-16,23,23],[-76,-27,22,18]];
+ const buildings=[[-21,-12,1],[-10,-12,.83],[4,-13,.95],[18,-12,1.04],[-18,6,.9],[1,4,1.06],[21,6,.88],[-11,19,.85],[12,19,.94],[41,-9,.9],[57,-14,1.05],[54,-30,.82],[-39,-18,.88]];
+ let trees=[];for(let i=0;i<135;i++){let x=range(-120,120),z=range(-83,79),v=x*x/(56*56)+z*z/(32*32);if(v>.64&&v<1.45||z>23&&z<58&&x>-30&&x<32||x>-30&&x<32&&z>-25&&z<23)continue;trees.push([x,z,range(.6,1.25),rnd()])}
+ let mode='overview',paused=false,speed=1,dist=station-13,hold=0,skipped=false,time=0,panX=0,panZ=0,zoom=6.5;
+ let camX=0,camZ=0,camZoom=zoom;
+ function notify(msg){let t=document.querySelector('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1850)}
+ function setView(v){mode=v;document.querySelectorAll('.view-btn').forEach(b=>{let active=b.dataset.view===v;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});notify(({overview:'全景俯瞰',follow:'列车跟随',cabin:'乘客车窗',platform:'青野駅 · 车站站台'})[v])}
+ document.querySelectorAll('.view-btn').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+ function setPlay(){document.querySelector('#play').innerHTML=paused?'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5c0-.7.8-1.15 1.4-.76l11 7.5a.9.9 0 0 1 0 1.48l-11 7.5A.9.9 0 0 1 7 19.5z"/></svg>':'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';document.querySelector('#motionState').textContent=paused?'已暂停':'运行中'}
+ document.querySelector('#play').addEventListener('click',()=>{paused=!paused;setPlay()});
+ document.querySelector('#speed').addEventListener('input',e=>{speed=+e.target.value;document.querySelector('#speedVal').textContent=speed.toFixed(2).replace(/0$/,'')+'×'});
+ document.addEventListener('keydown',e=>{if(e.target instanceof HTMLInputElement&&e.target.type!=='range')return;if(['1','2','3','4'].includes(e.key))setView(['overview','follow','cabin','platform'][+e.key-1]);if(e.code==='Space'){e.preventDefault();paused=!paused;setPlay()}});
+ let dragging=false,dragX=0,dragY=0;
+ canvas.addEventListener('pointerdown',e=>{dragging=true;dragX=e.clientX;dragY=e.clientY;canvas.setPointerCapture(e.pointerId)});
+ canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
+ canvas.addEventListener('pointermove',e=>{if(!dragging)return;let dx=e.clientX-dragX,dy=e.clientY-dragY;dragX=e.clientX;dragY=e.clientY;if(mode!=='overview')setView('overview');panX-=dx/camZoom*.85;panZ-=dy/camZoom*1.3});
+ canvas.addEventListener('wheel',e=>{e.preventDefault();if(mode!=='overview')setView('overview');zoom=Math.max(3.5,Math.min(13,zoom-e.deltaY*.007))},{passive:false});
+ let scale=1,w=0,h=0;
+ function resize(){w=canvas.width=window.innerWidth*devicePixelRatio;h=canvas.height=window.innerHeight*devicePixelRatio;scale=Math.min(devicePixelRatio,1.8);canvas.width=Math.floor(window.innerWidth*scale);canvas.height=Math.floor(window.innerHeight*scale);w=canvas.width;h=canvas.height}
+ resize();window.addEventListener('resize',resize);
+ function project(x,z,alt=0){let xx=x-camX,zz=z-camZ;return [w*.59+(xx-zz*.44)*camZoom*scale,h*.47+(xx*.14+zz*.55-alt*.82)*camZoom*scale]}
+ function poly(points,fill,stroke,lw=1){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw*scale;ctx.stroke()}}
+ function line(points,color,width=1,dash=[]){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.strokeStyle=color;ctx.lineWidth=width*scale;ctx.lineCap='round';ctx.lineJoin='round';ctx.setLineDash(dash.map(a=>a*scale));ctx.stroke();ctx.setLineDash([])}
+ function spot(x,z,r,color,alt=0){const p=project(x,z,alt);ctx.beginPath();ctx.ellipse(p[0],p[1],r*camZoom*scale,r*.44*camZoom*scale,0,0,TAU);ctx.fillStyle=color;ctx.fill()}
+ function box(x,z,wx,wz,alt,height,wall,roof){let a=project(x-wx/2,z-wz/2,alt),b=project(x+wx/2,z-wz/2,alt),c=project(x+wx/2,z+wz/2,alt),d=project(x-wx/2,z+wz/2,alt);let A=project(x-wx/2,z-wz/2,alt+height),B=project(x+wx/2,z-wz/2,alt+height),C=project(x+wx/2,z+wz/2,alt+height),D=project(x-wx/2,z+wz/2,alt+height);
+ poly([b,c,C,B],wall);poly([c,d,D,C],wall);poly([A,B,C,D],roof);return [A,B,C,D]}
+ function worldBackground(){let sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#91bdbf');sky.addColorStop(.44,'#d6ddc2');sky.addColorStop(1,'#e4debb');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+ const sunX=w*.3,sunY=h*.22,gr=ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,w*.25);gr.addColorStop(0,'rgba(255,229,154,.43)');gr.addColorStop(1,'rgba(255,229,154,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,w,h);
+ for(let layer=0;layer<3;layer++){ctx.beginPath();let baseline=h*(.31+layer*.065);ctx.moveTo(0,h);ctx.lineTo(0,baseline);for(let x=0;x<=w+20;x+=13){let y=baseline-(.065+layer*.024)*h*Math.abs(Math.sin(x/(w*.15)+layer*.8)*.65+Math.sin(x/(w*.11)+layer)*.45);ctx.lineTo(x,y)}ctx.lineTo(w,h);ctx.closePath();ctx.fillStyle=['#aac1af','#8ea994','#88a98b'][layer];ctx.fill()}
+ const land=ctx.createLinearGradient(0,h*.38,0,h);land.addColorStop(0,'#a6be97');land.addColorStop(1,'#b1be91');ctx.fillStyle=land;ctx.fillRect(0,h*.47,w,h*.53)
+ }
+ function drawField(f){let [x,z,wx,wz]=f;let a=project(x-wx/2,z-wz/2),b=project(x+wx/2,z-wz/2),c=project(x+wx/2,z+wz/2),d=project(x-wx/2,z+wz/2);poly([a,b,c,d],'#8fae81','#789b7d',.5);for(let k=1;k<7;k++){let xx=x-wx/2+(wx*k/7);line([project(xx,z-wz/2),project(xx,z+wz/2)],k%2?'#c1bf84':'#bbcb92',.85)}}
+ function tree(x,z,s,style){spot(x,z,s*2.9,'rgba(64,99,78,.16)');let p=project(x,z,0),q=project(x,z,2.2*s);line([p,q],'#777e62',Math.max(1,s*1.25));const head=project(x,z,4.3*s);let r=camZoom*scale*s*1.9;ctx.fillStyle=style>.8?'#71927a':'#7da587';ctx.beginPath();ctx.arc(head[0]-r*.3,head[1]+r*.1,r*.76,0,TAU);ctx.arc(head[0]+r*.5,head[1]+r*.2,r*.71,0,TAU);ctx.arc(head[0],head[1]-r*.22,r*.85,0,TAU);ctx.fill();ctx.fillStyle='rgba(195,208,162,.32)';ctx.beginPath();ctx.ellipse(head[0]-r*.25,head[1]-r*.37,r*.45,r*.24,-.5,0,TAU);ctx.fill()}
+ function drawHome(b,i){let [x,z,s]=b,wx=7*s,wz=6*s;spot(x,z,5*s,'rgba(73,90,72,.12)');box(x,z,wx,wz,.06,2.7*s,'#dbd7b9',i%3?'#677c72':'#73877b');let apex=project(x,z,4.9*s),left=project(x-wx/2-1,z-wz/2-1,2.8*s),right=project(x+wx/2+1,z-wz/2-1,2.8*s);poly([left,right,apex],'#5f746d');let door=project(x+.8*s,z+wz/2,1.0*s);ctx.fillStyle='#8aa89a';ctx.fillRect(door[0]-1.8*s*scale,door[1]-6*s*scale,3.5*s*scale,6*s*scale)}
+ function stationDraw(){box(0,48.8,23,9,0,4.4,'#e8dfc6','#627d70');box(0,37.8,31,6,.15,.6,'#afa38b','#e8d4ae');box(0,39.2,27,6,.75,5.2,'rgba(102,132,115,.72)','#5c857a');
+ for(let x of [-11,-4,4,11])line([project(x,39,1),project(x,39,6)],'#52786c',1.8);
+ box(2,42,2.9,1,.7,2.3,'#d9d9c5','#d9d9c5');
+ let sign=project(4,39,6.8);ctx.fillStyle='#f9f4dd';ctx.fillRect(sign[0]-26*scale,sign[1]-10*scale,52*scale,16*scale);ctx.font=`${10*scale}px sans-serif`;ctx.fillStyle='#47796c';ctx.textAlign='center';ctx.fillText('青野駅',sign[0],sign[1]+2*scale);
+ }
+ function drawTrack(){let outer=[],inner=[];for(let i=0;i<=N;i+=3)outer.push(project(...pts[i]));
+ line(outer,'#8b927d',10);line(outer,'#a8a18a',7);
+ for(let s=0;s<total;s+=2.15){let f=front(s),p=f.p,r=f.r;line([project(p[0]-r[0]*1.85,p[1]-r[1]*1.85),project(p[0]+r[0]*1.85,p[1]+r[1]*1.85)],'#726f62',2.2)}
+ for(const side of [-1,1]){let points=[];for(let s=0;s<total;s+=.9){let f=front(s);points.push(project(f.p[0]+f.r[0]*side*.97,f.p[1]+f.r[1]*side*.97))}points.push(points[0]);line(points,'#d0cdb7',1.4)}
+ }
+ function drawTrainCar(s,isFront){let f=front(s),{p,d,r}=f,wx=11.7,wz=3;
+ function xy(a,b,h){return project(p[0]+d[0]*a+r[0]*b,p[1]+d[1]*a+r[1]*b,h)}
+ spot(p[0],p[1],5.2,'rgba(31,58,48,.21)');
+ const A=xy(-wx/2,-wz/2,1),B=xy(wx/2,-wz/2,1),C=xy(wx/2,wz/2,1),D=xy(-wx/2,wz/2,1);
+ const a=xy(-wx/2,-wz/2,4.35),b=xy(wx/2,-wz/2,4.35),c=xy(wx/2,wz/2,4.35),dd=xy(-wx/2,wz/2,4.35);
+ poly([A,B,b,a],'#dce3cb');poly([B,C,c,b],'#d8e4d6');poly([C,D,dd,c],'#e0e6ce');poly([D,A,a,dd],'#e0e8d8');
+ let lowSide=[xy(-wx/2,wz/2,1.66),xy(wx/2,wz/2,1.66),xy(wx/2,wz/2,2.22),xy(-wx/2,wz/2,2.22)];poly(lowSide,isFront?'#4f897e':'#46756d');
+ poly([a,b,c,dd],'#8ca7a3','#f0ecdc',1.3);
+ poly([xy(-4.5,-1.2,4.45),xy(4.5,-1.2,4.45),xy(4.5,1.2,4.45),xy(-4.5,1.2,4.45)],'#9fb6af');
+ for(let k=-3;k<=3;k++){let aa=-4+k*1.35,bb=aa+1.02;poly([xy(aa,wz/2+.03,2.45),xy(bb,wz/2+.03,2.45),xy(bb,wz/2+.03,3.45),xy(aa,wz/2+.03,3.45)],'#6d9e9c','#cbd9cb',.5)}
+ for(let k=-3;k<=3;k++){let aa=-4+k*1.35,bb=aa+1.02;poly([xy(aa,-wz/2-.03,2.45),xy(bb,-wz/2-.03,2.45),xy(bb,-wz/2-.03,3.45),xy(aa,-wz/2-.03,3.45)],'#7ca9a6','#d6decc',.5)}
+ if(isFront){spot(p[0]+d[0]*5.9+r[0]*.9,p[1]+d[1]*5.9+r[1]*.9,.22,'#f9d994',3.1)}
+ }
+ function drawLandscape(){worldBackground();
+ // Waterside and fields are layered under the railway.
+ let river=[];for(let z=-91;z<=101;z+=6){let x=-77+4*Math.sin(z*.045);river.push([project(x-5,z),project(x+5,z)])}for(let i=0;i<river.length-1;i++)poly([river[i][0],river[i][1],river[i+1][1],river[i+1][0]],'#8fbeb7');
+ fields.forEach(drawField);box(0,51,115,6,0,.05,'#c4bea6','#bdbca3');
+ buildings.slice(0,9).forEach(drawHome);
+ drawTrack();
+ trees.filter(t=>t[1]<15).sort((a,b)=>a[1]-b[1]).forEach(t=>tree(...t));
+ buildings.slice(9).forEach((b,i)=>drawHome(b,i+9));
+ stationDraw();
+ trees.filter(t=>t[1]>=15).sort((a,b)=>a[1]-b[1]).forEach(t=>tree(...t));
+ drawTrainCar(dist-12.5,false);drawTrainCar(dist,true);
+ }
+ function cabinView(){worldBackground();
+ let grd=ctx.createLinearGradient(0,h*.3,0,h*.78);grd.addColorStop(0,'#a6bf9a');grd.addColorStop(1,'#a0aa78');ctx.fillStyle=grd;ctx.fillRect(0,h*.45,w,h*.42);
+ // Animated landscape beyond the window.
+ let shift=(dist*12*scale)%(w*.85),x0=w*.1;
+ for(let i=-2;i<16;i++){let x=i*(w*.14)-shift;ctx.fillStyle=i%2?'#a9b985':'#91a984';ctx.beginPath();ctx.moveTo(x,h*.63);ctx.lineTo(x+w*.20,h*.62);ctx.lineTo(x+w*.12,h*.86);ctx.lineTo(x-w*.06,h*.86);ctx.fill()}
+ for(let i=-3;i<14;i++){let x=i*w*.17-shift*.5;line([[x,h*.29],[x-10*scale,h*.87]],'#839b84',2);line([[x-25*scale,h*.42],[x+22*scale,h*.43]],'#839b84',2.3)}
+ // Roof, panes, interior wall and left-hand passenger seat.
+ poly([[0,0],[w,0],[w,h*.20],[0,h*.25]],'#738b82');poly([[0,h*.20],[w,h*.16],[w,h*.24],[0,h*.31]],'#dedbca');
+ poly([[0,h*.79],[w,h*.77],[w,h],[0,h]],'#a79c87');
+ poly([[0,h*.74],[w,h*.74],[w,h*.79],[0,h*.82]],'#596e65');
+ for(let i=0;i<5;i++){let x=w*(.05+i*.233);ctx.fillStyle='#a4b0a4';ctx.fillRect(x,h*.23,10*scale,h*.57);ctx.fillStyle='#e3dfcd';ctx.fillRect(x+7*scale,h*.22,3*scale,h*.57)}
+ for(let i=0;i<5;i++){let x=w*(.05+i*.233);line([[x+6*scale,h*.2],[x+6*scale,h*.315]],'#e3d8bd',3);line([[x-12*scale,h*.315],[x+26*scale,h*.315]],'#c4baa3',2)}
+ poly([[0,h*.67],[w*.17,h*.64],[w*.21,h],[0,h]],'#56796e');poly([[w*.78,h*.65],[w,h*.63],[w,h],[w*.73,h]],'#64877a');
+ ctx.fillStyle='rgba(251,241,219,.08)';ctx.fillRect(w*.14,h*.24,w*.68,h*.40);
+ // Small paper tickets on the panel and passenger silhouette.
+ let py=h*.76;ctx.fillStyle='#e6c9ad';ctx.beginPath();ctx.ellipse(w*.15,py-40*scale,23*scale,30*scale,0,0,TAU);ctx.fill();ctx.fillStyle='#7e927e';ctx.beginPath();ctx.ellipse(w*.15,py+40*scale,58*scale,53*scale,0,0,TAU);ctx.fill();
+ ctx.fillStyle='rgba(238,242,228,.84)';ctx.font=`${12*scale}px sans-serif`;ctx.fillText('車窓からの景色 · 车窗外的夏天',w*.60,h*.92)
+ }
+ function updateUI(){let t=document.querySelector('#routeStatus');t.textContent=paused?'播放已暂停':hold>0?'青野駅 · 正在停靠':'行驶中 · 田园路段';document.querySelector('#motionState').textContent=paused?'已暂停':hold>0?'停靠中':'运行中';document.querySelector('#progress-bar').style.width=(dist/total*100)+'%';document.querySelector('#distance').textContent='已行驶 '+Math.round(dist)+' m';const [x,z]=pos(dist),dot=document.querySelector('#mapTrain');dot.setAttribute('cx',(112+74*x/58).toFixed(1));dot.setAttribute('cy',(44+31*z/34).toFixed(1))}
+ let prev=performance.now(),ui=0;
+ function loop(now){let dt=Math.min(.08,(now-prev)/1000);prev=now;time+=dt;
+ if(!paused){if(hold>0){hold-=dt;if(hold<=0){hold=0;skipped=true}}else{let d0=dist;dist=(dist+6.25*speed*dt)%total;if(!skipped&&d0<station&&dist>=station){dist=station;hold=3.2;notify('青野駅 · 列车进站停靠')}if(skipped&&dist>station+5&&dist<station+30)skipped=false}}
+ let targetX=panX,targetZ=panZ,targetZoom=zoom;
+ if(mode==='follow'){let p=pos(dist);targetX=p[0];targetZ=p[1];targetZoom=13}
+ if(mode==='platform'){targetX=-2;targetZ=36;targetZoom=12}
+ camX=mix(camX,targetX,.07);camZ=mix(camZ,targetZ,.07);camZoom=mix(camZoom,targetZoom,.07);
+ if(mode==='cabin')cabinView();else drawLandscape();
+ if(now-ui>120){updateUI();ui=now}
+ requestAnimationFrame(loop)}
+ updateUI();requestAnimationFrame(loop);
+};
+
+</script>
+<script>
+'use strict';
+(()=>{
+const canvas=document.querySelector('#world');
+let gl;
+try{gl=canvas.getContext('webgl',{alpha:true,depth:true,antialias:true,premultipliedAlpha:false})||canvas.getContext('experimental-webgl',{alpha:true,depth:true,antialias:true});if(!gl)throw Error('当前浏览器不支持 WebGL');}
+catch(e){window.startRailFallback(canvas);return;}
+const DPR=Math.min(window.devicePixelRatio||1,1.8), TWO_PI=Math.PI*2;
+const hex=(s)=>{s=s.replace('#','');return [parseInt(s.slice(0,2),16)/255,parseInt(s.slice(2,4),16)/255,parseInt(s.slice(4,6),16)/255]};
+const palette={ground:'#abc99f',grass:'#88b18c',paddy:'#9cba7d',water:'#8bbaad',rail:'#677672',sleeper:'#786b57',cream:'#f2e9d3',car:'#dcece0',teal:'#467e79',roof:'#8fa5a1',wood:'#8b7463',wall:'#eee8ce',roofHouse:'#657b73',trunk:'#866e59',leaf:'#7ca788'};
+let seed=98465;const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};
+const range=(a,b)=>a+(b-a)*rand();
+const mix=(a,b,t)=>a+(b-a)*t;
+const V=(x,y,z)=>[x,y,z];
+const add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]];
+const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
+const mul=(a,s)=>[a[0]*s,a[1]*s,a[2]*s];
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const norm=a=>{const l=Math.hypot(...a)||1;return a.map(v=>v/l)};
+const len=a=>Math.hypot(...a);
+const colorCache={};function rgb(color){return colorCache[color]||(colorCache[color]=Array.isArray(color)?color:hex(color));}
+function tint(col,f){const c=rgb(col);return c.map(v=>Math.max(0,Math.min(1,v*f)))}
+class Mesh{
+ constructor(){this.p=[];this.n=[];this.c=[];this.count=0}
+ tri(a,b,c,co,n){const normal=n||norm(cross(sub(b,a),sub(c,a)));const color=rgb(co);for(const pt of [a,b,c]){this.p.push(...pt);this.n.push(...normal);this.c.push(...color)}this.count+=3}
+ quad(a,b,c,d,co){const n=norm(cross(sub(b,a),sub(c,a)));this.tri(a,b,c,co,n);this.tri(a,c,d,co,n)}
+ box(x,y,z,w,h,d,col,rot=0){const a=w/2,b=h/2,c=d/2,C=Math.cos(rot),S=Math.sin(rot);let ps=[[-a,-b,-c],[a,-b,-c],[a,b,-c],[-a,b,-c],[-a,-b,c],[a,-b,c],[a,b,c],[-a,b,c]].map(p=>[x+C*p[0]+S*p[2],y+p[1],z-S*p[0]+C*p[2]]);[[0,3,2,1],[4,5,6,7],[0,4,7,3],[1,2,6,5],[3,7,6,2],[0,1,5,4]].forEach((ids,i)=>this.quad(...ids.map(j=>ps[j]),tint(col,[.90,.95,.87,.92,1,.78][i])))}
+ rod(a,b,r,col,segments=7){const dir=norm(sub(b,a)),ref=Math.abs(dir[1])>.87?[1,0,0]:[0,1,0],u=norm(cross(dir,ref)),v=norm(cross(u,dir));for(let i=0;i<segments;i++){let th=i*TWO_PI/segments,th2=(i+1)*TWO_PI/segments;let p=add(a,add(mul(u,r*Math.cos(th)),mul(v,r*Math.sin(th))));let p2=add(a,add(mul(u,r*Math.cos(th2)),mul(v,r*Math.sin(th2))));let q=add(b,add(mul(u,r*Math.cos(th)),mul(v,r*Math.sin(th))));let q2=add(b,add(mul(u,r*Math.cos(th2)),mul(v,r*Math.sin(th2))));this.quad(p,p2,q2,q,col)} }
+ sphere(x,y,z,rx,ry,rz,col,lat=7,lon=10){let p=(a,b)=>[x+rx*Math.sin(a)*Math.cos(b),y+ry*Math.cos(a),z+rz*Math.sin(a)*Math.sin(b)];for(let i=0;i<lat;i++){let a=i*Math.PI/lat,b=(i+1)*Math.PI/lat;for(let j=0;j<lon;j++){let c=j*TWO_PI/lon,d=(j+1)*TWO_PI/lon;this.quad(p(a,c),p(a,d),p(b,d),p(b,c),tint(col,range(.93,1.06)))}}}
+ roof(x,y,z,w,depth,rise,col){let l=x-w/2,r=x+w/2,f=z-depth/2,b=z+depth/2;this.quad([l,y,f],[l,y,b],[x,y+rise,b],[x,y+rise,f],col);this.quad([x,y+rise,f],[x,y+rise,b],[r,y,b],[r,y,f],tint(col,.87));this.tri([l,y,f],[x,y+rise,f],[r,y,f],tint(col,.76));this.tri([l,y,b],[r,y,b],[x,y+rise,b],tint(col,.76));this.rod([l,y,f],[l,y,b],.09,tint(col,.72));this.rod([r,y,f],[r,y,b],.09,tint(col,.72));this.rod([x,y+rise,f],[x,y+rise,b],.09,tint(col,.72))}
+ upload(){const interleaved=new Float32Array(this.count*9);for(let i=0;i<this.count;i++){let off=i*9,k=i*3;interleaved[off]=this.p[k];interleaved[off+1]=this.p[k+1];interleaved[off+2]=this.p[k+2];interleaved[off+3]=this.n[k];interleaved[off+4]=this.n[k+1];interleaved[off+5]=this.n[k+2];interleaved[off+6]=this.c[k];interleaved[off+7]=this.c[k+1];interleaved[off+8]=this.c[k+2]}const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,interleaved,gl.STATIC_DRAW);this.p=[];this.n=[];this.c=[];return {buffer,count:this.count}}
+}
+const vertex=`attribute vec3 aPosition; attribute vec3 aNormal;attribute vec3 aColor;uniform mat4 uProjection;uniform mat4 uView;uniform mat4 uModel;varying vec3 vColor;varying vec3 vNormal;varying vec3 vWorld;void main(){vec4 world=uModel*vec4(aPosition,1.0);vWorld=world.xyz;vColor=aColor;vNormal=(uModel*vec4(aNormal,0.)).xyz;gl_Position=uProjection*uView*world;}`;
+const fragment=`precision mediump float;varying vec3 vColor;varying vec3 vNormal;varying vec3 vWorld;uniform vec3 uCamera;uniform float uSun;void main(){vec3 N=normalize(vNormal);vec3 L=normalize(vec3(-0.56,0.88,0.34));float lit=max(0.0,dot(N,L));float ambient=0.69+0.10*max(N.y,0.0);vec3 c=vColor*(ambient+0.30*lit);c=mix(c,vec3(0.96,0.82,0.63),0.075*uSun*max(0.,lit));float fog=smoothstep(80.0,220.0,distance(vWorld,uCamera));vec3 fogColor=vec3(0.73,0.82,0.76);c=mix(c,fogColor,fog*.83);gl_FragColor=vec4(c,1.);}`;
+function shader(src,type){let s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
+let program;try{program=gl.createProgram();gl.attachShader(program,shader(vertex,gl.VERTEX_SHADER));gl.attachShader(program,shader(fragment,gl.FRAGMENT_SHADER));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));}catch(e){document.querySelector('#fallback').style.display='flex';document.querySelector('#errorDetail').textContent=e.message;return}
+const attrib={p:gl.getAttribLocation(program,'aPosition'),n:gl.getAttribLocation(program,'aNormal'),c:gl.getAttribLocation(program,'aColor')};
+const uniform={proj:gl.getUniformLocation(program,'uProjection'),view:gl.getUniformLocation(program,'uView'),model:gl.getUniformLocation(program,'uModel'),cam:gl.getUniformLocation(program,'uCamera'),sun:gl.getUniformLocation(program,'uSun')};
+gl.useProgram(program);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);
+function matIdentity(){return new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1])}
+function matAt(pos,angle){let c=Math.cos(angle),s=Math.sin(angle);return new Float32Array([c,0,-s,0,0,1,0,0,s,0,c,0,pos[0],pos[1],pos[2],1])}
+function perspective(fov,aspect,near,far){let f=1/Math.tan(fov/2),n=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*n,-1,0,0,2*far*near*n,0])}
+function lookAt(eye,target){let z=norm(sub(eye,target)),x=norm(cross([0,1,0],z)),y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1])}
+function draw(mesh,model){gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.vertexAttribPointer(attrib.p,3,gl.FLOAT,false,36,0);gl.vertexAttribPointer(attrib.n,3,gl.FLOAT,false,36,12);gl.vertexAttribPointer(attrib.c,3,gl.FLOAT,false,36,24);gl.enableVertexAttribArray(attrib.p);gl.enableVertexAttribArray(attrib.n);gl.enableVertexAttribArray(attrib.c);gl.uniformMatrix4fv(uniform.model,false,model);gl.drawArrays(gl.TRIANGLES,0,mesh.count)}
+// --- The rail route is measured by arc length for stable train motion and car spacing. ---
+const PATH_N=1024;const trackPoints=[],pathCum=[0];
+function trackAt(t){return [56*Math.cos(t)+2*Math.cos(2*t+.9),.36,32*Math.sin(t)+1.4*Math.sin(2*t+.6)]}
+for(let i=0;i<=PATH_N;i++){let pt=trackAt(i*TWO_PI/PATH_N);trackPoints.push(pt);if(i)pathCum.push(pathCum[i-1]+len(sub(pt,trackPoints[i-1])))}
+const totalLength=pathCum[PATH_N];
+function byDistance(distance){distance=((distance%totalLength)+totalLength)%totalLength;let lo=0,hi=PATH_N;while(lo<hi){let mid=(lo+hi)>>1;if(pathCum[mid]<distance)lo=mid+1;else hi=mid}const i=Math.max(0,lo-1),f=(distance-pathCum[i])/(pathCum[i+1]-pathCum[i]||1);return [mix(trackPoints[i][0],trackPoints[i+1][0],f),.36,mix(trackPoints[i][2],trackPoints[i+1][2],f)]}
+function routeFrame(distance){let a=byDistance(distance),prev=byDistance(distance-.18),next=byDistance(distance+.18);let dir=norm(sub(next,prev)),right=[-dir[2],0,dir[0]];return {pos:a,dir,right,angle:Math.atan2(-dir[2],dir[0])}}
+function distanceAt(t){let n=t/TWO_PI*PATH_N,i=Math.floor(n),f=n-i;return mix(pathCum[i],pathCum[Math.min(i+1,PATH_N)],f)}
+const stationS=distanceAt(Math.PI/2);
+const staticGeo=new Mesh();
+// Terrain: grassy mesa with gentle patchwork and warm edge.
+staticGeo.box(0,-1.16,0,270,2,225,'#a2bb94');
+staticGeo.box(0,-2.23,0,270,.38,225,'#849d83');
+for(let i=0;i<560;i++){let x=range(-132,132),z=range(-108,107);staticGeo.box(x,-.09,z,range(1.6,6),.03,range(1.4,6),rand()>.5?'#adca9a':'#b9cd99',range(-.3,.3))}
+// Far mountain layers. Vertical ridges fade gradually into the warm sky.
+function mountainLayer(z,base,maxHeight,col,seedOffset){let steps=44;for(let i=0;i<steps;i++){let x1=-190+i*380/steps,x2=-190+(i+1)*380/steps,mid=(x1+x2)/2;let h1=base+maxHeight*(.38+.23*Math.sin(x1*.035+seedOffset)+.17*Math.sin(x1*.09+seedOffset*2)+.08*Math.sin(x1*.16));let h2=base+maxHeight*(.38+.23*Math.sin(x2*.035+seedOffset)+.17*Math.sin(x2*.09+seedOffset*2)+.08*Math.sin(x2*.16));staticGeo.quad([x1,-.2,z],[x2,-.2,z],[x2,h2,z],[x1,h1,z],col)}}
+mountainLayer(-95,13,35,'#a2b7aa',.45);mountainLayer(-76,11,26,'#829f91',1.8);mountainLayer(-61,5,16,'#739987',3.7);
+// Scenic river at left hand side; banks and pale reflections.
+function waterRibbon(xbase,width){for(let j=0;j<37;j++){let z1=-99+j*5.4,z2=z1+5.4;let x1=xbase+4*Math.sin(z1*.045),x2=xbase+4*Math.sin(z2*.045);staticGeo.quad([x1-width/2,-.01,z1],[x1+width/2,-.01,z1],[x2+width/2,-.01,z2],[x2-width/2,-.01,z2],'#91b8ae');if(j%2===0)staticGeo.box(x1+range(-2,2),.001,z1+2,range(1,3),.012,.13,'#c9d8bf',range(-.1,.1))}}
+waterRibbon(-77,10);
+// Rice fields: panelled embankments with geometrically planted rice rows.
+function field(x,z,w,d,rot=0){staticGeo.box(x,.09,z,w,.24,d,'#779f73',rot);staticGeo.box(x,.205,z,w-.5,.05,d-.5,'#9fbaa2',rot);const C=Math.cos(rot),S=Math.sin(rot);let rows=Math.max(3,Math.floor(w/1.38)),lines=Math.max(4,Math.floor(d/1.68));for(let i=0;i<rows;i++){let lx=-w/2+1+i*(w-2)/(rows-1);for(let j=0;j<lines;j++){let lz=-d/2+.9+j*(d-1.8)/(lines-1);let px=x+C*lx+S*lz,pz=z-S*lx+C*lz;staticGeo.rod([px,.28,pz],[px+range(-.11,.11),range(.53,.81),pz+range(-.11,.11)],.067,rand()>.25?'#80a66a':'#afbd75',4)}}}
+const fields=[[-90,46,18,21],[-68,53,23,24],[-43,58,21,20],[-17,65,24,18],[10,64,25,17],[43,59,28,23],[75,48,18,25],[-30,3,24,18],[-6,-11,23,17],[24,1,21,18],[0,14,19,14],[40,13,17,13],[74,-16,23,23],[-76,-27,22,18]];
+fields.forEach((f,i)=>field(f[0],f[1],f[2],f[3],i%4===0?.07:0));
+// A faded local road, running past the village and old station.
+staticGeo.box(0,.035,51,114,.07,6,'#b5b7a1');staticGeo.box(0,.086,54.0,114,.02,.22,'#d4d3ba');
+staticGeo.box(0,.035,-9,79,.06,4.5,'#b9b9a6');
+function tree(x,z,size=1,type='broad'){
+ const y=.08;staticGeo.rod([x,y,z],[x,y+3.8*size,z],.34*size,'#867b61',7);
+ if(type==='cedar'){staticGeo.sphere(x,y+3.8*size,z,1.28*size,3.35*size,1.28*size,'#577d66',6,8);staticGeo.sphere(x,y+5.1*size,z,1.0*size,2.4*size,1.0*size,'#64866c',6,9)}
+ else{staticGeo.sphere(x-1.05*size,y+4.2*size,z,.96*2*size,1.68*size,1.9*size,rand()>.5?'#789d79':'#87a880',6,9);staticGeo.sphere(x+1.05*size,y+4.5*size,z+.25*size,1.8*size,1.65*size,1.8*size,'#83a483',6,9);staticGeo.sphere(x,y+5.25*size,z-.4*size,1.8*size,1.56*size,1.7*size,'#9fb58a',6,9)}
+}
+// Avoid planting trees on rails, village buildings, platform and near roads.
+for(let i=0;i<144;i++){
+ let x=range(-120,120),z=range(-83,79),angle=Math.atan2(z/32,x/56),v=(x*x/(56*56)+z*z/(32*32));
+ if(v>.65&&v<1.43)continue;if(z>23&&z<57&&x>-31&&x<32)continue;if(x>-30&&x<32&&z>-25&&z<23)continue;if(x<-67&&z>-70&&z<76)continue;
+ tree(x,z,range(.58,1.1),rand()>.72?'cedar':'broad')
+}
+for(let i=0;i<24;i++){let x=range(-112,112),z=range(-89,-61);tree(x,z,range(.65,1.15),'cedar')}
+// Japanese farm houses with plaster walls, tiled gables and dark timber.
+function house(x,z,scale=1,variant=0){let w=(7+(variant%3)*.8)*scale,d=(5.5+(variant%2)*.4)*scale,h=(3.3+(variant%3)*.28)*scale;
+ staticGeo.box(x,.1,z,w+1.2,.22,d+1.2,'#a4ad97');staticGeo.box(x,h/2+.1,z,w,h,d,variant%4===0?'#ead9bb':'#eae5d3');
+ staticGeo.box(x,.44,z+d/2+.05,w,.22,.12,'#6a7868');staticGeo.roof(x,h+.17,z,w+1.1,d+1.5,1.8*scale,variant%2?'#73857d':'#60736c');
+ staticGeo.box(x-w*.23,1.6*scale,z+d/2+.055,1.3*scale,1.65*scale,.10,'#597d7b');staticGeo.box(x+w*.22,1.7*scale,z+d/2+.09,1.15*scale,1.93*scale,.12,'#ab926f');
+ staticGeo.box(x-w*.23,1.6*scale,z+d/2+.12,.06,1.8*scale,.1,'#f4e3c5');staticGeo.box(x-w*.23,1.6*scale,z+d/2+.12,1.3*scale,.06,.1,'#f4e3c5');
+ staticGeo.box(x,1.8*scale,z-d/2-.1,1.65*scale,1.25*scale,.10,'#688785');
+ staticGeo.box(x,2.2*scale,z+d/2+.12,w,.10,.12,'#806b55');
+ if(variant%2===0){staticGeo.box(x+w/2+1,.15,z,1.6,.24,d+1.4,'#b5bd9d');tree(x+w/2+2.8,z+1.5,.46)}
+}
+const houses=[[-21,-12,1,0],[-10,-12,.83,1],[4,-13,.95,2],[18,-12,1.04,3],[-18,6,.9,2],[1,4,1.06,4],[21,6,.88,5],[-11,19,.85,6],[12,19,.94,3],[41,-9,.9,2],[57,-14,1.05,4],[54,-30,.82,0],[-39,-18,.88,1]];
+houses.forEach(h=>house(...h));
+// A few low outbuildings, fences, vegetables and garden plots.
+staticGeo.box(30,.9,-10,6,1.8,6,'#d5d9c1');staticGeo.roof(30,1.9,-10,7,6.7,1.3,'#8c8f73');
+for(let i=0;i<27;i++){let x=-33+i*2.3;staticGeo.box(x,.6,27,.13,1.12,.13,'#9b9d80');if(i<26)staticGeo.box(x+1.15,.72,27,2.3,.12,.11,'#adab89')}
+// Rails: two continuous steel strips, individual sleepers and ballast line.
+for(let i=0;i<PATH_N;i+=4){let cur=trackPoints[i],next=trackPoints[(i+4)%PATH_N],dir=norm(sub(next,cur)),right=[-dir[2],0,dir[0]],mid=mul(add(cur,next),.5),angle=Math.atan2(-dir[2],dir[0]);let dist=len(sub(next,cur));staticGeo.box(mid[0],.13,mid[2],dist+.07,.24,4.7,'#8e9485',angle)}
+for(let i=0;i<PATH_N;i+=5){let pt=trackPoints[i],frame=routeFrame(pathCum[i]),a=frame.angle;staticGeo.box(pt[0],.30,pt[2],.43,.14,3.65,i%4?'#817461':'#6d6b5c',a)}
+for(let i=0;i<PATH_N;i+=2){let p0=trackPoints[i],p1=trackPoints[(i+2)%PATH_N],frame=routeFrame(pathCum[i]),right=frame.right;for(const side of [-1,1]){let a=add(p0,mul(right,.96*side)),b=add(p1,mul(right,.96*side));staticGeo.rod([a[0],.43,a[2]],[b[0],.43,b[2]],.075,'#d3d2bc',5)}}
+// Kilometer posts, small glinting trackside markers.
+for(let i=0;i<14;i++){let f=routeFrame(i*totalLength/14),p=add(f.pos,mul(f.right,3.7));staticGeo.box(p[0],.65,p[2],.32,1.04,.3,'#f0e6c8')}
+// Road-rail crossing, skewed to the western arc.
+const crossS=distanceAt(2.36),crossFrame=routeFrame(crossS);let crossing=crossFrame.pos;
+const crossAngle=crossFrame.angle+Math.PI/2;
+staticGeo.box(crossing[0],.27,crossing[2],16,.05,5.0,'#a2a598',crossAngle);
+function barrier(x,z){staticGeo.rod([x,.12,z],[x,4.8,z],.12,'#686e62');staticGeo.box(x,4.7,z,1.8,.13,.14,'#777c6d');staticGeo.rod([x,3.8,z],[x+2.5,3.8,z],.07,'#e8c28f');staticGeo.sphere(x,4.15,z,.25,.25,.25,'#d08c5b',5,7)}
+barrier(crossing[0]-5,crossing[2]-4);barrier(crossing[0]+5,crossing[2]+4);
+// Station platform and building, aligned with southern tangent.
+staticGeo.box(0,.29,38.0,30,.58,5.7,'#a69f85');staticGeo.box(0,.62,38,30,.09,5.7,'#d4c3a3');staticGeo.box(0,.62,35.2,30,.10,.23,'#e8c67c');
+for(const x of [-11,-4,4,11]){staticGeo.rod([x,.68,39],[x,5.8,39],.13,'#6e8175');staticGeo.box(x,5.8,39,.4,.2,4.3,'#718f81')}
+staticGeo.box(0,6.02,39,27,.18,5.3,'#728f82');staticGeo.roof(0,6.12,39,27.7,6.1,1.0,'#627d75');
+// Station benches, signboard, clock and vending machine.
+for(let x of [-8,3]){staticGeo.box(x,1.19,40.3,3.2,.22,.68,'#917f67');staticGeo.box(x,1.77,40.7,3.2,.95,.17,'#927f69');for(let dx of [-1.25,1.25])staticGeo.box(x+dx,.91,40.3,.17,.7,.45,'#7a7967')}
+staticGeo.box(6,3.9,39.5,3.3,.95,.14,'#f1efd9');staticGeo.box(6,3.92,39.62,2.95,.66,.04,'#6b9686');
+staticGeo.box(-13,.9,43.4,1.4,1.8,.92,'#d9e5dc');staticGeo.box(-13,1.16,43.91,1.12,1.12,.08,'#5d8f88');
+staticGeo.sphere(-3,5.15,38.9,.48,.48,.12,'#e4e1cb',8,11);staticGeo.rod([-3,5.15,39.06],[-3,5.4,39.07],.028,'#566f62');
+// Station house: small wooden building and a gabled green tile roof.
+staticGeo.box(0,2.22,48.7,22,4.4,7.9,'#eee4d0');staticGeo.roof(0,4.45,48.7,23.8,9.9,2.7,'#6e877c');
+staticGeo.box(-2,2,44.68,3.6,3.3,.12,'#617f79');staticGeo.box(3.7,2.06,44.68,3.5,2.8,.12,'#698983');staticGeo.box(-8.0,2.05,44.68,2.4,2.0,.12,'#789b8b');
+for(let x of [-10.4,-5.3,.7,6.5,10.4])staticGeo.box(x,2.4,44.63,.16,4.5,.13,'#997f65');
+staticGeo.box(-1.9,4.25,44.57,6.5,1.0,.19,'#f2e8c9');staticGeo.box(-1.9,4.25,44.43,6.24,.66,.02,'#557e70');
+staticGeo.box(0,.2,57.0,22,.14,5.5,'#bebda3');
+for(let i=0;i<8;i++){let x=-14+i*4;staticGeo.box(x,.56,57.1,.15,.9,.15,'#927b64')}
+// Utility poles with crossbars and several overhead cables around outside edge.
+const poles=[];
+for(let i=0;i<17;i++){let f=routeFrame(i*totalLength/17),p=add(f.pos,mul(f.right,8.1));if(p[2]>34&&p[0]>-21&&p[0]<23)continue;let top=7.5+rand()*.7;staticGeo.rod([p[0],.12,p[2]],[p[0],top,p[2]],.14,'#857966',8);staticGeo.rod([p[0]-1.55,top-1.35,p[2]],[p[0]+1.55,top-1.35,p[2]],.11,'#927e65');for(const dx of [-1,0,1])staticGeo.sphere(p[0]+dx,top-1.12,p[2],.14,.22,.14,'#d3cfb8',5,7);poles.push([p[0],top-1,p[2]])}
+for(let i=0;i<poles.length-1;i++){let a=poles[i],b=poles[i+1];if(len(sub(a,b))>50)continue;for(let side of [-.85,.85]){let aa=[a[0]+side,a[1],a[2]],bb=[b[0]+side,b[1],b[2]],mid=mul(add(aa,bb),.5);mid[1]-=1.4;staticGeo.rod(aa,mid,.026,'#73837a',4);staticGeo.rod(mid,bb,.026,'#73837a',4)}}
+// Roadside shrubs and tufts of flowers by the station.
+for(let i=0;i<65;i++){let x=range(-30,32),z=range(59,69);staticGeo.sphere(x,.18,z,range(.2,.53),range(.22,.6),range(.25,.55),i%5?'#91aa84':'#e6c995',4,6)}
+// Mountainside clouds float in a separate draw batch.
+const cloudGeo=new Mesh();
+for(let i=0;i<15;i++){let x=range(-140,135),y=range(42,69),z=range(-95,13),s=range(2.5,5.5);for(let k=0;k<4;k++)cloudGeo.sphere(x+k*s*.65,y+Math.sin(k*2)*s*.25,z+k*s*.18,s*range(.8,1.25),s*.36,s*.56,k===2?'#f0edd8':'#f4efdc',6,9)}
+// Rolling stock: two carriage meshes with real open window cutouts.
+function trainCar(index){const m=new Mesh();const c=index?'#dce7d2':'#ebe8d3',stripe=index?'#537f72':'#4b817e';
+ m.box(0,1.15,0,11.8,.5,3.0,'#596b68'); // chassis
+ m.box(0,1.56,0,11.7,.50,3.10,stripe); // lower belt
+ m.box(0,2.08,0,11.7,.73,3.08,c); // side under windows
+ m.box(0,3.89,0,11.7,.62,3.08,c); // above window
+ m.box(0,4.25,0,11.86,.37,3.22,'#829b98');
+ m.box(0,4.51,0,11.26,.16,2.75,'#99aeaa');
+ m.box(0,2.23,0,11.76,.18,3.16,'#4f8279');
+ m.box(0,3.55,0,11.74,.095,3.18,'#e4e9d5');
+ // vertical mullions/windows; the openings stay clear for the interior view.
+ for(const side of [-1,1]){let z=side*1.52;for(let x=-5.8;x<=5.81;x+=1.47){m.box(x,2.92,z,.14,1.48,.13,index?'#e3e6d6':'#e8e8d6')}
+ m.box(0,2.88,z,.06,1.38,.095,'#d1dfd4');
+ m.box(0,3.46,z,11.3,.07,.10,'#c9d9cd');
+ // sliding doors near each end
+ for(let x of [-4.45,4.45]){m.box(x,2.2,z,1.06,1.1,.07,index?'#b7c9bf':'#c8d7c7');m.box(x,3.1,z,1.04,.89,.06,'#668f8b');m.box(x,2.8,z,1.09,.09,.10,'#dce5d8');}
+ }
+ // front and rear cabin windows
+ for(let side of [-1,1]){m.box(side*5.91,2.2,0,.12,2.27,3.0,c);m.box(side*5.98,3.17,0,.14,1.08,2.52,'#779994');m.box(side*6.00,3.22,0,.12,.04,2.53,'#d5d8c8');m.box(side*5.98,1.72,0,.12,.2,2.9,stripe)}
+ // warm headlights on leading face
+ if(index===0)for(const z of [-1.08,1.08])m.sphere(6.02,2.0,z,.17,.19,.17,'#fae3ac',7,9);
+ // roof vents and exhaust
+ for(const x of [-3,0,3])m.box(x,4.65,0,1.05,.18,.69,'#738c88');
+ // rails for inside; seat benches and luggage racks
+ m.box(0,1.49,0,10.9,.11,2.77,'#bcb29a');m.box(0,4.00,0,10.7,.08,2.84,'#d7ddc7');
+ for(const side of [-1,1]){const z=side*1.08;m.box(0,3.64,z,9.9,.08,.42,'#89958a');for(const x of [-3.2,-.9,1.5,3.8]){
+ // seats face each other along the train direction; their backs, legs and cushions are modelled
+ m.box(x,1.92,z,1.35,.23,.91,'#779e90');m.box(x-.53,2.3,z, .18,.98,.88,'#628c81');m.box(x-.2,1.7,z,.12,.48,.68,'#8c988a');}}
+ // ceiling straps
+ for(let x=-4.5;x<5;x+=1.35){m.rod([x,3.92,-.34],[x,3.22,-.34],.037,'#a1aaa0',5);m.box(x,3.12,-.34,.31,.12,.07,'#c7bfa5')}
+ // passenger silhouettes: simple human proportions
+ const persons=index?[[1.4,1.03,'#c8a48a'],[-2.4,-1.02,'#abbab1']]:[[-3.15,1.02,'#dcad8a'],[.15,-1.05,'#849baf'],[3.35,1.02,'#bba8a3']];
+ for(let j=0;j<persons.length;j++){const [x,z,coat]=persons[j],cy=2.42;m.sphere(x,cy+.64,z,.29,.32,.27,'#e8c9a9',6,9);m.sphere(x,cy+.90,z-.03,.30,.16,.28,j%2?'#535953':'#725e4c',5,8);m.box(x,cy-.22,z,.55,.84,.49,coat);m.box(x-.15,1.87,z+.16,.17,.26,.2,'#596e66');m.box(x+.15,1.87,z+.16,.17,.26,.2,'#596e66')}
+ // four axles, shiny wheel rims
+ for(let x of [-4.13,4.13])for(let z of [-1.25,1.25]){m.rod([x,.78,z-.16],[x,.78,z+.16],.52,'#53625f',12);m.rod([x,.78,z-.19],[x,.78,z-.17],.30,'#99a49a',11)}
+ m.box(0,.83,0,9.3,.28,1.55,'#58655f');
+ // train connection coupler
+ for(const side of [-1,1])m.box(side*6.15,.95,0,.72,.19,.34,'#666f64');
+ return m.upload();}
+const meshes={terrain:staticGeo.upload(),carA:trainCar(0),carB:trainCar(1),clouds:cloudGeo.upload()};
+// User interaction state
+let mode='overview',paused=false,speed=1,stopRemaining=0,stationSkip=false,distance=stationS-10.0;
+let orbit={az:0.58,el:.54,dist:115};
+let camEye=[70,62,102],camTarget=[0,0,0],first=true;
+const clock={elapsed:0};let textToastTimer=0;
+function notify(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(textToastTimer);textToastTimer=setTimeout(()=>t.classList.remove('show'),2100)}
+function setMode(next){mode=next;document.querySelectorAll('.view-btn').forEach(b=>{let a=b.dataset.view===next;b.classList.toggle('active',a);b.setAttribute('aria-pressed',a?'true':'false')});const labels={overview:'全景俯瞰 · 可拖动旋转',follow:'列车跟随 · 流动的乡间风景',cabin:'乘客车窗 · 从车厢内看世界',platform:'青野站台 · 静候列车驶来'};notify(labels[next])}
+document.querySelectorAll('.view-btn').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.view)));
+const play=document.querySelector('#play'),motionState=document.querySelector('#motionState');
+function updatePlay(){play.innerHTML=paused?'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5c0-.7.8-1.15 1.4-.76l11 7.5a.9.9 0 0 1 0 1.48l-11 7.5A.9.9 0 0 1 7 19.5z"/></svg>':'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';play.setAttribute('aria-label',paused?'播放列车':'暂停列车');motionState.textContent=paused?'已暂停':stopRemaining>0?'停靠中':'运行中'}
+play.addEventListener('click',()=>{paused=!paused;updatePlay();notify(paused?'列车已暂停':'列车继续行驶')});
+const speedInput=document.querySelector('#speed');speedInput.addEventListener('input',()=>{speed=+speedInput.value;document.querySelector('#speedVal').textContent=speed.toFixed(2).replace(/0$/,'')+'×'});
+document.addEventListener('keydown',e=>{if(e.target instanceof HTMLInputElement&&e.target.type!=='range')return;if(['1','2','3','4'].includes(e.key)){setMode(['overview','follow','cabin','platform'][+e.key-1])}else if(e.code==='Space'){e.preventDefault();paused=!paused;updatePlay()}});
+let dragging=false,px=0,py=0,moved=0;
+canvas.addEventListener('pointerdown',e=>{dragging=true;px=e.clientX;py=e.clientY;moved=0;canvas.setPointerCapture(e.pointerId)});
+canvas.addEventListener('pointerup',()=>{dragging=false});canvas.addEventListener('pointercancel',()=>{dragging=false});
+canvas.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-px,dy=e.clientY-py;px=e.clientX;py=e.clientY;moved+=Math.abs(dx)+Math.abs(dy);if(mode!=='overview'){if(moved>8){setMode('overview');notify('已切换自由观察视角')}}orbit.az+=dx*.006;orbit.el=Math.min(1.4,Math.max(.13,orbit.el+dy*.005))});
+canvas.addEventListener('wheel',e=>{e.preventDefault();if(mode!=='overview')setMode('overview');orbit.dist=Math.min(205,Math.max(36,orbit.dist+e.deltaY*.08))},{passive:false});
+function desiredCamera(front){const p=front.pos,d=front.dir,r=front.right;switch(mode){
+ case 'follow':return {eye:add(add(p,mul(d,-18)),add(mul(r,9),[0,8.4,0])),target:add(add(p,mul(d,7)),[0,2.5,0])};
+ case 'cabin':return {eye:add(add(p,mul(d,.1)),add(mul(r,.38),[0,2.88,0])),target:add(add(p,mul(d,4.7)),add(mul(r,11),[0,2.75,0]))};
+ case 'platform':return {eye:[-16,4.8,47],target:[0,2.5,32]};
+ default:return {eye:[Math.sin(orbit.az)*Math.cos(orbit.el)*orbit.dist,Math.sin(orbit.el)*orbit.dist+2,Math.cos(orbit.az)*Math.cos(orbit.el)*orbit.dist],target:[0,1,0]}
+}}
+function setStatus(){const t=document.querySelector('#routeStatus');t.textContent=paused?'播放已暂停':stopRemaining>0?'青野駅 · 正在停靠':Math.abs(((distance-stationS+totalLength/2)%totalLength)-totalLength/2)<33?'靠近青野站 · 田园路段':'行驶中 · 夏日田园';motionState.textContent=paused?'已暂停':stopRemaining>0?'停靠中':'运行中';document.querySelector('#progress-bar').style.width=((distance%totalLength+totalLength)%totalLength/totalLength*100)+'%';document.querySelector('#distance').textContent='已行驶 '+Math.round((distance%totalLength+totalLength)%totalLength)+' m';
+ // Minimaps use the exact same sampled path as the 3D line.
+ const p=byDistance(distance),cx=112+74*(p[0]/58),cy=44+31*(p[2]/34);const dot=document.querySelector('#mapTrain');dot.setAttribute('cx',cx.toFixed(1));dot.setAttribute('cy',cy.toFixed(1));}
+function sizeCanvas(){let w=window.innerWidth,h=window.innerHeight;canvas.width=Math.floor(w*DPR);canvas.height=Math.floor(h*DPR);gl.viewport(0,0,canvas.width,canvas.height)}
+window.addEventListener('resize',sizeCanvas);sizeCanvas();
+let tPrev=performance.now(),lastUi=0;
+function frame(time){const dt=Math.min((time-tPrev)/1000,.08);tPrev=time;clock.elapsed+=dt;
+ if(!paused){if(stopRemaining>0){stopRemaining-=dt;if(stopRemaining<=0){stopRemaining=0;stationSkip=true}}else{let delta=6.25*speed*dt;let prev=distance;distance=(distance+delta)%totalLength;
+ // physical stop when the train reaches the southern station
+ if(!stationSkip&&((prev<=stationS&&distance>=stationS)||(distance<prev&&stationS>=prev))){distance=stationS;stopRemaining=3.2;notify('青野駅 · 列车进站停靠')}if(stationSkip&&distance>stationS+4&&distance<stationS+35)stationSkip=false;
+ }}
+ const front=routeFrame(distance),back=routeFrame(distance-12.45),cam=desiredCamera(front);
+ let a=first?1:1-Math.pow(.004,dt);if(mode==='cabin')a=first?1:1-Math.pow(.0001,dt);
+ camEye=camEye.map((v,i)=>mix(v,cam.eye[i],a));camTarget=camTarget.map((v,i)=>mix(v,cam.target[i],a));first=false;
+ gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+ gl.useProgram(program);const aspect=canvas.width/canvas.height,fov=mode==='cabin'?Math.PI/2.65:Math.PI/3.13;
+ gl.uniformMatrix4fv(uniform.proj,false,perspective(fov,aspect,.08,400));gl.uniformMatrix4fv(uniform.view,false,lookAt(camEye,camTarget));gl.uniform3fv(uniform.cam,new Float32Array(camEye));gl.uniform1f(uniform.sun,1);
+ draw(meshes.terrain,matIdentity());draw(meshes.clouds,matAt([Math.sin(clock.elapsed*.026)*.35,0,0],0));
+ const leftFront=add(front.pos,[0,.23,0]),leftBack=add(back.pos,[0,.23,0]);draw(meshes.carA,matAt(leftFront,front.angle));draw(meshes.carB,matAt(leftBack,back.angle));
+ if(time-lastUi>120){setStatus();lastUi=time}
+ requestAnimationFrame(frame);
+}
+setStatus();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

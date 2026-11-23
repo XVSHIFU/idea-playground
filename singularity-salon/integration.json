@@ -1,0 +1,21 @@
+{
+  "id": "singularity-salon",
+  "name": "给黑洞梳毛",
+  "category": "游戏与模拟",
+  "description": "给一颗会打呼噜的黑洞梳毛，一边攒毛球，一边照顾它的痒度。",
+  "hint": "点「轻轻梳一下」，观察第一颗毛球和痒度变化。",
+  "label": "放置 · 经营",
+  "color": "#eadfd2",
+  "directory": "../singularity-salon",
+  "port": 4317,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "给黑洞梳毛 · 宇宙尽头的美容院",
+  "enabled": true
+}

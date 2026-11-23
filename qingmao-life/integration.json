@@ -1,0 +1,21 @@
+{
+  "id": "qingmao-life",
+  "name": "蛊界 · 青茅余生",
+  "category": "互动叙事",
+  "description": "从青茅山起步，在修行、资源与人际抉择中经营此生。",
+  "hint": "开启新人生，查看第一段遭遇。",
+  "label": "同人 · 生存叙事",
+  "color": "#eadfeb",
+  "directory": "../qingmao-life",
+  "port": 4350,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "蛊界 · 青茅余生 | 离线游戏",
+  "enabled": true
+}

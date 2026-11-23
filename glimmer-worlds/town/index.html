@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f1efe6">
+  <meta name="description" content="栖川，一座自己生活的小城。观察居民的工作、交往和迁徙，改变政策，看一座城慢慢长出自己的故事。">
+  <title>栖川 — 一座自己生活的小城</title>
+  <link rel="icon" href="../assets/town.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="engine.js" defer></script><script src="view.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+  <svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7M5 9v12h14V9M9 21v-8h6v8"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 3C9 3 3 7 4 14c1 7 13 8 16-11ZM4 21 15 10"/></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6M18 15a5 5 0 0 1 3 5"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></symbol>
+    <symbol id="i-tune" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18M8 3v6M16 9v6M10 15v6"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 3v17h17M7 15l4-5 4 2 5-7"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h12l4 4v14H3V3ZM7 3v6h10V3M7 21v-8h10v8"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5C9 3 5 3 2 4v16c4-1 7-1 10 1 3-2 6-2 10-1V4c-3-1-7-1-10 1Zm0 0v16"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M19 10c0 6-7 11-7 11S5 16 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 17V5l11-2v12M9 8l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="17" cy="16" rx="3" ry="2"/></symbol>
+  </defs></svg>
+  <header class="topbar">
+    <a class="brand" href="../index.html" aria-label="微光实验室，作品入口"><svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="m4 24 16-9 16 9-16 9Z" fill="#b1bf99"/><path d="m12 22 8-5 8 5v7l-8 5-8-5Z" fill="#eee8d7"/><path d="m10 21 10-10 10 10-10 6Z" fill="#b96649"/><path d="M20 27v7l8-5v-7Z" fill="#cfc9b5"/></svg><span class="wordmark">栖川</span><span class="brand-note">一座自己生活的小城</span></a>
+    <div class="world-clock"><span class="live-dot" id="live-dot"></span><span id="calendar">春 · 第 1 天</span><span class="clock-divider"></span><strong id="clock">07:00</strong><span class="weather" id="weather">晴</span></div>
+    <nav class="top-actions" aria-label="作品工具"><a class="text-link instrument-link" href="../instrument/index.html"><svg class="icon"><use href="#i-music"/></svg>去弦汐</a><a class="icon-button" href="guide.html" title="观察手记" aria-label="阅读观察手记"><svg class="icon"><use href="#i-book"/></svg></a><button class="icon-button" id="save-menu" title="保存与导入" aria-label="保存与导入"><svg class="icon"><use href="#i-save"/></svg></button></nav>
+  </header>
+  <main class="workspace">
+    <aside class="observation-rail" aria-label="小城概况">
+      <div class="rail-heading"><h1>河岸上的日常</h1><span id="season-label">初春</span></div>
+      <p class="town-thought" id="town-thought">炊烟升起，新的一天开始了。</p>
+      <dl class="town-stats">
+        <div><dt><svg class="icon"><use href="#i-people"/></svg>居民</dt><dd><span id="stat-pop">42</span><small>人</small></dd></div>
+        <div><dt><svg class="icon"><use href="#i-sun"/></svg>幸福感</dt><dd><span id="stat-mood">—</span><small>/ 100</small></dd></div>
+        <div><dt><svg class="icon"><use href="#i-leaf"/></svg>粮食储备</dt><dd><span id="stat-food">—</span><small>天</small></dd></div>
+        <div><dt><svg class="icon"><use href="#i-home"/></svg>公共资金</dt><dd><span id="stat-money">—</span><small>贝</small></dd></div>
+      </dl>
+      <button class="rail-link" data-panel="chronicle">看看小城怎样变化<svg class="icon"><use href="#i-arrow"/></svg></button>
+      <div class="section-rule"></div>
+      <div class="rail-heading news-heading"><h2>小城来信</h2><span class="count-label" id="news-count">此刻</span></div>
+      <div class="news-list" id="news-list" aria-label="最新城镇事件"></div>
+      <div class="rail-foot"><span class="tiny-signal"></span><span id="save-status">生活正在继续</span><button class="quiet-button" id="save-now">保存</button></div>
+    </aside>
+    <section class="world-stage" aria-label="栖川实时地图">
+      <canvas id="world" tabindex="0" aria-label="等距小城地图。拖动移动，滚轮缩放。点选居民或建筑查看详情，也可通过居民名册使用键盘选择。"></canvas>
+      <div class="map-title"><span class="map-place">栖川河谷</span><span class="map-coordinate">30 × 26 · 微型生活观察场</span></div>
+      <div class="map-legend" id="map-legend"><span class="legend-dot"></span>每一个小小身影，都有自己的生活</div>
+      <div class="time-control" aria-label="时间控制"><button class="play-button" id="pause" aria-label="暂停小城" aria-pressed="false"><svg class="icon"><use href="#i-pause"/></svg></button><div class="speed-controls"><button class="active" data-speed="1" aria-pressed="true">1×</button><button data-speed="3" aria-pressed="false">3×</button><button data-speed="8" aria-pressed="false">8×</button></div><span class="time-label" id="time-label">让日子慢慢过</span></div>
+      <div class="map-hint" id="map-hint"><span>小城已经醒来。试着点一位居民，认识他的一天。</span><button aria-label="关闭提示" id="dismiss-hint"><svg class="icon"><use href="#i-close"/></svg></button></div>
+      <div class="map-tools"><div class="zoom-tools"><button class="icon-button" id="zoom-out" aria-label="缩小地图"><svg class="icon"><use href="#i-minus"/></svg></button><button class="icon-button" id="fit-map" aria-label="回到全景" title="回到全景 H"><svg class="icon"><use href="#i-home"/></svg></button><button class="icon-button" id="zoom-in" aria-label="放大地图"><svg class="icon"><use href="#i-plus"/></svg></button></div><div class="layer-tools" aria-label="地图图层"><button data-layer="life" class="active" aria-pressed="true">生活</button><button data-layer="mood" aria-pressed="false">心情</button><button data-layer="work" aria-pressed="false">工作</button></div></div>
+      <div class="map-tooltip" id="map-tooltip" hidden></div>
+      <aside class="detail-panel" id="detail-panel" aria-label="详细观察" hidden><div class="detail-head"><span id="detail-category">观察</span><button class="icon-button" id="close-detail" aria-label="收起面板"><svg class="icon"><use href="#i-close"/></svg></button></div><div id="detail-content"></div></aside>
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    </section>
+  </main>
+  <footer class="bottom-bar"><span class="footer-note">不必指挥每一个人，试着理解一座城。</span><nav class="bottom-nav" aria-label="城镇管理"><button data-panel="residents"><svg class="icon"><use href="#i-people"/></svg>居民名册</button><button data-panel="policy"><svg class="icon"><use href="#i-tune"/></svg>城镇政策</button><button data-panel="build"><svg class="icon"><use href="#i-plus"/></svg>添一处风景</button><button data-panel="events"><svg class="icon"><use href="#i-sun"/></svg>改变天气与日常</button></nav><button class="mobile-overview" id="mobile-overview" aria-expanded="false">小城来信</button></footer>
+  <input id="import-file" type="file" accept=".json,application/json" hidden>
+  <dialog id="reset-dialog"><h2>让河谷迎来另一种生活？</h2><p>这会重新开始当前小城。你可以先导出存档，留下这段故事。</p><div class="dialog-actions"><button class="secondary-button" id="cancel-reset">继续这段生活</button><button class="primary-button" id="confirm-reset">开启新小城</button></div></dialog>
+  <noscript>栖川需要启用 JavaScript，才能让居民开始生活。</noscript>
+</body>
+</html>

@@ -521,5 +521,1792 @@
     "publicDirectories": [],
     "identity": "借一度",
     "enabled": true
+  },
+  {
+    "id": "root-botnet",
+    "name": "ROOT/BOTNET",
+    "category": "游戏与模拟",
+    "description": "在复古 CRT 终端中积累算力、升级设备，推进四章虚构网络任务。",
+    "hint": "按 Enter 接入终端，查看第一项任务。",
+    "label": "虚构终端 · 增量",
+    "color": "#eadfd2",
+    "directory": "../root-botnet",
+    "port": 4313,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "ROOT/BOTNET · CRT-OS",
+    "enabled": true
+  },
+  {
+    "id": "tidal-town-farm",
+    "name": "潮汐小镇 · 黏土农场",
+    "category": "游戏与模拟",
+    "description": "在黏土农场耕地播种，照料作物与家禽，把一天的收获记入存档。",
+    "hint": "从标题画面开始，在农田旁选工具操作。",
+    "label": "种植 · 经营",
+    "color": "#eadfd2",
+    "directory": "../tidal-town-farm",
+    "port": 4314,
+    "entry": "index.html",
+    "required": [
+      "assets/atlas.json",
+      "assets/buildings.webp",
+      "assets/care.webp",
+      "assets/cat.webp",
+      "assets/characters.webp",
+      "assets/chickens.webp",
+      "assets/coopInterior.webp",
+      "assets/crops.webp",
+      "assets/earth.webp",
+      "assets/environment.webp",
+      "assets/farmhouseInterior.webp",
+      "assets/goods.webp",
+      "assets/grass.webp",
+      "assets/index-BG06cD2U.js",
+      "assets/index-BpJLkDIb.css",
+      "assets/items.webp",
+      "assets/livestock.webp",
+      "assets/nature.webp",
+      "assets/paper.webp",
+      "assets/phaser-Czz4FBZH.js",
+      "assets/ui.webp",
+      "assets/vue-BJcgNYWT.js",
+      "assets/water.webp",
+      "assets/wood.webp",
+      "assets/work.webp",
+      "index.html"
+    ],
+    "files": [
+      "assets/atlas.json",
+      "assets/buildings.webp",
+      "assets/care.webp",
+      "assets/cat.webp",
+      "assets/characters.webp",
+      "assets/chickens.webp",
+      "assets/coopInterior.webp",
+      "assets/crops.webp",
+      "assets/earth.webp",
+      "assets/environment.webp",
+      "assets/farmhouseInterior.webp",
+      "assets/goods.webp",
+      "assets/grass.webp",
+      "assets/index-BG06cD2U.js",
+      "assets/index-BpJLkDIb.css",
+      "assets/items.webp",
+      "assets/livestock.webp",
+      "assets/nature.webp",
+      "assets/paper.webp",
+      "assets/phaser-Czz4FBZH.js",
+      "assets/ui.webp",
+      "assets/vue-BJcgNYWT.js",
+      "assets/water.webp",
+      "assets/wood.webp",
+      "assets/work.webp",
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "潮汐小镇 · 黏土农场",
+    "enabled": true
+  },
+  {
+    "id": "tidal-coast",
+    "name": "潮汐小镇 · 黏土海岸",
+    "category": "游戏与模拟",
+    "description": "沿海岸小镇种地、钓鱼、制作物品，在农舍与各片区域间来往。",
+    "hint": "用方向键走到田边，按 E 使用已选工具。",
+    "label": "小镇 · 生活模拟",
+    "color": "#eadfd2",
+    "directory": "../tidal-coast",
+    "port": 4315,
+    "entry": "index.html",
+    "required": [
+      "actors.js",
+      "app.js",
+      "art.js",
+      "assets/art-direction.png",
+      "assets/atlas-layout.json",
+      "assets/barn-interior.png",
+      "assets/candy-buildings.png",
+      "assets/candy-nature.png",
+      "assets/cat-poses.png",
+      "assets/clay-buildings.png",
+      "assets/clay-characters.png",
+      "assets/clay-items.png",
+      "assets/clay-nature.png",
+      "assets/coop-interior.png",
+      "assets/environment-details.png",
+      "assets/farmer-actions.png",
+      "assets/ground-earth.png",
+      "assets/ground-grass.png",
+      "assets/item-icons.png",
+      "assets/livestock.png",
+      "assets/ui-icons.png",
+      "assets/ui-paper.png",
+      "assets/ui-wood.png",
+      "assets/water-stream.png",
+      "clay.css",
+      "core.js",
+      "index.html",
+      "interiors.js",
+      "panels.css",
+      "panels.js",
+      "style.css",
+      "world.js"
+    ],
+    "files": [
+      "actors.js",
+      "app.js",
+      "art.js",
+      "assets/art-direction.png",
+      "assets/atlas-layout.json",
+      "assets/barn-interior.png",
+      "assets/candy-buildings.png",
+      "assets/candy-nature.png",
+      "assets/cat-poses.png",
+      "assets/clay-buildings.png",
+      "assets/clay-characters.png",
+      "assets/clay-items.png",
+      "assets/clay-nature.png",
+      "assets/coop-interior.png",
+      "assets/environment-details.png",
+      "assets/farmer-actions.png",
+      "assets/ground-earth.png",
+      "assets/ground-grass.png",
+      "assets/item-icons.png",
+      "assets/livestock.png",
+      "assets/ui-icons.png",
+      "assets/ui-paper.png",
+      "assets/ui-wood.png",
+      "assets/water-stream.png",
+      "clay.css",
+      "core.js",
+      "index.html",
+      "interiors.js",
+      "panels.css",
+      "panels.js",
+      "style.css",
+      "world.js"
+    ],
+    "publicDirectories": [],
+    "identity": "潮汐小镇 · 黏土海岸",
+    "enabled": true
+  },
+  {
+    "id": "one-more-fish",
+    "name": "再捞一条 · 猫猫的小小海湾",
+    "category": "游戏与模拟",
+    "description": "掌舵猫咪的小船，寻找鱼群，权衡载重与返航时机。",
+    "hint": "出海后用鼠标划船，按住张网，松开收网。",
+    "label": "捕鱼 · 经营",
+    "color": "#eadfd2",
+    "directory": "../one-more-fish",
+    "port": 4316,
+    "entry": "index.html",
+    "required": [
+      "assets/bay.png",
+      "assets/cat-boat.png",
+      "game.js",
+      "index.html",
+      "rules.js",
+      "style.css"
+    ],
+    "files": [
+      "assets/bay.png",
+      "assets/cat-boat.png",
+      "game.js",
+      "index.html",
+      "rules.js",
+      "style.css"
+    ],
+    "publicDirectories": [],
+    "identity": "再捞一条 · 猫猫的小小海湾",
+    "enabled": true
+  },
+  {
+    "id": "singularity-salon",
+    "name": "给黑洞梳毛",
+    "category": "游戏与模拟",
+    "description": "给一颗会打呼噜的黑洞梳毛，一边攒毛球，一边照顾它的痒度。",
+    "hint": "点「轻轻梳一下」，观察第一颗毛球和痒度变化。",
+    "label": "放置 · 经营",
+    "color": "#eadfd2",
+    "directory": "../singularity-salon",
+    "port": 4317,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "给黑洞梳毛 · 宇宙尽头的美容院",
+    "enabled": true
+  },
+  {
+    "id": "volume-mines",
+    "name": "三维扫雷",
+    "category": "游戏与模拟",
+    "description": "转动立方雷场，在三维邻域中推理哪些格子可以打开。",
+    "hint": "从入门尺寸开始，旋转雷场查看不同侧面。",
+    "label": "空间 · 推理",
+    "color": "#eadfd2",
+    "directory": "../volume-mines",
+    "port": 4318,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "VOLUME / 26 — 三维扫雷",
+    "enabled": true
+  },
+  {
+    "id": "sling-club",
+    "name": "弦上对决",
+    "category": "游戏与模拟",
+    "description": "把木饼弹过中央小门，与电脑争夺率先清空半场的机会。",
+    "hint": "点「开始对战」，将下半场木饼向后拉，再松手。",
+    "label": "桌面 · 对战",
+    "color": "#eadfd2",
+    "directory": "../sling-club",
+    "port": 4319,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "弦上对决 · 木制弹力绳冰球",
+    "enabled": true
+  },
+  {
+    "id": "beam-balance",
+    "name": "留住这一球",
+    "category": "游戏与模拟",
+    "description": "拆走支撑梁，观察重心和碰撞，设法让小球留在结构上。",
+    "hint": "从第一关点一根梁，观察球怎样落下。",
+    "label": "拆梁 · 物理",
+    "color": "#eadfd2",
+    "directory": "../beam-balance",
+    "port": 4320,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "留住这一球 · 拆梁物理小游戏",
+    "enabled": true
+  },
+  {
+    "id": "crazy-water-world",
+    "name": "疯狂水世界",
+    "category": "游戏与模拟",
+    "description": "控制海上钩爪，在合适的时机松手，把物资带回船上。",
+    "hint": "等指针进入绿色区域时松手。",
+    "label": "钩爪 · 打捞",
+    "color": "#eadfd2",
+    "directory": "../crazy-water-world",
+    "port": 4321,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "疯狂水世界：广告版 · 乘风重制版",
+    "enabled": true
+  },
+  {
+    "id": "origin-tide",
+    "name": "源初 · 生命的潮汐",
+    "category": "游戏与模拟",
+    "description": "从细胞开始收集熵，购买进化节点，逐步走进早期海洋。",
+    "hint": "点击细胞获得熵，再打开右下方的进化树。",
+    "label": "进化树 · 放置",
+    "color": "#eadfd2",
+    "directory": "../origin-tide",
+    "port": 4322,
+    "entry": "index.html",
+    "required": [
+      "assets/index-BY8R_vfR.js",
+      "assets/index-CK45mQYF.css",
+      "assets/three-BDH8tnG5.js",
+      "assets/vue-bkM5DuOA.js",
+      "favicon.svg",
+      "index.html",
+      "licenses/lucide-vue-next.txt",
+      "licenses/three.txt",
+      "licenses/vue-reactivity.txt",
+      "licenses/vue-runtime-core.txt",
+      "licenses/vue-runtime-dom.txt",
+      "licenses/vue-shared.txt",
+      "licenses/vue.txt"
+    ],
+    "files": [
+      "assets/index-BY8R_vfR.js",
+      "assets/index-CK45mQYF.css",
+      "assets/three-BDH8tnG5.js",
+      "assets/vue-bkM5DuOA.js",
+      "favicon.svg",
+      "index.html",
+      "licenses/lucide-vue-next.txt",
+      "licenses/three.txt",
+      "licenses/vue-reactivity.txt",
+      "licenses/vue-runtime-core.txt",
+      "licenses/vue-runtime-dom.txt",
+      "licenses/vue-shared.txt",
+      "licenses/vue.txt"
+    ],
+    "publicDirectories": [],
+    "identity": "源初 · 生命的潮汐",
+    "enabled": true
+  },
+  {
+    "id": "gray-domain",
+    "name": "灰域纪元",
+    "category": "游戏与模拟",
+    "description": "从暮色星谷的科研前哨起步，调度资源、设施与研究，观察文明的发展。",
+    "hint": "启动暮色星谷，点击场景采集第一份物质。",
+    "label": "文明 · 策略",
+    "color": "#eadfd2",
+    "directory": "../gray-domain",
+    "port": 4323,
+    "entry": "index.html",
+    "required": [
+      "assets/blockade-pulse.webp",
+      "assets/cover.webp",
+      "assets/early-research-valley.webp",
+      "assets/orbital-dawn.webp",
+      "assets/roster.webp",
+      "game.js",
+      "index.html",
+      "style.css"
+    ],
+    "files": [
+      "assets/blockade-pulse.webp",
+      "assets/cover.webp",
+      "assets/early-research-valley.webp",
+      "assets/orbital-dawn.webp",
+      "assets/roster.webp",
+      "game.js",
+      "index.html",
+      "style.css"
+    ],
+    "publicDirectories": [],
+    "identity": "灰域纪元｜文明观测站",
+    "enabled": true
+  },
+  {
+    "id": "before-the-rain",
+    "name": "雨落之前",
+    "category": "游戏与模拟",
+    "description": "修复荒漠中的集水器，用水分、电力和生物质重建星球生态。",
+    "hint": "先唤醒「零」，再点击「收集水分」启动荒漠集水器。",
+    "label": "生态 · 增量",
+    "color": "#eadfd2",
+    "directory": "../before-the-rain",
+    "port": 4324,
+    "entry": "index.html",
+    "required": [
+      "assets/desert.png",
+      "assets/forest.png",
+      "assets/restored.png",
+      "fonts/Noto-LICENSE.txt",
+      "fonts/Rajdhani-LICENSE.txt",
+      "fonts/climate-sans-bold.woff",
+      "fonts/climate-sans-regular.woff",
+      "fonts/rajdhani-latin-500-normal.woff2",
+      "fonts/rajdhani-latin-600-normal.woff2",
+      "game-v2.js",
+      "index.html",
+      "style.css"
+    ],
+    "files": [
+      "assets/desert.png",
+      "assets/forest.png",
+      "assets/restored.png",
+      "fonts/Noto-LICENSE.txt",
+      "fonts/Rajdhani-LICENSE.txt",
+      "fonts/climate-sans-bold.woff",
+      "fonts/climate-sans-regular.woff",
+      "fonts/rajdhani-latin-500-normal.woff2",
+      "fonts/rajdhani-latin-600-normal.woff2",
+      "game-v2.js",
+      "index.html",
+      "style.css"
+    ],
+    "publicDirectories": [],
+    "identity": "雨落之前｜生态重建增量游戏",
+    "enabled": true
+  },
+  {
+    "id": "odd-arms",
+    "name": "ODD ARMS",
+    "category": "游戏与模拟",
+    "description": "选择玩具英雄与搭档，在桌面竞技场里躲避敌人、拾取升级。",
+    "hint": "选择英雄和武器，开始第一局。",
+    "label": "桌面 · 生存",
+    "color": "#eadfd2",
+    "directory": "../odd-arms",
+    "port": 4325,
+    "entry": "index.html",
+    "required": [
+      "assets/index-CoEarHME.css",
+      "assets/index-DUApy62r.js",
+      "fonts/DEJAVU-LICENSE.txt",
+      "fonts/NOTO-LICENSE.txt",
+      "fonts/body.woff",
+      "fonts/display.woff",
+      "fonts/japanese.woff",
+      "index.html",
+      "licenses/three.txt",
+      "models/manifest.json"
+    ],
+    "files": [
+      "assets/index-CoEarHME.css",
+      "assets/index-DUApy62r.js",
+      "fonts/DEJAVU-LICENSE.txt",
+      "fonts/NOTO-LICENSE.txt",
+      "fonts/body.woff",
+      "fonts/display.woff",
+      "fonts/japanese.woff",
+      "index.html",
+      "licenses/three.txt",
+      "models/manifest.json"
+    ],
+    "publicDirectories": [],
+    "identity": "ODD ARMS — Your idea. Your hero.",
+    "enabled": true
+  },
+  {
+    "id": "blockbound",
+    "name": "Blockbound",
+    "category": "游戏与模拟",
+    "description": "在像素世界里采木、合成工具、建造据点，兼顾生命与饥饿。",
+    "hint": "点 CREATE WORLD，跟随采集木材的第一个目标。",
+    "label": "像素 · 生存",
+    "color": "#eadfd2",
+    "directory": "../blockbound",
+    "port": 4326,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "Blockbound — Pixel Survival",
+    "enabled": true
+  },
+  {
+    "id": "pixelcraft",
+    "name": "PixelCraft",
+    "category": "游戏与模拟",
+    "description": "在程序生成的方块地形里采矿、搭建、采食，度过昼夜。",
+    "hint": "创建世界后点击画面，用 WASD 移动。",
+    "label": "体素 · 沙盒",
+    "color": "#eadfd2",
+    "directory": "../pixelcraft",
+    "port": 4327,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "PixelCraft",
+    "enabled": true
+  },
+  {
+    "id": "one-line-arcade",
+    "name": "一句话游乐场",
+    "category": "游戏与模拟",
+    "description": "切换极速竞速、运输船与鹈鹕骑行三个短篇小游戏。",
+    "hint": "先选极速竞速，点「开始游戏」并用方向键移动。",
+    "label": "街机 · 三合一",
+    "color": "#eadfd2",
+    "directory": "../one-line-arcade",
+    "port": 4328,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "一句话游乐场 · 三款小游戏",
+    "enabled": true
+  },
+  {
+    "id": "infinite-garden",
+    "name": "无限庭院",
+    "category": "游戏与模拟",
+    "description": "在循环庭院里改变重力方向，搬运方块，点亮通往下一关的光门。",
+    "hint": "点「进入庭院」，按操作手记进入第一关。",
+    "label": "重力 · 空间解谜",
+    "color": "#eadfd2",
+    "directory": "../infinite-garden",
+    "port": 4329,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "licenses/font.txt"
+    ],
+    "files": [
+      "index.html",
+      "licenses/font.txt"
+    ],
+    "publicDirectories": [],
+    "identity": "无限庭院 · Infinite Garden",
+    "enabled": true
+  },
+  {
+    "id": "windflower-meadow",
+    "name": "风渡花原",
+    "category": "场景与漫游",
+    "description": "穿过花间径与柳溪木桥，在听风亭和水岸间自由漫游、取景。",
+    "hint": "用 WASD 沿花径走，拖动画面环顾四周。",
+    "label": "山野 · 摄影",
+    "color": "#dce8df",
+    "directory": "../windflower-meadow",
+    "port": 4330,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "风渡花原 · Windflower Meadow",
+    "enabled": true
+  },
+  {
+    "id": "eizan-summer",
+    "name": "叡山电车 · 夏日车窗",
+    "category": "场景与漫游",
+    "description": "坐进蓝色长椅车厢，从侧窗与驾驶室前窗看夏季山林掠过。",
+    "hint": "切换「斜看车窗」和「正看车头」，观察同一段路。",
+    "label": "乘客 · 林间铁路",
+    "color": "#dce8df",
+    "directory": "../eizan-summer",
+    "port": 4331,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "叡山电车 · 夏日车窗",
+    "enabled": true
+  },
+  {
+    "id": "satoyama-line",
+    "name": "里山线 · 平成乡间铁路",
+    "category": "场景与漫游",
+    "description": "在平成乡间铁道上跟随普通列车，切换俯瞰、跟车和车厢视角。",
+    "hint": "在列车运行时按 2 切到跟车视角。",
+    "label": "乡间铁路 · 场景编辑",
+    "color": "#dce8df",
+    "directory": "../satoyama-line",
+    "port": 4332,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "里山線 · 平成乡间铁路",
+    "enabled": true
+  },
+  {
+    "id": "haru-line",
+    "name": "夏日环线 · HARU LINE",
+    "category": "场景与漫游",
+    "description": "在稻田与村落间看列车绕行，可分别从站台、车窗、空中观看。",
+    "hint": "按 3 从乘客车窗看风景，再按 4 到站台等车。",
+    "label": "乡间环线 · 四视角",
+    "color": "#dce8df",
+    "directory": "../haru-line",
+    "port": 4333,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "夏日环线 · HARU LINE — Japanese Countryside Railway",
+    "enabled": true
+  },
+  {
+    "id": "cloudline",
+    "name": "云海电车",
+    "category": "场景与漫游",
+    "description": "驾驶空中电车穿过海岛，在弯道前制动、到站开门接送旅客。",
+    "hint": "按 W 加速，靠近站台时按 S 制动。",
+    "label": "空中铁路 · 驾驶",
+    "color": "#dce8df",
+    "directory": "../cloudline",
+    "port": 4334,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "云海电车 · CLOUDLINE",
+    "enabled": true
+  },
+  {
+    "id": "valley-line",
+    "name": "Valley Line · 山谷铁路",
+    "category": "场景与漫游",
+    "description": "从自由视角或跟车视角看微缩列车运行，在岔口切换山谷环线和河畔捷径。",
+    "hint": "先切到 Follow train，再选择 River shortcut。",
+    "label": "微缩铁路 · 道岔",
+    "color": "#dce8df",
+    "directory": "../valley-line",
+    "port": 4335,
+    "entry": "index.html",
+    "required": [
+      "app.js",
+      "index.html",
+      "style.css",
+      "vendor/BufferGeometryUtils.js",
+      "vendor/OrbitControls.js",
+      "vendor/THREE-LICENSE.txt",
+      "vendor/three.core.min.js",
+      "vendor/three.module.js"
+    ],
+    "files": [
+      "app.js",
+      "index.html",
+      "style.css",
+      "vendor/BufferGeometryUtils.js",
+      "vendor/OrbitControls.js",
+      "vendor/THREE-LICENSE.txt",
+      "vendor/three.core.min.js",
+      "vendor/three.module.js"
+    ],
+    "publicDirectories": [],
+    "identity": "Valley Line — A little world in motion",
+    "enabled": true
+  },
+  {
+    "id": "harbor-railway",
+    "name": "港湾八十七 · 铁路工坊",
+    "category": "场景与漫游",
+    "description": "操纵模型铁路桌上的调速手柄、转车台与灯光，让微缩港湾运转。",
+    "hint": "拖动红色手柄改变车速，按 3 进入跟车视角。",
+    "label": "模型铁路 · 工坊",
+    "color": "#dce8df",
+    "directory": "../harbor-railway",
+    "port": 4336,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "vendor/THREE-LICENSE.txt",
+      "vendor/three.min.js"
+    ],
+    "files": [
+      "index.html",
+      "vendor/THREE-LICENSE.txt",
+      "vendor/three.min.js"
+    ],
+    "publicDirectories": [],
+    "identity": "港湾八十七 · 铁路工坊",
+    "enabled": true
+  },
+  {
+    "id": "aphelion",
+    "name": "远日点 · 环地轨道站",
+    "category": "场景与漫游",
+    "description": "驾驶飞行器接近轨道站，切换拆解视图，查看各模块的空间关系。",
+    "hint": "按 E 进入拆解视图，拖动旋转空间站。",
+    "label": "太空飞行 · 模块拆解",
+    "color": "#dce8df",
+    "directory": "../aphelion",
+    "port": 4337,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "远日点 · APHELION",
+    "enabled": true
+  },
+  {
+    "id": "star-journey",
+    "name": "星际漫游 · Star Journey",
+    "category": "场景与漫游",
+    "description": "搭乘飞船拜访花园、沙漠与钟表星球，寻找居民与散落的星光。",
+    "hint": "从起始星球出发，靠近居民或地标查看互动。",
+    "label": "星球探索 · 旅行",
+    "color": "#dce8df",
+    "directory": "../star-journey",
+    "port": 4338,
+    "entry": "index.html",
+    "required": [
+      "assets/index-CsTkVe6l.css",
+      "assets/index-DadNqYYa.js",
+      "assets/motion-I1jVCVBc.js",
+      "assets/physics-CKC5f6tm.js",
+      "assets/three-KzLFYu3s.js",
+      "index.html",
+      "models/clock-tower.glb",
+      "models/cottage.glb",
+      "models/ruin-gate.glb",
+      "models/ship.glb",
+      "models/traveler-v2.glb",
+      "models/wind-tree.glb",
+      "textures/v2/clockwork-panorama.webp",
+      "textures/v2/desert-panorama.webp",
+      "textures/v2/garden-panorama.webp",
+      "textures/v2/grass.webp",
+      "textures/v2/sand.webp",
+      "textures/v2/stone.webp"
+    ],
+    "files": [
+      "assets/index-CsTkVe6l.css",
+      "assets/index-DadNqYYa.js",
+      "assets/motion-I1jVCVBc.js",
+      "assets/physics-CKC5f6tm.js",
+      "assets/three-KzLFYu3s.js",
+      "index.html",
+      "models/clock-tower.glb",
+      "models/cottage.glb",
+      "models/ruin-gate.glb",
+      "models/ship.glb",
+      "models/traveler-v2.glb",
+      "models/wind-tree.glb",
+      "textures/v2/clockwork-panorama.webp",
+      "textures/v2/desert-panorama.webp",
+      "textures/v2/garden-panorama.webp",
+      "textures/v2/grass.webp",
+      "textures/v2/sand.webp",
+      "textures/v2/stone.webp"
+    ],
+    "publicDirectories": [],
+    "identity": "星际漫游 · Star Journey",
+    "enabled": true
+  },
+  {
+    "id": "mini-world",
+    "name": "Mini World · 小小探险星球",
+    "category": "场景与漫游",
+    "description": "在一颗小星球上穿越森林、沙漠与海岸，把发现收入探险手册。",
+    "hint": "进入星球，使用方向键走向附近的发现点。",
+    "label": "微型星球 · 收集",
+    "color": "#dce8df",
+    "directory": "../mini-world",
+    "port": 4339,
+    "entry": "index.html",
+    "required": [
+      "assets/engine-BLxyStzf.js",
+      "assets/index-CcniKGFp.css",
+      "assets/index-CkUOvYWS.js",
+      "favicon.svg",
+      "index.html",
+      "licenses/lucide-react.txt",
+      "licenses/react-dom.txt",
+      "licenses/react.txt",
+      "licenses/three.txt"
+    ],
+    "files": [
+      "assets/engine-BLxyStzf.js",
+      "assets/index-CcniKGFp.css",
+      "assets/index-CkUOvYWS.js",
+      "favicon.svg",
+      "index.html",
+      "licenses/lucide-react.txt",
+      "licenses/react-dom.txt",
+      "licenses/react.txt",
+      "licenses/three.txt"
+    ],
+    "publicDirectories": [],
+    "identity": "Mini World · A little planet, a big adventure",
+    "enabled": true
+  },
+  {
+    "id": "infinity-lanterns",
+    "name": "无限城 · 万灯之境",
+    "category": "场景与漫游",
+    "description": "在层叠楼阁和灯廊之间漫步、飞行，或让镜头带路。",
+    "hint": "进入城中后切换漫游方式，观察建筑层次。",
+    "label": "楼阁 · 自动漫游",
+    "color": "#dce8df",
+    "directory": "../infinity-lanterns",
+    "port": 4340,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "無限城 · 万灯之境",
+    "enabled": true
+  },
+  {
+    "id": "infinity-living-castle",
+    "name": "无限城 · 活城",
+    "category": "场景与漫游",
+    "description": "在会移动的木构城廓里步行、坠落或悬浮，切换第一与第三人称。",
+    "hint": "进入场景后用 WASD 移动，按 V 切换视角。",
+    "label": "木构 · 角色漫游",
+    "color": "#dce8df",
+    "directory": "../infinity-living-castle",
+    "port": 4341,
+    "entry": "index.html",
+    "required": [
+      "THREE-LICENSE.txt",
+      "app.js",
+      "index.html",
+      "style.css"
+    ],
+    "files": [
+      "THREE-LICENSE.txt",
+      "app.js",
+      "index.html",
+      "style.css"
+    ],
+    "publicDirectories": [],
+    "identity": "無限城 · 活城",
+    "enabled": true
+  },
+  {
+    "id": "voxel-waterfall",
+    "name": "体素山瀑",
+    "category": "场景与漫游",
+    "description": "环绕镜头掠过山脊、瀑布和低云，展示体素地貌的层次。",
+    "hint": "打开页面，观察镜头绕行时山体的遮挡变化。",
+    "label": "体素 · 自动环绕",
+    "color": "#dce8df",
+    "directory": "../voxel-waterfall",
+    "port": 4342,
+    "entry": "index.html",
+    "required": [
+      "assets/index-DULm_t-U.js",
+      "index.html",
+      "licenses/three.txt"
+    ],
+    "files": [
+      "assets/index-DULm_t-U.js",
+      "index.html",
+      "licenses/three.txt"
+    ],
+    "publicDirectories": [],
+    "identity": "Voxel Mountain",
+    "enabled": true
+  },
+  {
+    "id": "ten-years-later",
+    "name": "给十年后的我",
+    "category": "互动叙事",
+    "description": "启动一台旧电脑，在 Windows XP 风格的桌面上拆开十二岁的自己留下的信。",
+    "hint": "按 Enter 跳过开机，然后双击桌面上的信。",
+    "label": "复古桌面 · 短篇",
+    "color": "#eadfeb",
+    "directory": "../ten-years-later",
+    "port": 4343,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "给十年后的我",
+    "enabled": true
+  },
+  {
+    "id": "second-stage",
+    "name": "我不是戏神 · 第二场戏",
+    "category": "互动叙事",
+    "description": "选择出身，在调查、演出和战斗之间作决定，留下自己的因果。",
+    "hint": "从标题页开始一段新的演出。",
+    "label": "同人 · 人生冒险",
+    "color": "#eadfeb",
+    "directory": "../second-stage",
+    "port": 4344,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "我不是戏神 · 第二场戏",
+    "enabled": true
+  },
+  {
+    "id": "swordlife",
+    "name": "剑来 · 山外有山",
+    "category": "互动叙事",
+    "description": "从骊珠洞天的小镇出发，通过探索与抉择书写一段自己的江湖人生。",
+    "hint": "点「推门入世」，选择出身。",
+    "label": "同人 · 人生长卷",
+    "color": "#eadfeb",
+    "directory": "../swordlife",
+    "port": 4345,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "剑来 · 山外有山",
+    "enabled": true
+  },
+  {
+    "id": "nightwatch",
+    "name": "神明禁行 · 守夜人纪事",
+    "category": "互动叙事",
+    "description": "在雨夜里的城市中展开巡守、调查与修行，走出一段守夜人生。",
+    "hint": "从封面开始新档，再选人物来路。",
+    "label": "同人 · 都市幻想",
+    "color": "#eadfeb",
+    "directory": "../nightwatch",
+    "port": 4346,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "斩神 · 神明禁行 — 守夜人纪事",
+    "enabled": true
+  },
+  {
+    "id": "yiren-life",
+    "name": "一人之下 · 异人人生",
+    "category": "互动叙事",
+    "description": "以不同身份入局，在人情、修行与江湖事件间留下自己的选择。",
+    "hint": "点「开始一段人生」，选择一份出身。",
+    "label": "同人 · 江湖冒险",
+    "color": "#eadfeb",
+    "directory": "../yiren-life",
+    "port": 4347,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "一人之下 · 异人人生",
+    "enabled": true
+  },
+  {
+    "id": "sheep-judge",
+    "name": "羊村怪谈 · 法官守则",
+    "category": "互动叙事",
+    "description": "对照十条入村守则，核验现场物证，在一次次判断中推进案卷。",
+    "hint": "阅读入村须知，把第一条守则记在心里。",
+    "label": "同人 · 规则推理",
+    "color": "#eadfeb",
+    "directory": "../sheep-judge",
+    "port": 4348,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "羊村怪谈 · 法官守则",
+    "enabled": true
+  },
+  {
+    "id": "fengshen-chronicle",
+    "name": "封神大劫 · 山河故人",
+    "category": "互动叙事",
+    "description": "进入封神时代的山河，在旅途、人物与阵营之间留下选择。",
+    "hint": "从封面开启新故事，选择人物来路。",
+    "label": "同人 · 群像叙事",
+    "color": "#eadfeb",
+    "directory": "../fengshen-chronicle",
+    "port": 4349,
+    "entry": "index.html",
+    "required": [
+      "index.html",
+      "licenses/font.txt"
+    ],
+    "files": [
+      "index.html",
+      "licenses/font.txt"
+    ],
+    "publicDirectories": [],
+    "identity": "封神大劫 · 山河故人",
+    "enabled": true
+  },
+  {
+    "id": "qingmao-life",
+    "name": "蛊界 · 青茅余生",
+    "category": "互动叙事",
+    "description": "从青茅山起步，在修行、资源与人际抉择中经营此生。",
+    "hint": "开启新人生，查看第一段遭遇。",
+    "label": "同人 · 生存叙事",
+    "color": "#eadfeb",
+    "directory": "../qingmao-life",
+    "port": 4350,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "蛊界 · 青茅余生 | 离线游戏",
+    "enabled": true
+  },
+  {
+    "id": "cangyuan-dawn",
+    "name": "沧元图 · 向着朝阳",
+    "category": "互动叙事",
+    "description": "从东宁府的无名少年出发，在修行和人物关系中留下因果。",
+    "hint": "点「开启此生」，选择起点。",
+    "label": "同人 · 修行冒险",
+    "color": "#eadfeb",
+    "directory": "../cangyuan-dawn",
+    "port": 4351,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "沧元图 · 向着朝阳",
+    "enabled": true
+  },
+  {
+    "id": "douluo-life",
+    "name": "斗罗大陆 · 人生纪",
+    "category": "互动叙事",
+    "description": "以自己的身份进入魂师世界，在成长、探索与关系中书写人物经历。",
+    "hint": "开始新人生，按引导建立角色。",
+    "label": "同人 · 角色养成",
+    "color": "#eadfeb",
+    "directory": "../douluo-life",
+    "port": 4352,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "斗罗大陆 · 人生纪",
+    "enabled": true
+  },
+  {
+    "id": "dahuang-chronicles",
+    "name": "大荒纪事 · 穿越荒域",
+    "category": "互动叙事",
+    "description": "从暮色中的石村醒来，选择来路，探索任务、舆图与图鉴。",
+    "hint": "输入角色名字，选择来路，点「踏入大荒」。",
+    "label": "荒域 · 角色叙事",
+    "color": "#eadfeb",
+    "directory": "../dahuang-chronicles",
+    "port": 4353,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "大荒纪事 · 穿越荒域 | 离线互动原型",
+    "enabled": true
+  },
+  {
+    "id": "three-suns",
+    "name": "三恒星文明 · 荒原观测站",
+    "category": "互动叙事",
+    "description": "在三恒星世界里读取观象柱、记录证据，判断应继续观测还是保存文明。",
+    "hint": "进入界面原型，读取第一根观象柱。",
+    "label": "观测 · 界面原型",
+    "color": "#eadfeb",
+    "directory": "../three-suns",
+    "port": 4354,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "三恒星文明 · UI 交互原型 v0.2",
+    "enabled": true
+  },
+  {
+    "id": "shanhai-letters",
+    "name": "山海来信",
+    "category": "视觉与交互",
+    "description": "用旅行手账、立体地景和手机预览体验同一段旅程的不同呈现。",
+    "hint": "选一套地图，再从全国总览进入省份。",
+    "label": "旅行地图 · 设计集",
+    "color": "#dee5f4",
+    "directory": "../shanhai-letters",
+    "port": 4355,
+    "entry": "index.html",
+    "required": [
+      "arrivals.html",
+      "index.html",
+      "letters.html",
+      "map-studies.html",
+      "phone.html",
+      "slow-travel.html",
+      "spatial.html",
+      "three-worlds.html"
+    ],
+    "files": [
+      "arrivals.html",
+      "index.html",
+      "letters.html",
+      "map-studies.html",
+      "phone.html",
+      "slow-travel.html",
+      "spatial.html",
+      "three-worlds.html"
+    ],
+    "publicDirectories": [],
+    "identity": "山海来信",
+    "enabled": true
+  },
+  {
+    "id": "arthropod",
+    "name": "Arthropod · 六足步态",
+    "category": "视觉与交互",
+    "description": "观察六足节肢动物如何跨越台阶、斜坡与墙面，在不同地形上寻找落脚点。",
+    "hint": "切换 Steps、Rolling 和 Wall，观察足端接触。",
+    "label": "逆向运动学 · 地形",
+    "color": "#dee5f4",
+    "directory": "../arthropod",
+    "port": 4356,
+    "entry": "index.html",
+    "required": [
+      "app.js",
+      "index.html",
+      "style.css",
+      "vendor/OrbitControls.js",
+      "vendor/THREE-LICENSE.txt",
+      "vendor/three.core.js",
+      "vendor/three.module.js"
+    ],
+    "files": [
+      "app.js",
+      "index.html",
+      "style.css",
+      "vendor/OrbitControls.js",
+      "vendor/THREE-LICENSE.txt",
+      "vendor/three.core.js",
+      "vendor/three.module.js"
+    ],
+    "publicDirectories": [],
+    "identity": "Arthropod — A study in motion",
+    "enabled": true
+  },
+  {
+    "id": "softie",
+    "name": "Softie · 软泥工作室",
+    "category": "视觉与交互",
+    "description": "按压、拉伸彩色软泥，比较软度和阻尼改变后的回弹。",
+    "hint": "在支持 WebGPU 的浏览器里拖拽软泥，再松开。",
+    "label": "WebGPU · 触感",
+    "color": "#dee5f4",
+    "directory": "../softie",
+    "port": 4357,
+    "entry": "index.html",
+    "required": [
+      "assets/index-Bnn9S8lA.css",
+      "assets/index-DDxNekQU.js",
+      "index.html",
+      "licenses/three.txt"
+    ],
+    "files": [
+      "assets/index-Bnn9S8lA.css",
+      "assets/index-DDxNekQU.js",
+      "index.html",
+      "licenses/three.txt"
+    ],
+    "publicDirectories": [],
+    "identity": "Softie — A little softer.",
+    "enabled": true
+  },
+  {
+    "id": "glimmer-worlds",
+    "name": "微光实验室 · 栖川与弦汐",
+    "category": "视觉与交互",
+    "description": "观察一座自行演变的小城，或走进另一间工作室，弹奏弦汐。",
+    "hint": "从首页选择「栖川」或「弦汐」。",
+    "label": "城镇模拟 · 电子乐器",
+    "color": "#dee5f4",
+    "directory": "../glimmer-worlds",
+    "port": 4358,
+    "entry": "index.html",
+    "required": [
+      "assets/FONT-LICENSES.md",
+      "assets/OFL-NotoSerifSC.txt",
+      "assets/font-source.css",
+      "assets/noto-serif-sc-display.woff2",
+      "assets/tide.svg",
+      "assets/town.svg",
+      "index.html",
+      "instrument/app.js",
+      "instrument/audio/river-echoes.flac",
+      "instrument/audio/river-echoes.mp3",
+      "instrument/index.html",
+      "instrument/score.js",
+      "instrument/style.css",
+      "instrument/synth.js",
+      "instrument/view.js",
+      "town/app.js",
+      "town/engine.js",
+      "town/guide.html",
+      "town/index.html",
+      "town/style.css",
+      "town/view.js"
+    ],
+    "files": [
+      "assets/FONT-LICENSES.md",
+      "assets/OFL-NotoSerifSC.txt",
+      "assets/font-source.css",
+      "assets/noto-serif-sc-display.woff2",
+      "assets/tide.svg",
+      "assets/town.svg",
+      "index.html",
+      "instrument/app.js",
+      "instrument/audio/river-echoes.flac",
+      "instrument/audio/river-echoes.mp3",
+      "instrument/index.html",
+      "instrument/score.js",
+      "instrument/style.css",
+      "instrument/synth.js",
+      "instrument/view.js",
+      "town/app.js",
+      "town/engine.js",
+      "town/guide.html",
+      "town/index.html",
+      "town/style.css",
+      "town/view.js"
+    ],
+    "publicDirectories": [],
+    "identity": "微光实验室 · 栖川与弦汐",
+    "enabled": true
+  },
+  {
+    "id": "particle-sea",
+    "name": "星海 · 粒子实验室",
+    "category": "视觉与交互",
+    "description": "移动指针吸引粒子，在星云、星海与文字形态之间切换。",
+    "hint": "移动鼠标牵引粒子，按 1、2、3 切换形态。",
+    "label": "粒子 · 文字",
+    "color": "#dee5f4",
+    "directory": "../particle-sea",
+    "port": 4359,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "星海 · 交互粒子实验室",
+    "enabled": true
+  },
+  {
+    "id": "enigma-lab",
+    "name": "恩尼格玛 · 密码机械实验室",
+    "category": "视觉与交互",
+    "description": "用两套机械实验台观察转子、插线板和灯盘怎样共同变换一个字母。",
+    "hint": "选择一套实验台，按下字母键，追踪电流。",
+    "label": "转子 · 流程可视化",
+    "color": "#dee5f4",
+    "directory": "../enigma-lab",
+    "port": 4360,
+    "entry": "index.html",
+    "required": [
+      "atelier.html",
+      "index.html",
+      "mechanical.html"
+    ],
+    "files": [
+      "atelier.html",
+      "index.html",
+      "mechanical.html"
+    ],
+    "publicDirectories": [],
+    "identity": "恩尼格玛 · 密码机械实验室",
+    "enabled": true
+  },
+  {
+    "id": "latency-archaeology",
+    "name": "延迟考古学",
+    "category": "视觉与交互",
+    "description": "让虚拟小包穿过六个节点，观察自己的点击怎样改变这片网络的天气。",
+    "hint": "点「发包」，看第一枚小包走完整条路径。",
+    "label": "模拟网络 · 节奏",
+    "color": "#dee5f4",
+    "directory": "../latency-archaeology",
+    "port": 4361,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "延迟考古学 / Latency Archaeology",
+    "enabled": true
+  },
+  {
+    "id": "xinghuo-map",
+    "name": "星火汇中华",
+    "category": "视觉与交互",
+    "description": "沿中国地图点亮五颗主题星，跟随粒子、配乐与章节字幕看完整段演出。",
+    "hint": "点亮第一颗星，或开启自动演示。",
+    "label": "粒子地图 · 声画",
+    "color": "#dee5f4",
+    "directory": "../xinghuo-map",
+    "port": 4362,
+    "entry": "index.html",
+    "required": [
+      "app.js",
+      "china_red_five_star_map.png",
+      "index.html",
+      "styles.css",
+      "庄重国庆主题配乐.wav"
+    ],
+    "files": [
+      "app.js",
+      "china_red_five_star_map.png",
+      "index.html",
+      "styles.css",
+      "庄重国庆主题配乐.wav"
+    ],
+    "publicDirectories": [],
+    "identity": "星火汇中华",
+    "enabled": true
+  },
+  {
+    "id": "chibi-css-art",
+    "name": "贴贴 · Pure CSS Art",
+    "category": "视觉与交互",
+    "description": "用 HTML 与 CSS 拼出两位相依的动漫角色，可近看线条与色块。",
+    "hint": "打开画面，观察两个人物的轮廓和层次。",
+    "label": "CSS · 角色插画",
+    "color": "#dee5f4",
+    "directory": "../chibi-css-art",
+    "port": 4363,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "贴贴 · Pure CSS Art",
+    "enabled": true
+  },
+  {
+    "id": "pelican-bicycle",
+    "name": "鹈鹕骑自行车",
+    "category": "视觉与交互",
+    "description": "用矢量动画表现鹈鹕的踩踏与车轮转动。",
+    "hint": "打开页面，观察脚踏与车轮的运动。",
+    "label": "SVG · 循环动画",
+    "color": "#dee5f4",
+    "directory": "../pelican-bicycle",
+    "port": 4364,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "鹈鹕骑自行车 - SVG 2D 动画",
+    "enabled": true
+  },
+  {
+    "id": "foodlife-demo",
+    "name": "食光管家与食刻 Life",
+    "category": "工具与原型",
+    "description": "体验家庭饮食项目的两版前端，从菜单、库存到审批与统计。",
+    "hint": "选一个版本，从首页查看菜单或库存。",
+    "label": "饮食管理 · 产品原型",
+    "color": "#e4e8ef",
+    "directory": "../foodlife-demo",
+    "port": 4365,
+    "entry": "index.html",
+    "required": [
+      "foodlife.html",
+      "index.html",
+      "licenses/THIRD_PARTY_NOTICES.md",
+      "shiguang.html"
+    ],
+    "files": [
+      "foodlife.html",
+      "index.html",
+      "licenses/THIRD_PARTY_NOTICES.md",
+      "shiguang.html"
+    ],
+    "publicDirectories": [],
+    "identity": "食光管家与食刻 Life",
+    "enabled": true
+  },
+  {
+    "id": "writing-experiments",
+    "name": "文字编辑的三种新交互",
+    "category": "工具与原型",
+    "description": "用文字显微镜切换叙述层级，并排比较草稿，或追踪修改影响到的段落。",
+    "hint": "先打开「平行草稿」，并排比较两个分支。",
+    "label": "写作 · 三个原型",
+    "color": "#e4e8ef",
+    "directory": "../writing-experiments",
+    "port": 4366,
+    "entry": "index.html",
+    "required": [
+      "01-semantic-zoom.html",
+      "02-parallel-drafts.html",
+      "03-ripple-edit.html",
+      "index.html",
+      "preview-01.png",
+      "preview-02.png",
+      "preview-03.png"
+    ],
+    "files": [
+      "01-semantic-zoom.html",
+      "02-parallel-drafts.html",
+      "03-ripple-edit.html",
+      "index.html",
+      "preview-01.png",
+      "preview-02.png",
+      "preview-03.png"
+    ],
+    "publicDirectories": [],
+    "identity": "文字编辑的三种新交互 · 原型合集",
+    "enabled": true
+  },
+  {
+    "id": "html-creator",
+    "name": "可视化 HTML 创作工具",
+    "category": "工具与原型",
+    "description": "在画布与组件面板中编辑文章页面，再预览或导出 HTML。",
+    "hint": "选择页面中的一个组件，修改后点预览。",
+    "label": "网页编辑 · 原型",
+    "color": "#e4e8ef",
+    "directory": "../html-creator",
+    "port": 4367,
+    "entry": "index.html",
+    "required": [
+      "canvas.html",
+      "index.html",
+      "studio.html",
+      "web-canvas.html"
+    ],
+    "files": [
+      "canvas.html",
+      "index.html",
+      "studio.html",
+      "web-canvas.html"
+    ],
+    "publicDirectories": [],
+    "identity": "可视化 HTML 创作工具",
+    "enabled": true
+  },
+  {
+    "id": "folio-editor",
+    "name": "页间 Folio · 数字写作室",
+    "category": "工具与原型",
+    "description": "在数字写作室里切换文稿、主题与阅读预览。",
+    "hint": "打开一篇文稿，再切换纸张、极简或夜读主题。",
+    "label": "写作 · 排版",
+    "color": "#e4e8ef",
+    "directory": "../folio-editor",
+    "port": 4368,
+    "entry": "index.html",
+    "required": [
+      "atelier.html",
+      "folio.html",
+      "index.html",
+      "inkstone.html",
+      "perch-page.html",
+      "yantai.html"
+    ],
+    "files": [
+      "atelier.html",
+      "folio.html",
+      "index.html",
+      "inkstone.html",
+      "perch-page.html",
+      "yantai.html"
+    ],
+    "publicDirectories": [],
+    "identity": "页间 Folio · 数字写作室",
+    "enabled": true
+  },
+  {
+    "id": "perch-studio",
+    "name": "栖点 · Agent 工作台",
+    "category": "工具与原型",
+    "description": "在桌面样机里体验 Agent 启动器、工作区与多种布局。",
+    "hint": "选择一个工作台版本，进入示例项目。",
+    "label": "桌面工具 · 样机",
+    "color": "#e4e8ef",
+    "directory": "../perch-studio",
+    "port": 4369,
+    "entry": "index.html",
+    "required": [
+      "desktop.html",
+      "forge.html",
+      "index.html",
+      "launchpad.html",
+      "studio.html",
+      "workbench.html"
+    ],
+    "files": [
+      "desktop.html",
+      "forge.html",
+      "index.html",
+      "launchpad.html",
+      "studio.html",
+      "workbench.html"
+    ],
+    "publicDirectories": [],
+    "identity": "栖点 · Agent 工作台",
+    "enabled": true
+  },
+  {
+    "id": "myenv",
+    "name": "myEnv · 环境工作台",
+    "category": "工具与原型",
+    "description": "在图形与终端界面中模拟版本选择、诊断和同步流程。",
+    "hint": "先在图形界面选一个工具，查看期望版本与生效版本。",
+    "label": "开发环境 · GUI 与 TUI",
+    "color": "#e4e8ef",
+    "directory": "../myenv",
+    "port": 4370,
+    "entry": "index.html",
+    "required": [
+      "gui.html",
+      "index.html",
+      "tui.html"
+    ],
+    "files": [
+      "gui.html",
+      "index.html",
+      "tui.html"
+    ],
+    "publicDirectories": [],
+    "identity": "myEnv · 环境工作台",
+    "enabled": true
+  },
+  {
+    "id": "llm-price-radar",
+    "name": "LLM Price Radar · 价格工作台",
+    "category": "工具与原型",
+    "description": "用内置历史价格比较模型与订阅，按用量试算调用成本。",
+    "hint": "选择一个模型，输入用量或切换计费档位。",
+    "label": "模型价格 · 历史快照",
+    "color": "#e4e8ef",
+    "directory": "../llm-price-radar",
+    "port": 4371,
+    "entry": "index.html",
+    "required": [
+      "catalog.html",
+      "index.html",
+      "workbench.html"
+    ],
+    "files": [
+      "catalog.html",
+      "index.html",
+      "workbench.html"
+    ],
+    "publicDirectories": [],
+    "identity": "LLM Price Radar · 价格工作台",
+    "enabled": true
+  },
+  {
+    "id": "ai-radar",
+    "name": "AI 革新雷达 · 离线样机",
+    "category": "工具与原型",
+    "description": "用样例资讯体验筛选动态、核对来源与整理研究线索的流程。",
+    "hint": "从动态列表打开一条记录，再查看来源。",
+    "label": "资讯 · 工作台",
+    "color": "#e4e8ef",
+    "directory": "../ai-radar",
+    "port": 4372,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "AI Radar MVP",
+    "enabled": true
+  },
+  {
+    "id": "opensource-radar",
+    "name": "中国开源项目雷达",
+    "category": "工具与原型",
+    "description": "按公司和层级筛选项目，回看 2026 年 10 月的开源生态快照。",
+    "hint": "在项目库中选择一个公司，查看条目与来源。",
+    "label": "项目目录 · 历史快照",
+    "color": "#e4e8ef",
+    "directory": "../opensource-radar",
+    "port": 4373,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "中国大型科技公司开源项目雷达",
+    "enabled": true
+  },
+  {
+    "id": "matrix-zeroes",
+    "name": "矩阵置零 · 算法可视化",
+    "category": "学习页面",
+    "description": "逐步运行原地标记法，查看第一行、第一列与当前单元如何变化。",
+    "hint": "选一个示例矩阵，点击下一步。",
+    "label": "算法 · 单步执行",
+    "color": "#e7ebd8",
+    "directory": "../matrix-zeroes",
+    "port": 4374,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "矩阵置零｜交互式代码讲解",
+    "enabled": true
+  },
+  {
+    "id": "concurrency-lab",
+    "name": "Python 爬虫并发 · 引导式课程",
+    "category": "学习页面",
+    "description": "用队列、线程池和异步任务的可视化实验理解取走与完成的区别。",
+    "hint": "先取走一个任务，再报告完成，观察等待者的状态。",
+    "label": "并发 · 可视化",
+    "color": "#e7ebd8",
+    "directory": "../concurrency-lab",
+    "port": 4375,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "Python 爬虫并发 · 引导式课程",
+    "enabled": true
+  },
+  {
+    "id": "os-workshop",
+    "name": "操作系统 · 交互学习与复习",
+    "category": "学习页面",
+    "description": "从系统基础讲解切换到章节题目，在同一处学习和自测。",
+    "hint": "选「从零理解」阅读第一章，或进入工作台做一道题。",
+    "label": "操作系统 · 自学",
+    "color": "#e7ebd8",
+    "directory": "../os-workshop",
+    "port": 4376,
+    "entry": "index.html",
+    "required": [
+      "desk.html",
+      "index.html",
+      "primer.html"
+    ],
+    "files": [
+      "desk.html",
+      "index.html",
+      "primer.html"
+    ],
+    "publicDirectories": [],
+    "identity": "操作系统 · 交互学习与复习",
+    "enabled": true
+  },
+  {
+    "id": "linux-field-guide",
+    "name": "Linux 系统管理 · 交互手册",
+    "category": "学习页面",
+    "description": "按章节浏览系统管理主题，在学习目录中记录自己的进度。",
+    "hint": "从目录打开一个章节，切换主题或标记进度。",
+    "label": "Linux · 自学",
+    "color": "#e7ebd8",
+    "directory": "../linux-field-guide",
+    "port": 4377,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "publicDirectories": [],
+    "identity": "Linux 系统管理 · 从终端到运维实践",
+    "enabled": true
   }
 ]

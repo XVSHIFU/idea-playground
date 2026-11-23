@@ -1,0 +1,35 @@
+{
+  "id": "gray-domain",
+  "name": "灰域纪元",
+  "category": "游戏与模拟",
+  "description": "从暮色星谷的科研前哨起步，调度资源、设施与研究，观察文明的发展。",
+  "hint": "启动暮色星谷，点击场景采集第一份物质。",
+  "label": "文明 · 策略",
+  "color": "#eadfd2",
+  "directory": "../gray-domain",
+  "port": 4323,
+  "entry": "index.html",
+  "required": [
+    "assets/blockade-pulse.webp",
+    "assets/cover.webp",
+    "assets/early-research-valley.webp",
+    "assets/orbital-dawn.webp",
+    "assets/roster.webp",
+    "game.js",
+    "index.html",
+    "style.css"
+  ],
+  "files": [
+    "assets/blockade-pulse.webp",
+    "assets/cover.webp",
+    "assets/early-research-valley.webp",
+    "assets/orbital-dawn.webp",
+    "assets/roster.webp",
+    "game.js",
+    "index.html",
+    "style.css"
+  ],
+  "publicDirectories": [],
+  "identity": "灰域纪元｜文明观测站",
+  "enabled": true
+}

@@ -1,0 +1,21 @@
+{
+  "id": "infinity-lanterns",
+  "name": "无限城 · 万灯之境",
+  "category": "场景与漫游",
+  "description": "在层叠楼阁和灯廊之间漫步、飞行，或让镜头带路。",
+  "hint": "进入城中后切换漫游方式，观察建筑层次。",
+  "label": "楼阁 · 自动漫游",
+  "color": "#dce8df",
+  "directory": "../infinity-lanterns",
+  "port": 4340,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "無限城 · 万灯之境",
+  "enabled": true
+}

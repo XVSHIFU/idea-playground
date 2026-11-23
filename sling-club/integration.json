@@ -1,0 +1,21 @@
+{
+  "id": "sling-club",
+  "name": "弦上对决",
+  "category": "游戏与模拟",
+  "description": "把木饼弹过中央小门，与电脑争夺率先清空半场的机会。",
+  "hint": "点「开始对战」，将下半场木饼向后拉，再松手。",
+  "label": "桌面 · 对战",
+  "color": "#eadfd2",
+  "directory": "../sling-club",
+  "port": 4319,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "弦上对决 · 木制弹力绳冰球",
+  "enabled": true
+}

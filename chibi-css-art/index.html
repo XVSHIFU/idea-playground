@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="纯 HTML 与 CSS 绘制的双人动漫插画：粉发女孩趴在蓝发女孩头上。">
+  <title>贴贴 · Pure CSS Art</title>
+  <style>
+
+/* Pure HTML + CSS illustration. No image, SVG, canvas, script or external asset.
+   Edit the named layers below; DOM order is paint order.
+   clip-path: path() supplies the Bézier contours, not an SVG element. */
+:root { color-scheme: light; background: #fff; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100svh; display: grid; place-items: center; background: #fff; }
+.picture { margin: 0; width: min(94vw, 750px); aspect-ratio: 1; container-type: inline-size; overflow: hidden; }
+.art { position: relative; width: 375px; height: 375px; transform-origin: 0 0; transform: scale(calc(100cqw / 375px)); isolation: isolate; }
+.part { position: absolute; inset: 0; pointer-events: none; }
+.part::before { content: ""; position: absolute; inset: 0; background: var(--fill); clip-path: var(--contour); }
+.outlined { filter: drop-shadow(.38px .35px 0 #6c555c) drop-shadow(-.38px -.35px 0 #6c555c); }
+@supports not (transform: scale(calc(100cqw / 375px))) {
+  .picture { width: 375px; height: 375px; }
+  .art { transform: none; }
+  @media(max-width: 390px) { .picture { width: 300px; height: 300px; } .art { transform: scale(.8); } }
+}
+.ground-shadow { --fill: #eededc; --contour: path("M34 320 C83 310 326 323 375 330 L375 342 C290 369 120 345 34 327 Z"); }
+.navy-hair-back { --fill: #3e5266; --contour: path("M58 261 C40 280 33 282 16 287 C1 292 1 298 10 301 L34 300 L24 309 C52 323 83 322 108 306 L153 224 Z"); }
+.navy-hair-back-light { --fill: #6e8192; --contour: path("M43 286 Q13 285 10 295 L27 296 L23 300 Q54 302 67 280 Z"); }
+.coat-back { --fill: #9d858c; --contour: path("M275 211 C320 208 355 229 387 239 L387 327 L350 343 Q269 363 213 341 C177 337 66 339 28 321 Q15 313 33 302 L83 266 Z"); }
+.coat-bottom-fold { --fill: #705d69; --contour: path("M35 302 Q69 304 83 318 Q151 315 207 330 L237 342 Q286 335 327 341 L366 331 L375 338 Q314 365 222 347 L193 337 Q104 340 30 324 L23 317 Z"); }
+.coat-right-shadow { --fill: #766371; --contour: path("M298 223 Q352 219 382 245 L381 333 L341 339 L290 322 L277 265 Z"); }
+.orange-shirt { --fill: linear-gradient(120deg,#ffd083 25%,#ffb570 70%,#fca56c); --contour: path("M300 96 Q323 104 349 119 Q362 121 376 126 L385 249 Q359 232 338 232 L315 220 L286 161 Z"); }
+.orange-shirt-shadow { --fill: #f99761; --contour: path("M320 163 Q335 168 337 183 Q355 195 377 195 L382 248 L333 229 L307 200 Z"); }
+.orange-shirt-fold { --fill: #f49762; --contour: path("M352 121 Q367 122 376 126 L380 138 Q362 137 350 133 Q337 129 352 121 Z"); }
+.mint-back { --fill: #a2e4a7; --contour: path("M293 157 C323 161 337 180 342 211 Q344 225 331 235 L292 237 L277 203 Z"); }
+.mint-back-shade { --fill: #6abb89; --contour: path("M313 168 Q335 184 331 216 L342 220 Q344 183 315 168 Z"); }
+.lower-left-hand { --fill: #ffe8d0; --contour: path("M55 309 C49 310 45 319 47 325 Q51 333 64 329 L72 326 Q80 331 82 325 L78 313 Z"); }
+.lower-left-fingers { --fill: #dca99f; --contour: path("M65 317 Q67 323 61 329 L63 329 Q71 325 69 319 Z M72 319 Q76 324 70 327 L74 327 Q80 324 76 320 Z"); }
+.lower-face { --fill: #ffead1; --contour: path("M85 205 C119 187 192 200 226 233 Q251 264 243 299 C232 327 204 337 158 334 Q110 333 80 323 Q66 318 69 295 Q67 249 85 205 Z"); }
+.lower-face-shade { --fill: #f9d7bd; --contour: path("M76 276 C77 304 71 314 87 325 L78 323 Q63 317 69 293 Z M220 286 Q239 280 243 289 Q238 315 213 324 L219 309 Z"); }
+.lower-right-ear { --fill: #f4b7a4; --contour: path("M239 276 Q253 273 258 283 Q264 295 249 312 L238 311 Z"); }
+.lower-ear-inner { --fill: #dd988e; --contour: path("M249 282 Q256 287 250 299 Q252 286 244 286 Z"); }
+.lower-eye-left-white { --fill: #fff7e7; --contour: path("M80 269 Q96 267 114 273 L114 293 Q106 306 94 303 Q84 299 80 269 Z"); }
+.lower-eye-left { --fill: linear-gradient(#442a48 50%,#733377 51%,#753778); --contour: path("M92 272 L112 274 Q118 306 102 304 Q91 302 92 284 Z"); }
+.lower-eye-left-pupil { --fill: #41283e; --contour: path("M93 273 L111 275 L111 289 Q104 295 95 289 Z"); }
+.lower-eye-right-white { --fill: #fff8e8; --contour: path("M164 276 Q189 279 216 276 Q214 300 192 310 Q173 312 168 298 Z"); }
+.lower-eye-right { --fill: linear-gradient(#42263f 58%,#713575 59%); --contour: path("M169 279 L201 280 Q202 308 185 312 Q169 314 169 291 Z"); }
+.lower-eye-right-pupil { --fill: #3c253b; --contour: path("M171 280 L199 281 Q200 300 183 301 Q174 301 171 294 Z"); }
+.lower-left-lash { --fill: #382e32; --contour: path("M75 270 Q93 265 116 272 L113 277 Q96 272 75 271 Z"); }
+.lower-right-lash { --fill: #372a30; --contour: path("M157 275 Q185 279 217 277 L215 281 Q197 286 173 281 Z"); }
+.lower-cheeks { --fill: radial-gradient(ellipse at 50% 50%,#ecac9e,#f2b7a7); --contour: path("M76 302 C82 297 94 305 90 311 C86 318 70 309 76 302 Z M211 309 C221 307 228 314 220 318 Q207 321 208 315 Z"); }
+.lower-cheek-glints { --fill: #fff9ed; --contour: path("M78 289 L80 289 L82 296 L80 296 Z M82 288 L84 289 L86 296 L84 296 Z M205 296 L207 295 L205 303 L203 303 Z M209 295 L211 294 L209 301 L207 302 Z"); }
+.navy-hair-main { --fill: linear-gradient(110deg,#52687e 5%,#576b83 48%,#3c5063 80%); --contour: path("M65 170 C91 156 160 175 201 195 Q244 208 292 220 C303 236 291 284 307 309 Q321 334 376 316 L379 326 Q348 337 317 334 Q290 335 280 322 Q265 302 263 264 Q257 278 246 280 L228 269 Q238 285 243 299 Q244 314 223 321 L202 333 Q190 344 187 335 Q187 328 200 324 Q215 313 220 296 Q226 281 215 278 Q186 278 171 265 Q176 275 186 278 Q157 276 141 259 Q142 270 148 275 Q122 273 112 256 L115 271 Q99 268 96 249 L92 218 Q83 239 77 257 L66 287 Q61 303 76 313 Q67 318 51 310 Q45 305 50 289 L55 260 Q45 274 48 258 Q41 266 44 249 Q47 206 65 170 Z"); }
+.navy-right-deep-shade { --fill: #304858; --contour: path("M235 220 L291 226 Q293 255 294 283 Q292 316 310 325 Q330 337 375 318 L377 326 Q348 337 317 333 Q291 336 281 321 Q270 301 266 256 L263 277 Q251 265 250 243 L248 264 L233 256 Z"); }
+.navy-left-light { --fill: #71849a; --contour: path("M66 185 Q65 211 56 230 Q52 247 50 257 L46 252 Q47 214 62 187 Z M66 268 Q58 293 61 303 L69 310 L53 306 Q47 298 58 281 Z"); }
+.navy-center-light { --fill: #6b7c93; --contour: path("M89 191 Q109 190 120 198 Q114 228 126 250 L135 264 Q120 254 116 244 L118 265 Q104 256 102 240 L101 250 L94 228 Z M149 204 L162 208 Q160 245 174 268 Q164 258 160 248 Q152 223 149 204 Z"); }
+.navy-center-shade { --fill: #485d75; --contour: path("M171 211 Q189 218 200 227 Q205 255 224 267 L239 276 Q214 270 194 256 Q180 244 171 211 Z"); }
+.navy-lock-bottom-light { --fill: #738398; --contour: path("M240 286 Q252 306 240 314 Q224 321 214 323 Q228 312 231 304 Z M212 322 Q194 329 192 335 Q187 335 191 331 Z"); }
+.navy-lock-lines { --fill: #354858; --contour: path("M88 203 Q84 232 75 256 Q82 237 88 213 Z M99 237 Q103 254 110 263 Q104 260 101 250 L106 250 L99 248 Z M101 244 L118 251 L103 247 Z M159 236 Q166 260 173 266 Q164 259 160 248 L154 246 L160 247 Z M164 252 L181 257 L166 255 Z M246 242 Q245 258 252 271 L246 264 Z"); }
+.navy-shine { --fill: #acb9c8; --contour: path("M67 190 C72 185 77 189 73 196 C69 203 65 199 67 190 Z M62 208 C65 204 68 205 66 210 C63 216 60 214 62 208 Z M72 208 C75 204 78 207 75 213 C72 217 70 214 72 208 Z M95 214 Q99 212 99 218 Q96 223 95 217 Z M101 218 Q105 216 104 222 Q101 224 101 218 Z M163 230 Q166 227 168 235 Q165 239 163 230 Z M167 243 Q170 240 171 247 Q168 250 167 243 Z"); }
+.front-sleeve { --fill: #a78b91; --contour: path("M231 321 Q234 324 248 323 Q267 317 277 327 Q315 342 374 322 L377 334 Q349 348 321 349 L242 349 Q225 353 209 343 L199 337 Q198 329 213 326 Z"); }
+.front-sleeve-shadow { --fill: #806773; --contour: path("M237 340 Q253 337 266 342 Q288 350 324 344 L357 333 L375 326 L375 335 Q344 351 318 349 L241 349 L231 345 Z"); }
+.lower-right-hand { --fill: #ffe4c9; --contour: path("M204 333 Q210 338 226 342 L233 345 Q225 352 216 348 Q207 351 204 345 Q198 345 203 339 Z"); }
+.lower-right-fingers { --fill: #d7a698; --contour: path("M208 339 Q211 344 208 348 L210 348 Q214 344 208 339 Z M222 343 L218 348 L220 349 L225 344 Z"); }
+.pink-tail { --fill: linear-gradient(100deg,#ffb0bb,#f3a0b0 64%,#be7f97); --contour: path("M311 204 C337 214 358 226 359 248 Q360 273 337 294 Q348 268 335 247 Q332 272 311 284 Q325 257 319 238 L307 226 Z"); }
+.pink-tail-shadow { --fill: #c67f98; --contour: path("M329 223 Q355 243 341 276 Q345 251 330 237 Z M321 235 Q329 266 311 284 Q320 259 317 243 Z"); }
+.pink-tail-light { --fill: #ffc1c5; --contour: path("M334 223 Q356 233 354 254 Q350 241 340 237 Z M323 227 Q331 249 322 267 Q326 250 321 238 Z"); }
+.pink-tail-lines { --fill: #995f79; --contour: path("M329 226 Q340 246 337 263 Q336 245 329 230 Z"); }
+.upper-face { --fill: #ffecd2; --contour: path("M90 143 Q129 126 158 84 Q197 89 226 126 Q251 154 253 178 Q247 205 218 222 Q203 227 185 218 L108 188 L83 175 Q78 161 90 143 Z"); }
+.upper-face-shade { --fill: #f7d9bc; --contour: path("M155 93 L165 98 Q168 130 164 145 L159 137 L153 116 Z M239 170 Q251 177 243 192 Q234 211 217 218 L205 220 Q228 207 231 189 Z"); }
+.upper-brow-left { --fill: #9d8771; --contour: path("M142 129 Q147 125 155 127 L155 128 Q148 127 142 130 Z M145 132 Q150 129 156 131 L156 132 Z"); }
+.upper-brow-right { --fill: #ab8b77; --contour: path("M204 151 Q211 153 216 159 L215 160 Q210 155 204 152 Z"); }
+.upper-smile-left { --fill: #49342e; --contour: path("M104 154 C119 141 135 146 145 162 Q123 155 104 154 Z"); }
+.upper-smile-left-tip { --fill: #63483a; --contour: path("M129 146 Q141 149 146 157 Q137 150 129 148 Z"); }
+.upper-smile-right { --fill: #49312c; --contour: path("M192 181 C203 170 220 181 228 198 Q210 187 192 181 Z"); }
+.upper-blush { --fill: #f2b4a4; --contour: path("M96 163 C101 157 117 160 122 166 Q127 173 112 177 Q96 177 96 169 Z M200 199 C204 192 212 194 219 199 Q226 206 216 211 Q202 213 198 207 Z"); }
+.upper-nose { --fill: #c9a388; --contour: path("M163 178 Q166 179 166 181 L164 181 Z"); }
+.pink-hair-main { --fill: linear-gradient(128deg,#ffc1be 3%,#f9b0b3 44%,#f5a6b2 75%,#e99cb0); --contour: path("M63 178 C53 174 57 160 62 145 Q76 105 104 67 C126 36 151 19 187 18 Q230 16 257 30 C294 50 314 84 318 122 Q322 150 313 176 Q323 192 318 208 Q316 217 300 220 Q281 226 258 219 Q248 216 246 210 Q240 226 233 228 Q218 226 210 222 Q218 216 227 203 Q235 187 240 168 Q240 194 229 210 Q211 193 205 159 Q199 141 199 127 Q196 166 180 191 Q172 169 168 151 Q154 122 155 95 Q140 123 116 136 Q102 144 86 163 Q81 172 91 174 L103 180 Q93 186 83 180 Q72 181 63 178 Z"); }
+.pink-outer-shadow { --fill: #b67d95; --contour: path("M191 19 C244 13 280 39 302 78 Q320 114 317 153 L311 173 Q320 194 313 208 L302 217 Q290 228 261 219 Q255 217 254 210 Q266 217 277 215 Q264 207 268 195 Q273 211 289 210 Q283 194 286 178 Q300 157 301 134 C299 82 273 45 231 31 Q213 24 191 19 Z"); }
+.pink-outer-midshade { --fill: #d98fa6; --contour: path("M287 65 Q320 113 310 163 Q304 179 311 196 Q315 207 303 214 Q288 210 286 198 Q291 205 300 203 Q297 195 292 191 Q284 181 287 154 Q300 113 287 65 Z"); }
+.pink-crown-highlight { --fill: #ffe0d8; --contour: path("M65 150 Q87 87 124 50 Q149 22 187 20 Q215 18 234 24 C187 19 145 41 119 68 Q93 94 65 150 Z"); }
+.pink-crown-glow { --fill: #ffd1c9; --contour: path("M124 49 Q166 17 211 23 Q172 25 147 42 Z"); }
+.pink-left-shadow { --fill: #d891a5; --contour: path("M109 112 Q93 141 78 162 Q74 172 85 176 L69 179 Q59 177 63 165 Q76 139 91 122 Q78 150 78 158 Z M121 107 Q113 125 103 137 L88 154 Q99 132 114 118 Z"); }
+.pink-left-lock-light { --fill: #ffbfbc; --contour: path("M94 127 Q113 109 125 88 Q118 114 102 131 L88 148 Z"); }
+.pink-center-shadow { --fill: #d992a6; --contour: path("M158 78 Q152 106 160 128 L168 149 Q171 167 180 189 Q176 177 182 159 Q188 169 190 155 Q199 133 200 92 Q208 117 200 145 L199 136 Q194 169 180 191 Q167 165 166 147 Q157 127 156 113 Q149 97 158 78 Z"); }
+.pink-center-light { --fill: #ffbfbd; --contour: path("M161 106 Q164 137 171 153 L177 175 Q177 151 169 130 Z"); }
+.pink-right-fringe-shade { --fill: #da91a6; --contour: path("M226 126 Q228 166 234 180 L229 198 Q216 184 213 169 L210 138 Q214 163 220 176 Q225 172 226 126 Z M245 130 Q249 173 237 199 Q230 213 220 219 L209 222 L230 228 Q241 226 247 209 Q256 187 260 154 L260 121 Q261 159 249 191 Q251 165 245 130 Z"); }
+.pink-lower-lock-light { --fill: #ffc0c0; --contour: path("M258 168 Q251 192 256 210 Q258 216 278 218 Q266 215 265 209 Q257 196 258 168 Z"); }
+.pink-hair-lines { --fill: #956e79; --contour: path("M159 75 Q151 102 137 117 Q119 133 108 143 Q130 122 141 105 Z M124 102 Q116 124 103 136 Q118 116 124 102 Z M155 94 Q154 123 165 145 Q156 125 155 112 Z M200 96 Q200 128 205 145 L209 158 Q201 145 199 128 Z M212 126 Q210 167 228 198 L226 199 Q210 177 212 143 Z M243 130 Q247 176 232 197 Q244 170 243 130 Z M260 117 Q269 174 247 211 Q260 180 261 153 Z M182 137 Q181 166 177 177 L179 182 Q183 161 182 137 Z"); }
+.pink-shine { --fill: #ffdfd1; --contour: path("M106 71 C110 68 112 72 109 77 L104 83 Q100 83 103 77 Z M112 89 C115 84 119 87 116 92 C113 96 109 95 112 89 Z M120 93 Q123 91 123 95 Q121 98 119 97 Z M159 109 C163 104 166 109 164 115 Q160 120 159 113 Z M171 117 Q174 114 174 120 Q171 123 171 117 Z M211 128 Q214 125 214 131 Q212 135 210 132 Z"); }
+.upper-left-sleeve { --fill: #b1edb0; --contour: path("M65 174 Q79 178 87 174 L99 178 Q98 185 89 189 Q75 187 65 182 Z"); }
+.upper-left-hand { --fill: #ffe4c7; --contour: path("M88 175 Q96 172 103 178 Q109 185 101 190 Q96 196 90 193 L78 188 Q74 185 80 181 Q85 180 93 184 L96 185 Q97 181 88 180 Z"); }
+.upper-left-finger-line { --fill: #d8a695; --contour: path("M81 182 Q89 181 96 186 L95 187 Q88 183 81 184 Z"); }
+.pink-ear-lock { --fill: #f5b0b5; --contour: path("M59 178 Q42 181 45 193 Q46 199 53 202 Q50 191 64 186 Z"); }
+.upper-right-hand { --fill: #ffe5c8; --contour: path("M208 220 Q197 218 193 225 Q189 231 197 236 Q204 240 214 237 L218 229 Z"); }
+.upper-right-finger { --fill: #dbab99; --contour: path("M195 223 Q200 220 205 223 L211 225 L208 226 Q202 222 195 225 Z"); }
+.mint-front-sleeve { --fill: #a7e9a6; --contour: path("M207 220 Q219 222 231 227 Q239 229 248 214 Q270 227 305 218 L316 215 L316 228 Q278 251 214 243 Z"); }
+.mint-front-shadow { --fill: #72bf88; --contour: path("M248 216 Q271 225 305 218 L316 215 L316 227 Q294 242 261 244 Q281 240 290 231 Q269 237 248 231 L240 226 Z"); }
+.mint-front-light { --fill: #c7f3bb; --contour: path("M211 222 L229 228 Q236 230 241 226 Q236 236 215 235 Z"); }
+.pink-hair-ribbon { --fill: #ffe0e3; --contour: path("M299 216 Q304 212 308 214 Q310 204 315 202 L321 208 L327 203 Q331 211 327 222 L315 219 Q314 229 310 228 Q306 225 306 222 L301 222 Z"); }
+.ribbon-shade { --fill: #dda5ba; --contour: path("M313 212 L315 218 L310 226 L308 221 Z M321 209 L327 205 L327 219 L321 217 Z"); }
+  </style>
+</head>
+<body>
+  <figure class="picture" role="img" aria-label="纯 CSS 插画：笑着的粉发女孩穿着橙色衣服、绿色袖口，趴在紫色眼睛的蓝发女孩头上；蓝发女孩裹着灰紫色外套，表情有点无奈。">
+    <div class="art" aria-hidden="true">
+      <div class="part ground-shadow"></div>
+      <div class="part navy-hair-back outlined"></div>
+      <div class="part navy-hair-back-light"></div>
+      <div class="part coat-back outlined"></div>
+      <div class="part coat-bottom-fold"></div>
+      <div class="part coat-right-shadow"></div>
+      <div class="part orange-shirt outlined"></div>
+      <div class="part orange-shirt-shadow"></div>
+      <div class="part orange-shirt-fold"></div>
+      <div class="part mint-back outlined"></div>
+      <div class="part mint-back-shade"></div>
+      <div class="part lower-left-hand outlined"></div>
+      <div class="part lower-left-fingers"></div>
+      <div class="part lower-face outlined"></div>
+      <div class="part lower-face-shade"></div>
+      <div class="part lower-right-ear outlined"></div>
+      <div class="part lower-ear-inner"></div>
+      <div class="part lower-eye-left-white"></div>
+      <div class="part lower-eye-left"></div>
+      <div class="part lower-eye-left-pupil"></div>
+      <div class="part lower-eye-right-white"></div>
+      <div class="part lower-eye-right"></div>
+      <div class="part lower-eye-right-pupil"></div>
+      <div class="part lower-left-lash"></div>
+      <div class="part lower-right-lash"></div>
+      <div class="part lower-cheeks"></div>
+      <div class="part lower-cheek-glints"></div>
+      <div class="part navy-hair-main outlined"></div>
+      <div class="part navy-right-deep-shade"></div>
+      <div class="part navy-left-light"></div>
+      <div class="part navy-center-light"></div>
+      <div class="part navy-center-shade"></div>
+      <div class="part navy-lock-bottom-light"></div>
+      <div class="part navy-lock-lines"></div>
+      <div class="part navy-shine"></div>
+      <div class="part front-sleeve outlined"></div>
+      <div class="part front-sleeve-shadow"></div>
+      <div class="part lower-right-hand outlined"></div>
+      <div class="part lower-right-fingers"></div>
+      <div class="part pink-tail outlined"></div>
+      <div class="part pink-tail-shadow"></div>
+      <div class="part pink-tail-light"></div>
+      <div class="part pink-tail-lines"></div>
+      <div class="part upper-face outlined"></div>
+      <div class="part upper-face-shade"></div>
+      <div class="part upper-brow-left"></div>
+      <div class="part upper-brow-right"></div>
+      <div class="part upper-smile-left"></div>
+      <div class="part upper-smile-left-tip"></div>
+      <div class="part upper-smile-right"></div>
+      <div class="part upper-blush"></div>
+      <div class="part upper-nose"></div>
+      <div class="part pink-hair-main outlined"></div>
+      <div class="part pink-outer-shadow"></div>
+      <div class="part pink-outer-midshade"></div>
+      <div class="part pink-crown-highlight"></div>
+      <div class="part pink-crown-glow"></div>
+      <div class="part pink-left-shadow"></div>
+      <div class="part pink-left-lock-light"></div>
+      <div class="part pink-center-shadow"></div>
+      <div class="part pink-center-light"></div>
+      <div class="part pink-right-fringe-shade"></div>
+      <div class="part pink-lower-lock-light"></div>
+      <div class="part pink-hair-lines"></div>
+      <div class="part pink-shine"></div>
+      <div class="part upper-left-sleeve outlined"></div>
+      <div class="part upper-left-hand outlined"></div>
+      <div class="part upper-left-finger-line"></div>
+      <div class="part pink-ear-lock outlined"></div>
+      <div class="part upper-right-hand outlined"></div>
+      <div class="part upper-right-finger"></div>
+      <div class="part mint-front-sleeve outlined"></div>
+      <div class="part mint-front-shadow"></div>
+      <div class="part mint-front-light"></div>
+      <div class="part pink-hair-ribbon outlined"></div>
+      <div class="part ribbon-shade"></div>
+    </div>
+  </figure>
+</body>
+</html>

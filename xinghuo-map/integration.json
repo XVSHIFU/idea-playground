@@ -1,0 +1,29 @@
+{
+  "id": "xinghuo-map",
+  "name": "星火汇中华",
+  "category": "视觉与交互",
+  "description": "沿中国地图点亮五颗主题星，跟随粒子、配乐与章节字幕看完整段演出。",
+  "hint": "点亮第一颗星，或开启自动演示。",
+  "label": "粒子地图 · 声画",
+  "color": "#dee5f4",
+  "directory": "../xinghuo-map",
+  "port": 4362,
+  "entry": "index.html",
+  "required": [
+    "app.js",
+    "china_red_five_star_map.png",
+    "index.html",
+    "styles.css",
+    "庄重国庆主题配乐.wav"
+  ],
+  "files": [
+    "app.js",
+    "china_red_five_star_map.png",
+    "index.html",
+    "styles.css",
+    "庄重国庆主题配乐.wav"
+  ],
+  "publicDirectories": [],
+  "identity": "星火汇中华",
+  "enabled": true
+}

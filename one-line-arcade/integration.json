@@ -1,0 +1,21 @@
+{
+  "id": "one-line-arcade",
+  "name": "一句话游乐场",
+  "category": "游戏与模拟",
+  "description": "切换极速竞速、运输船与鹈鹕骑行三个短篇小游戏。",
+  "hint": "先选极速竞速，点「开始游戏」并用方向键移动。",
+  "label": "街机 · 三合一",
+  "color": "#eadfd2",
+  "directory": "../one-line-arcade",
+  "port": 4328,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "一句话游乐场 · 三款小游戏",
+  "enabled": true
+}

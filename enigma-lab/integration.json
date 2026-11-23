@@ -1,0 +1,25 @@
+{
+  "id": "enigma-lab",
+  "name": "恩尼格玛 · 密码机械实验室",
+  "category": "视觉与交互",
+  "description": "用两套机械实验台观察转子、插线板和灯盘怎样共同变换一个字母。",
+  "hint": "选择一套实验台，按下字母键，追踪电流。",
+  "label": "转子 · 流程可视化",
+  "color": "#dee5f4",
+  "directory": "../enigma-lab",
+  "port": 4360,
+  "entry": "index.html",
+  "required": [
+    "atelier.html",
+    "index.html",
+    "mechanical.html"
+  ],
+  "files": [
+    "atelier.html",
+    "index.html",
+    "mechanical.html"
+  ],
+  "publicDirectories": [],
+  "identity": "恩尼格玛 · 密码机械实验室",
+  "enabled": true
+}

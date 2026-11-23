@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#335947">
+<meta name="description" content="手捏的海滨小镇，八片相连的原野。耕种、钓鱼、采矿、制作、养殖与小镇生活。">
+<title>潮汐小镇 · 黏土海岸</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="clay.css">
+<link rel="stylesheet" href="panels.css">
+</head>
+<body>
+<div id="loadingScreen">
+  <img class="loading-art" src="assets/art-direction.png" alt="潮汐小镇画风参考">
+  <div class="loading-label"><h2>潮汐小镇</h2><p>海风正在吹过手捏的小世界</p><p>正在装载场景素材…</p><div class="loading-dots"></div></div>
+</div>
+<main id="game" aria-label="潮汐小镇游戏">
+  <canvas id="world" tabindex="0" aria-label="农场场景，使用 WASD 移动，E 交互，数字键切换工具"></canvas>
+  <div class="vignette"></div>
+  <div class="energy" aria-label="体力">
+    <canvas class="energy-leaf" data-icon="leaf" width="38" height="38" aria-hidden="true"></canvas>
+    <div class="energy-track"><i id="energyFill"></i><span class="energy-value"><b id="energyText">100</b><span class="energy-max"> / 100</span></span></div>
+  </div>
+  <header class="hud">
+    <div class="top-right" aria-label="日期和金币">
+      <div class="calendar plaque"><canvas data-icon="sun" width="29" height="29" aria-hidden="true"></canvas><div class="calendar-line"><strong id="date">春 1 日</strong><small id="clock">08:00</small></div></div>
+      <div class="coins plaque"><canvas data-icon="coin" width="28" height="28" aria-hidden="true"></canvas><b id="money">200</b><span>金币</span></div>
+    </div>
+  </header>
+  <aside class="quest" id="questTracker"><button id="questToggle"><span class="tiny-flower" aria-hidden="true">✦</span><span id="questTitle">从一小块土地开始</span><span aria-hidden="true">›</span></button><div id="questDetail"></div></aside>
+  <nav id="gameMenu" class="side-buttons" aria-label="游戏菜单">
+    <div class="primary-buttons">
+      <button id="bagButton" title="背包 · I"><canvas data-icon="bag" width="36" height="36" aria-hidden="true"></canvas><span>背包</span><kbd>I</kbd></button>
+      <button id="mapButton" title="地图 · M"><canvas data-icon="map" width="36" height="36" aria-hidden="true"></canvas><span>地图</span><kbd>M</kbd></button>
+      <button id="craftButton" title="制作 · C"><canvas data-icon="craft" width="36" height="36" aria-hidden="true"></canvas><span>制作</span><kbd>C</kbd></button>
+      <button id="journalButton" title="手账 · J"><canvas data-icon="book" width="36" height="36" aria-hidden="true"></canvas><span>手账</span><kbd>J</kbd></button>
+      <button id="menuToggle" title="更多选项" aria-label="更多选项" aria-controls="utilityMenu" aria-expanded="false"><span class="menu-dots" aria-hidden="true">···</span></button>
+    </div>
+    <div id="utilityMenu" class="utility-buttons" aria-label="更多选项">
+      <button id="settingsButton" title="设置 · O"><canvas data-icon="gear" width="32" height="32" aria-hidden="true"></canvas><span>设置</span><kbd>O</kbd></button>
+      <button id="soundButton" title="开启或关闭声音" aria-pressed="false"><canvas data-icon="music" width="32" height="32" aria-hidden="true"></canvas><span>声音</span></button>
+      <button id="helpButton" title="操作说明"><canvas data-icon="help" width="32" height="32" aria-hidden="true"></canvas><span>帮助</span></button>
+    </div>
+  </nav>
+  <div class="location"><span class="location-dot"></span><span id="locationName">海风农场</span><span class="location-rule"></span><small id="saveStatus">已保存</small></div>
+  <div class="hover-tooltip" id="tooltip"></div>
+  <div class="toast-stack" id="toasts" aria-live="polite"></div>
+  <div class="context-hint" id="context"></div>
+  <div class="bottom-ui"><div class="tool-row" id="tools"></div><div class="tool-caption" id="toolCaption">空手</div></div>
+  <div class="mobile-controls"><div id="joystick"><i></i></div><button id="mobileAction">操作</button></div>
+  <div id="modalLayer" class="modal-layer hidden"><section id="panel" class="panel" role="dialog" aria-modal="true"><button id="closePanel" class="close" aria-label="关闭">×</button><div id="panelContent"></div></section></div>
+  <div id="fishing" class="fishing hidden"><div class="fishing-top"><strong>海风垂钓</strong><button id="cancelFishing" aria-label="取消钓鱼">×</button></div><p id="fishInstruction">静静等待浮漂下沉…</p><div id="fishTrack"><div id="catchZone"></div><div id="fishSprite"><canvas data-icon="fish" width="26" height="26"></canvas></div></div><div class="catch-progress"><i id="catchProgress"></i></div><button id="reelButton">等待鱼讯</button><small id="fishTip">按住空格 / 按钮让捕获区上升，松开下降</small></div>
+  <div id="sceneFade"></div>
+</main>
+<script src="art.js"></script><script src="core.js"></script><script src="world.js"></script><script src="interiors.js"></script><script src="actors.js"></script><script src="panels.js"></script><script src="app.js"></script>
+</body>
+</html>

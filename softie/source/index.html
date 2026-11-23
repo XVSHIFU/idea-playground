@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f4f4f1" />
+  <meta name="description" content="A little moment of squish. Stretch, squeeze and poke a soft, translucent WebGPU slime." />
+  <title>Softie — A little softer.</title>
+</head>
+<body>
+  <main class="app">
+    <header class="brand" aria-label="Softie"><svg viewBox="0 0 48 30" aria-hidden="true"><path d="M5 23C12 5 18 5 25 16s14 4 18-10"/></svg><span>softie</span></header>
+    <section class="intro"><h1>A little softer.</h1><p>A tiny moment of squish. Go on, give it a squeeze.</p></section>
+    <section id="playground" aria-label="Interactive slime. Press and drag to stretch, or use the Poke button.">
+      <canvas id="slime-canvas" aria-label="Soft, translucent mint slime" tabindex="0"></canvas>
+      <div id="loading" class="scene-message"><span class="loader"></span><p>Waking up your softie…</p></div>
+      <div id="error" class="scene-message error" hidden><span class="error-symbol">:(</span><h2>A little GPU help?</h2><p id="error-text"></p><button id="retry">Try again</button></div>
+    </section>
+    <aside class="customize" aria-label="Slime controls">
+      <div class="control-card">
+        <h2>MAKE IT YOURS</h2>
+        <fieldset><legend>Color <span id="color-name">Mint</span></legend><div class="swatches">
+          <button class="swatch selected" data-color="mint" style="--swatch:#95d7b7" aria-label="Mint" aria-pressed="true"></button>
+          <button class="swatch" data-color="pink" style="--swatch:#f2afc8" aria-label="Pink" aria-pressed="false"></button>
+          <button class="swatch" data-color="lavender" style="--swatch:#c6b4e9" aria-label="Lavender" aria-pressed="false"></button>
+          <button class="swatch" data-color="peach" style="--swatch:#f2bd92" aria-label="Peach" aria-pressed="false"></button>
+        </div></fieldset>
+        <div class="range-control"><label for="softness">Softness</label><div class="range-row"><input id="softness" type="range" min="0" max="100" value="70" style="--fill:70%"/><output for="softness" id="softness-value">70<span>%</span></output></div></div>
+        <div class="range-control"><label for="damping">Damping</label><div class="range-row"><input id="damping" type="range" min="0" max="100" value="45" style="--fill:45%"/><output for="damping" id="damping-value">45<span>%</span></output></div></div>
+        <button id="poke" class="poke" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5C12 8.5 15.5 12 22.5 12 15.5 12 12 15.5 12 22.5 12 15.5 8.5 12 1.5 12 8.5 12 12 8.5 12 1.5Z"/></svg>Poke</button>
+      </div>
+      <button id="reset" class="reset" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M19.5 11a8 8 0 1 0-1.7 6.2M20 12a8 8 0 0 0-14-5"/></svg>Reset</button>
+    </aside>
+    <div class="play-hint" id="hint"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 10 1-6a1.3 1.3 0 0 1 2.6.2V8l4 1a2 2 0 0 1 1.4 2.3l-.8 4A2 2 0 0 1 13.2 17H8.6A2 2 0 0 1 7 16l-3-4a1.3 1.3 0 0 1 2-1.6L7 12"/></svg><span>Drag to stretch <i>·</i> Release to wobble</span></div>
+    <footer><span>No thoughts. Just squish.</span><div class="engine-status"><span id="fps"></span><i id="status-dot"></i><span id="status-label">WebGPU</span></div></footer>
+  </main>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

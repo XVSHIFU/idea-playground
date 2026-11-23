@@ -1,0 +1,21 @@
+{
+  "id": "windflower-meadow",
+  "name": "风渡花原",
+  "category": "场景与漫游",
+  "description": "穿过花间径与柳溪木桥，在听风亭和水岸间自由漫游、取景。",
+  "hint": "用 WASD 沿花径走，拖动画面环顾四周。",
+  "label": "山野 · 摄影",
+  "color": "#dce8df",
+  "directory": "../windflower-meadow",
+  "port": 4330,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "风渡花原 · Windflower Meadow",
+  "enabled": true
+}

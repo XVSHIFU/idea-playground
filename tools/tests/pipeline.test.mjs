@@ -68,6 +68,29 @@ test('catalog rejects path escapes, duplicate ports, and missing declared assets
   await assert.rejects(buildSite(root), /missing/);
 });
 
+test('serves declared GLB models and FLAC recordings at the project subpath', async t => {
+  const root = await fixture(t);
+  await createProject('test-project', { root });
+  const directory = path.join(root, 'test-project');
+  const manifestPath = path.join(directory, 'integration.json');
+  const manifest = await readJson(manifestPath);
+  const media = { 'scene.glb': 'model/gltf-binary', 'score.flac': 'audio/flac' };
+  for (const name of Object.keys(media)) {
+    await writeFile(path.join(directory, name), Buffer.from([0, 128, 255]));
+    manifest.files.push(name);
+  }
+  await writeFile(manifestPath, JSON.stringify(manifest));
+  await registerProject('test-project', { root, enable: true });
+  const preview = await createPreview({ root: await buildSite(root), port: 0 });
+  t.after(preview.close);
+  for (const [name, type] of Object.entries(media)) {
+    const response = await fetch(new URL('projects/test-project/' + name, preview.url));
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('content-type'), type);
+    assert.deepEqual([...new Uint8Array(await response.arrayBuffer())], [0, 128, 255]);
+  }
+});
+
 test('incomplete primary app can publish explicitly declared usable fallback', async t => {
   const root = await fixture(t);
   await createProject('test-project', { root });

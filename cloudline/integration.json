@@ -1,0 +1,21 @@
+{
+  "id": "cloudline",
+  "name": "云海电车",
+  "category": "场景与漫游",
+  "description": "驾驶空中电车穿过海岛，在弯道前制动、到站开门接送旅客。",
+  "hint": "按 W 加速，靠近站台时按 S 制动。",
+  "label": "空中铁路 · 驾驶",
+  "color": "#dce8df",
+  "directory": "../cloudline",
+  "port": 4334,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "云海电车 · CLOUDLINE",
+  "enabled": true
+}

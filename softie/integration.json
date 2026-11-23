@@ -1,0 +1,27 @@
+{
+  "id": "softie",
+  "name": "Softie · 软泥工作室",
+  "category": "视觉与交互",
+  "description": "按压、拉伸彩色软泥，比较软度和阻尼改变后的回弹。",
+  "hint": "在支持 WebGPU 的浏览器里拖拽软泥，再松开。",
+  "label": "WebGPU · 触感",
+  "color": "#dee5f4",
+  "directory": "../softie",
+  "port": 4357,
+  "entry": "index.html",
+  "required": [
+    "assets/index-Bnn9S8lA.css",
+    "assets/index-DDxNekQU.js",
+    "index.html",
+    "licenses/three.txt"
+  ],
+  "files": [
+    "assets/index-Bnn9S8lA.css",
+    "assets/index-DDxNekQU.js",
+    "index.html",
+    "licenses/three.txt"
+  ],
+  "publicDirectories": [],
+  "identity": "Softie — A little softer.",
+  "enabled": true
+}

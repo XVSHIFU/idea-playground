@@ -1,0 +1,25 @@
+{
+  "id": "llm-price-radar",
+  "name": "LLM Price Radar · 价格工作台",
+  "category": "工具与原型",
+  "description": "用内置历史价格比较模型与订阅，按用量试算调用成本。",
+  "hint": "选择一个模型，输入用量或切换计费档位。",
+  "label": "模型价格 · 历史快照",
+  "color": "#e4e8ef",
+  "directory": "../llm-price-radar",
+  "port": 4371,
+  "entry": "index.html",
+  "required": [
+    "catalog.html",
+    "index.html",
+    "workbench.html"
+  ],
+  "files": [
+    "catalog.html",
+    "index.html",
+    "workbench.html"
+  ],
+  "publicDirectories": [],
+  "identity": "LLM Price Radar · 价格工作台",
+  "enabled": true
+}

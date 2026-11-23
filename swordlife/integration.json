@@ -1,0 +1,21 @@
+{
+  "id": "swordlife",
+  "name": "剑来 · 山外有山",
+  "category": "互动叙事",
+  "description": "从骊珠洞天的小镇出发，通过探索与抉择书写一段自己的江湖人生。",
+  "hint": "点「推门入世」，选择出身。",
+  "label": "同人 · 人生长卷",
+  "color": "#eadfeb",
+  "directory": "../swordlife",
+  "port": 4345,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "剑来 · 山外有山",
+  "enabled": true
+}

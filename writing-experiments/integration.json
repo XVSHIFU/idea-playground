@@ -1,0 +1,33 @@
+{
+  "id": "writing-experiments",
+  "name": "文字编辑的三种新交互",
+  "category": "工具与原型",
+  "description": "用文字显微镜切换叙述层级，并排比较草稿，或追踪修改影响到的段落。",
+  "hint": "先打开「平行草稿」，并排比较两个分支。",
+  "label": "写作 · 三个原型",
+  "color": "#e4e8ef",
+  "directory": "../writing-experiments",
+  "port": 4366,
+  "entry": "index.html",
+  "required": [
+    "01-semantic-zoom.html",
+    "02-parallel-drafts.html",
+    "03-ripple-edit.html",
+    "index.html",
+    "preview-01.png",
+    "preview-02.png",
+    "preview-03.png"
+  ],
+  "files": [
+    "01-semantic-zoom.html",
+    "02-parallel-drafts.html",
+    "03-ripple-edit.html",
+    "index.html",
+    "preview-01.png",
+    "preview-02.png",
+    "preview-03.png"
+  ],
+  "publicDirectories": [],
+  "identity": "文字编辑的三种新交互 · 原型合集",
+  "enabled": true
+}

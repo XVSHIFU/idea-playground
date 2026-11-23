@@ -1,0 +1,21 @@
+{
+  "id": "particle-sea",
+  "name": "星海 · 粒子实验室",
+  "category": "视觉与交互",
+  "description": "移动指针吸引粒子，在星云、星海与文字形态之间切换。",
+  "hint": "移动鼠标牵引粒子，按 1、2、3 切换形态。",
+  "label": "粒子 · 文字",
+  "color": "#dee5f4",
+  "directory": "../particle-sea",
+  "port": 4359,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "星海 · 交互粒子实验室",
+  "enabled": true
+}

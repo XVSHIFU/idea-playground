@@ -1,0 +1,21 @@
+{
+  "id": "satoyama-line",
+  "name": "里山线 · 平成乡间铁路",
+  "category": "场景与漫游",
+  "description": "在平成乡间铁道上跟随普通列车，切换俯瞰、跟车和车厢视角。",
+  "hint": "在列车运行时按 2 切到跟车视角。",
+  "label": "乡间铁路 · 场景编辑",
+  "color": "#dce8df",
+  "directory": "../satoyama-line",
+  "port": 4332,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html"
+  ],
+  "publicDirectories": [],
+  "identity": "里山線 · 平成乡间铁路",
+  "enabled": true
+}

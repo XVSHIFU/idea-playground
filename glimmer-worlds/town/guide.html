@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f1efe6">
+  <title>观察手记 · 栖川</title>
+  <meta name="description" content="认识栖川的生活规律：居民如何工作、消费、交往和迁徙，以及如何观察、改变和保存这座虚构小城。">
+  <style>
+    @font-face{font-family:"Qichuan Serif";src:url('../assets/noto-serif-sc-display.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap}
+    :root{color-scheme:light;--paper:#f1efe6;--white:#faf9f3;--ink:#254b3c;--quiet:#52675a;--rule:#ccd0bd;--river:#6d999d;--clay:#a75037;--gold:#bb9953}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:104px}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased}::selection{background:#cbd3ac;color:#1f3d31}a{color:inherit;text-underline-offset:5px;text-decoration-thickness:1px}a:hover{color:var(--clay)}a:focus-visible{outline:2px solid var(--clay);outline-offset:6px;border-radius:2px}button,input,a{-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#abb69d;border:2px solid var(--paper);border-radius:8px}::-webkit-scrollbar-track{background:var(--paper)}
+    .topbar{height:76px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 max(28px,calc((100vw - 1240px)/2));background:var(--paper)}.identity{text-decoration:none;display:flex;align-items:center;gap:14px}.mark{width:34px;height:34px;flex:none}.wordmark{font-family:"Qichuan Serif","Noto Serif SC",serif;font-size:28px;font-weight:600;letter-spacing:.12em;line-height:1}.identity small{font-size:11px;letter-spacing:.14em;border-left:1px solid var(--rule);padding-left:14px;color:var(--quiet)}.return{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-size:13px}.return svg{width:18px;height:18px}
+    .layout{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:210px minmax(0,1fr);gap:70px;padding:66px 28px 90px}.contents{align-self:start;position:sticky;top:32px}.contents h2{font-size:12px;font-weight:600;letter-spacing:.08em;margin:0 0 17px;color:var(--quiet)}.contents nav{display:grid;gap:10px}.contents nav a{display:flex;gap:11px;font-size:13px;text-decoration:none;color:var(--quiet);padding:4px 0}.contents nav span{font-size:11px;color:#7b8979;line-height:2.25;font-variant-numeric:tabular-nums}.contents nav a:hover{color:var(--clay)}.side-note{border-top:1px solid var(--rule);margin-top:30px;padding-top:18px;font-size:12px;line-height:1.9;color:var(--quiet)}.side-note strong{font-weight:500;color:var(--ink)}
+    main{max-width:840px;min-width:0}h1{font-family:"Qichuan Serif","Noto Serif SC",serif;font-weight:600;font-size:clamp(40px,5vw,64px);line-height:1.18;letter-spacing:.04em;margin:0 0 24px}h2{font-size:24px;line-height:1.45;letter-spacing:-.015em;font-weight:500;margin:0 0 22px;text-wrap:balance}h3{font-size:16px;font-weight:600;line-height:1.5;margin:28px 0 8px}p{margin:0 0 18px;max-width:70ch}.lead{font-size:18px;line-height:1.95;color:var(--quiet);max-width:38em}.preface{padding-bottom:43px;border-bottom:1px solid var(--rule)}.preface .description{font-size:13px;color:var(--quiet);margin-top:23px;margin-bottom:0}.river-drawing{width:100%;height:80px;margin:20px 0 16px;display:block}.chapter{padding:44px 0;border-bottom:1px solid var(--rule)}.chapter:last-child{border-bottom:0;padding-bottom:0}.chapter p{color:var(--quiet)}.chapter strong{font-weight:600;color:var(--ink)}.opening{font-size:16px;color:var(--ink)!important}.observation{display:grid;grid-template-columns:33px minmax(0,1fr);gap:14px;margin-top:23px;color:var(--quiet);font-size:14px}.observation svg{width:26px;height:26px;margin-top:4px;color:var(--river)}.observation p{margin:0}
+    .causal{display:flex;align-items:stretch;gap:0;margin:30px 0 23px;overflow:hidden}.causal .step{flex:1;min-width:0;border-top:2px solid var(--rule);padding:16px 16px 0 0;position:relative}.causal .step:not(:last-child)::after{content:"";width:6px;height:6px;border-top:1px solid var(--quiet);border-right:1px solid var(--quiet);transform:rotate(45deg);position:absolute;right:13px;top:26px}.causal b{font-size:14px;font-weight:600;display:block}.causal small{display:block;font-size:11px;color:var(--quiet);line-height:1.8;max-width:10em;margin-top:6px}.causal .step:first-child{border-color:var(--river)}.causal .step:last-child{border-color:var(--gold)}
+    .policy{display:grid;grid-template-columns:100px minmax(0,1fr);gap:24px;padding:24px 0;border-top:1px solid var(--rule)}.policy:first-of-type{margin-top:28px}.policy h3{margin:0;font-size:18px;font-weight:500}.policy p{margin:0 0 10px;font-size:14px}.policy p:last-child{margin:0}.policy .tradeoff{font-size:12px;color:#6a725f}
+    .control-table{width:100%;border-collapse:collapse;text-align:left;font-size:13px;margin:24px 0}.control-table caption{text-align:left;font-size:12px;color:var(--quiet);margin-bottom:8px}.control-table th{font-weight:500;padding:10px 12px 10px 0;border-bottom:1px solid var(--ink);color:var(--ink)}.control-table td{padding:13px 16px 13px 0;border-bottom:1px solid var(--rule);color:var(--quiet);vertical-align:top}.control-table td:first-child{width:34%;color:var(--ink)}kbd{display:inline-block;min-width:23px;text-align:center;border:1px solid #b9c1ac;background:#f9f7ef;box-shadow:0 2px 0 #d9ddca;border-radius:4px;padding:0 6px;font-size:11px;line-height:1.7;margin:0 3px 0 0;font-family:inherit;color:var(--ink)}
+    .field-note{background:#e4e7d8;padding:26px 30px;margin:27px 0 8px;border-radius:10px}.field-note h3{margin:0 0 8px;font-weight:500;font-size:16px}.field-note p{font-size:13px;margin:0}.numbered{list-style:none;padding:0;margin:26px 0 0;counter-reset:steps}.numbered li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:13px;padding:0 0 20px;font-size:14px;color:var(--quiet)}.numbered li::before{counter-increment:steps;content:counter(steps,decimal-leading-zero);font-size:11px;line-height:2.5;color:var(--river);font-variant-numeric:tabular-nums}.numbered li p{margin:0}.go-back{display:inline-flex;gap:20px;align-items:center;padding:14px 25px;margin-top:27px;border-radius:7px;background:var(--ink);color:var(--white);text-decoration:none;font-size:14px}.go-back:hover{background:#34604c;color:var(--white)}.go-back svg{width:18px;height:18px}footer{max-width:1184px;margin:auto;border-top:1px solid var(--rule);padding:24px 0 36px;display:flex;justify-content:space-between;gap:20px;font-size:11px;color:var(--quiet)}footer p{margin:0}footer a{text-decoration:none}
+    @media(max-width:960px){.layout{gap:38px;grid-template-columns:160px minmax(0,1fr)}.identity small{display:none}footer{margin:0 28px}.causal small{font-size:10px}.causal .step{padding-right:10px}.causal .step::after{display:none}}
+    @media(max-width:700px){html{scroll-padding-top:24px}.topbar{height:66px;padding:0 22px}.layout{display:block;padding:38px 22px 58px}.contents{position:static;margin-bottom:35px}.contents h2,.side-note{display:none}.contents nav{display:flex;flex-wrap:wrap;column-gap:20px;row-gap:2px}.contents nav a{font-size:11px}.contents nav span{display:none}.preface{padding-bottom:30px}h1{font-size:46px}.lead{font-size:16px}.chapter{padding:34px 0}h2{font-size:22px}.causal{flex-wrap:wrap;row-gap:15px}.causal .step{flex-basis:33%}.causal small{font-size:11px;max-width:none}.policy{grid-template-columns:72px minmax(0,1fr);gap:16px}.policy h3{font-size:16px}.field-note{padding:22px}.control-table td:first-child{width:38%}.return{font-size:12px}footer{margin:0 22px;flex-direction:column;gap:4px}.river-drawing{height:60px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="identity" href="index.html" aria-label="返回栖川小城">
+      <svg class="mark" viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M3 25 12 8l7 12 5-8 9 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 30c5-3 7-3 12-1s7 2 14-1" stroke="#6d999d" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="wordmark">栖川</span><small>一座自己生活的小城</small>
+    </a>
+    <a class="return" href="index.html"><span>回到小城</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </header>
+  <div class="layout">
+    <aside class="contents" aria-label="手记目录">
+      <h2>在这里，慢慢看</h2>
+      <nav>
+        <a href="#begin"><span>01</span>从一个居民开始</a>
+        <a href="#economy"><span>02</span>生活如何循环</a>
+        <a href="#relationships"><span>03</span>留下来的理由</a>
+        <a href="#choices"><span>04</span>你的几个选择</a>
+        <a href="#controls"><span>05</span>观察与操作</a>
+        <a href="#memory"><span>06</span>把这座城留下</a>
+      </nav>
+      <div class="side-note"><strong>一个小建议</strong><br>每次只改变一件事。<br>让小城过上几天，<br>再看看居民与仓库。</div>
+    </aside>
+    <main>
+      <header class="preface">
+        <h1>观察手记</h1>
+        <p class="lead">城镇有自己的节奏。太阳升起，居民出门；有人去田间，有人走向工坊。一天里的许多小事，慢慢决定了一座城的样子。</p>
+        <svg class="river-drawing" viewBox="0 0 800 80" preserveAspectRatio="none" fill="none" role="img" aria-label="一条流过田野与居民点的河流示意图"><path d="M0 58C100 58 87 19 180 25s100 56 201 24S484 7 582 32s153 22 218-7" stroke="#7da5a4" stroke-width="2"/><path d="M0 66C100 66 87 27 180 33s100 56 201 24S484 15 582 40s153 22 218-7" stroke="#b6c4b3" stroke-width="1"/><path d="m196 20 8-9 8 9v10h-16Zm273 8 8-9 8 9v10h-16Zm168 1 8-9 8 9v10h-16Z" fill="#e0d7bf" stroke="#8e9b80" stroke-width="1"/><path d="M330 47v23m8-26v23M92 34v26m8-30v26" stroke="#a58965" stroke-width="2"/></svg>
+        <p class="description">栖川中的人物、地名、资源与事件都是虚构的。它是一件可以观察和干预的规则模拟作品，记录的是这个小世界里的因果。</p>
+      </header>
+
+      <section class="chapter" id="begin">
+        <h2>从一个居民开始</h2>
+        <p class="opening">点开地图上的一个人，跟着他走一会儿。</p>
+        <p>居民有住处、工作、积蓄和不同的性格，也会饥饿、疲惫、需要陪伴。他们根据时间与当前需求选择去处。到达工作地点后才会生产，休息需要时间，吃饭需要食物和支付能力。</p>
+        <p>观察面板中的<strong>行动</strong>告诉你他正在做什么，<strong>状态</strong>说明他为什么需要这么做。近期记忆会留下生活里的一些变化；朋友关系则让某个居民与小城中的其他人联系起来。</p>
+        <div class="observation"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M3 16s5-8 13-8 13 8 13 8-5 8-13 8S3 16 3 16Z" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="16" r="4" stroke="currentColor" stroke-width="1.4"/></svg><p>不急着把数字调高。先看看：一个刚领到工资的人去了哪里？一位疲惫的居民什么时候回家？一天结束后，哪些需求还没有被满足？</p></div>
+      </section>
+
+      <section class="chapter" id="economy">
+        <h2>生活如何循环</h2>
+        <p>栖川采用合作社式的共享仓储经济。农田提供食物，林场提供木材，工坊加工商品。<strong>居民到岗劳动产生资源，公共金库支付工资，居民购买食物和商品时，钱再回到金库。</strong>工资支付时会扣除设定的税额。</p>
+        <div class="causal" aria-label="生活循环：劳动产生资源与工资，消费满足需求，余暇促进交往，生活状态影响去留">
+          <div class="step"><b>劳动</b><small>实际到岗<br>生产资源</small></div>
+          <div class="step"><b>收入</b><small>工资与税收<br>进入日常循环</small></div>
+          <div class="step"><b>消费</b><small>仓储与价格<br>影响温饱</small></div>
+          <div class="step"><b>余暇</b><small>休息与交往<br>改变生活状态</small></div>
+          <div class="step"><b>去留</b><small>生活与归属<br>影响人口</small></div>
+        </div>
+        <p>小城会出售多余的资源，获得外部收入。仓库紧张时，价格和居民负担会跟着变化；金库紧张时，工资与公共支出也会受限。因此，<strong>食物、工作、住房与公共预算需要一起看</strong>。</p>
+        <p>季节与天气会改变生产条件。这里每个季节持续三十个城镇日，天气逐日变化。扩建带来新的容量与岗位，也会消耗现有木材和资金；施工中的建筑需要等到完成，才会发挥作用。</p>
+      </section>
+
+      <section class="chapter" id="relationships">
+        <h2>留下来的理由</h2>
+        <p>当居民靠近、交往，关系会逐渐积累。社交状态、朋友、健康、休息和经济处境共同影响生活感受。地图上的一个小点，因此不只是人口统计中的一个单位。</p>
+        <p>持续不满或生活拮据的人可能离开；当城里有空余住房、生活状况合适时，也可能迎来新居民。<strong>开放度影响迁入的机会，住房决定小城能否接纳他们。</strong></p>
+        <p>日常事件会记录发生了什么。遇到人口变化，不妨回看最近几天：食物是否变得昂贵？工作和住房是否足够？金库是否在持续缩水？这些信息往往比单看一个人口数字更有意思。</p>
+        <div class="field-note"><h3>关系和生活都有时间尺度</h3><p>一次补给可以缓解眼前的短缺；一座新农田需要施工和劳动；熟悉一个邻居，也需要相遇。把时间调快，可以观察长期变化；暂停，则能仔细读一位居民的故事。</p></div>
+      </section>
+
+      <section class="chapter" id="choices">
+        <h2>你的几个选择</h2>
+        <p>你可以旁观，也可以改变小城的条件。每个选项都有资源或时间上的代价。</p>
+        <div class="policy"><h3>税率</h3><div><p>调整居民工资中留下多少进入公共预算。更多税收有利于公共支出，也会减少居民拿到手的收入。</p><p class="tradeoff">一起观察：金库、居民积蓄、食物价格。</p></div></div>
+        <div class="policy"><h3>福利</h3><div><p>把有上限的日常公共预算，按设定比例用于帮助较贫困的居民。福利依赖真实的金库余额，无法无限发放。</p><p class="tradeoff">一起观察：贫困居民的状态、金库的持续变化。</p></div></div>
+        <div class="policy"><h3>开放度</h3><div><p>改变小城接纳外来居民的倾向。迁入还取决于生活状况和住房空位。</p><p class="tradeoff">一起观察：住房容量、工作岗位、食物储备。</p></div></div>
+        <div class="policy"><h3>建设</h3><div><p>住宅增加居住空间，农田与工坊扩大生产，公园和诊所为生活提供支持。选择建筑前，先看看资源与施工条件。</p><p class="tradeoff">一起观察：建造成本、完工进度、新增设施的实际使用。</p></div></div>
+        <div class="policy"><h3>干预</h3><div><p>降雨、干旱、节庆与补给可以直接改变一段时间里的条件。操作后的提示会说明结果与成本，城镇事件会留下记录。</p><p class="tradeoff">试着只改变一种条件，再用几天的时间观察后续影响。</p></div></div>
+      </section>
+
+      <section class="chapter" id="controls">
+        <h2>观察与操作</h2>
+        <p>地图可以拖动和缩放。点开居民或建筑查看详情；名册适合找到具体的人，观察图层则帮助你从整座小城中看出差异。</p>
+        <table class="control-table">
+          <caption>常用操作</caption>
+          <thead><tr><th scope="col">操作</th><th scope="col">用途</th></tr></thead>
+          <tbody>
+            <tr><td>点击居民或建筑</td><td>打开详情，了解状态与正在发生的事。</td></tr>
+            <tr><td>拖动地图 / 滚轮</td><td>移动观察位置 / 缩放地图。</td></tr>
+            <tr><td>跟随居民</td><td>让视角陪着选中的居民行动。</td></tr>
+            <tr><td><kbd>Space</kbd></td><td>暂停或继续小城的时间。</td></tr>
+            <tr><td><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></td><td>切换 1 倍、3 倍、8 倍速度。</td></tr>
+            <tr><td><kbd>H</kbd></td><td>回到完整地图视角。</td></tr>
+            <tr><td><kbd>Esc</kbd></td><td>关闭当前展开的面板。</td></tr>
+          </tbody>
+        </table>
+        <p>城镇纪事与历史曲线适合看趋势。数字是在模拟时间里变化的；不同速度只改变观察节奏，不会直接改变政策或生产规则。</p>
+      </section>
+
+      <section class="chapter" id="memory">
+        <h2>把这座城留下</h2>
+        <p>小城会尝试自动保存在<strong>当前浏览器的本地存储</strong>中。再次打开同一入口时，可以继续上次的城镇。关闭页面后，城镇不会在后台继续演变。</p>
+        <ol class="numbered">
+          <li><p><strong>长期保留，导出一份档案。</strong> 导出后的 JSON 文件包含城镇状态，可以留在自己的文件夹中。</p></li>
+          <li><p><strong>换浏览器或换设备，导入档案。</strong> 在线入口与本地文件、不同浏览器之间不会自动同步存档。</p></li>
+          <li><p><strong>开始新城前，先留下旧城。</strong> 重置会替换当前的模拟。想比较两种走向，可以先导出同一个起点，再分别尝试。</p></li>
+        </ol>
+        <div class="field-note"><h3>这份记忆属于你</h3><p>清理浏览器数据、使用无痕窗口或浏览器限制本地存储时，自动保存可能无法保留。可下载的城镇档案是更稳妥的备份。城镇模拟本身不需要外部模型、账号或 API 密钥。</p></div>
+        <a class="go-back" href="index.html">回去看看，城里发生了什么<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </section>
+    </main>
+  </div>
+  <footer><p>栖川 · 微光实验室</p><p>这里的故事，由规则、时间和你的选择共同写下。</p></footer>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c24"><meta name="description" content="弦汐，一件用指尖拨动潮汐的原创数字乐器。八根弧弦、三种声质，以及一首完整的原创作品《河岸回声》。">
+  <title>弦汐 — 让指尖掠过潮汐</title><link rel="icon" href="../assets/tide.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css">
+  <script src="synth.js" defer></script><script src="score.js" defer></script><script src="view.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+  <svg class="icon-library" aria-hidden="true"><defs>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-record" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3ZM16 8a6 6 0 0 1 0 8M19 5a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5C9 3 5 3 2 4v16c4-1 7-1 10 1 3-2 6-2 10-1V4c-3-1-7-1-10 1Zm0 0v16"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M20 12H4m6-6-6 6 6 6"/></symbol>
+  </defs></svg>
+  <header class="topbar"><a class="brand" href="../index.html" aria-label="微光实验室作品入口"><svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><ellipse cx="20" cy="20" rx="16" ry="10" transform="rotate(-32 20 20)"/><path d="M10 29q15-18 20-18M14 32q8-19 12-24M8 23q17-6 23-7"/></svg><span class="wordmark">弦汐</span><span class="brand-note">一件可以演奏的潮汐</span></a><div class="sound-status" id="sound-status"><span></span>声音尚在沉睡</div><nav class="top-actions" aria-label="作品工具"><a href="../town/index.html" class="text-link">回到栖川</a><button id="show-notes" class="icon-button" aria-label="打开演奏手记" title="演奏手记"><svg class="icon"><use href="#i-book"/></svg></button><button id="record" class="record-button" aria-pressed="false"><svg class="icon"><use href="#i-record"/></svg><span id="record-label">录下此刻</span></button></nav></header>
+  <main class="instrument-layout">
+    <section class="resonator" aria-label="弦汐演奏区">
+      <canvas id="instrument" tabindex="0" aria-label="八根弧弦。用指尖或鼠标划过弦面演奏。也可以按 A S D F G H J K，Z X 切换八度，按住 Shift 延音。"></canvas>
+      <div class="instrument-intro"><h1>让指尖<br>掠过潮汐。</h1><p>拨动一根弦。<br>让余音找到下一根。</p><button class="wake-button" id="wake">唤醒弦汐<svg class="icon"><use href="#i-arrow"/></svg></button><span class="wake-note" id="wake-note">声音由你的第一次触碰开始</span></div>
+      <div class="stage-coordinate"><span id="current-note">D minor pentatonic</span><span id="gesture-readout">八弦 · 等待一次触碰</span></div>
+      <div class="level-display" aria-label="输出音量指示"><span>共鸣</span><div class="level-track"><i id="level-fill"></i></div></div>
+      <div class="performance-strip"><div class="keyboard" aria-label="可点击的八根弦"><button data-string="0" aria-label="第一弦 D3"><span>A</span><small>D3</small></button><button data-string="1" aria-label="第二弦 F3"><span>S</span><small>F3</small></button><button data-string="2" aria-label="第三弦 G3"><span>D</span><small>G3</small></button><button data-string="3" aria-label="第四弦 A3"><span>F</span><small>A3</small></button><button data-string="4" aria-label="第五弦 C4"><span>G</span><small>C4</small></button><button data-string="5" aria-label="第六弦 D4"><span>H</span><small>D4</small></button><button data-string="6" aria-label="第七弦 F4"><span>J</span><small>F4</small></button><button data-string="7" aria-label="第八弦 G4"><span>K</span><small>G4</small></button></div><span class="gesture-hint">划过弦面拨奏 · 靠近弦端更明亮 · 按住 Shift 延音</span></div>
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    </section>
+    <aside class="sound-rail" aria-label="声音塑形">
+      <div class="rail-title"><h2>声音的形状</h2><button class="quiet-button" id="reset-sound">复原</button></div>
+      <div class="voice-selector" role="group" aria-label="声质"><button data-voice="silk" class="active" aria-pressed="true">柔弦</button><button data-voice="glass" aria-pressed="false">晶体</button><button data-voice="wood" aria-pressed="false">木语</button></div><p class="voice-description" id="voice-description">柔和的起音，缓缓盛开的泛音。</p>
+      <div class="parameter"><label for="tide">潮位 <output id="tide-value">58</output></label><input id="tide" data-param="tide" type="range" min="0" max="100" value="58"><p>从一滴声音，到漫长的回响</p></div>
+      <div class="parameter"><label for="light">光泽 <output id="light-value">48</output></label><input id="light" data-param="light" type="range" min="0" max="100" value="48"><p>让泛音从温润，走向清澈</p></div>
+      <div class="parameter"><label for="space">空间 <output id="space-value">50</output></label><input id="space" data-param="space" type="range" min="0" max="100" value="50"><p>在近处低语，在远处回荡</p></div>
+      <div class="parameter"><label for="drift">漂移 <output id="drift-value">22</output></label><input id="drift" data-param="drift" type="range" min="0" max="100" value="22"><p>给声音一点缓慢的呼吸</p></div>
+      <div class="tuning-row"><label for="scale">调式</label><select id="scale"><option value="dminor">D 小调五声</option><option value="aminor">A 小调五声</option><option value="cmajor">C 大调五声</option></select></div><div class="octave-row"><span>八度</span><div><button id="octave-down" class="icon-button" aria-label="降低一个八度 Z"><svg class="icon"><use href="#i-minus"/></svg></button><output id="octave-value">原位</output><button id="octave-up" class="icon-button" aria-label="升高一个八度 X"><svg class="icon"><use href="#i-plus"/></svg></button></div></div>
+      <div class="rail-bottom"><label class="volume-control" for="volume"><svg class="icon"><use href="#i-volume"/></svg><span class="sr-only">主音量</span><input id="volume" data-param="volume" type="range" min="0" max="100" value="55"></label><button class="stop-button" id="silence" title="停止所有声音 Esc"><svg class="icon"><use href="#i-stop"/></svg>止音</button></div>
+    </aside>
+  </main>
+  <section class="composition" aria-label="原创作品河岸回声">
+    <div class="composition-heading"><div><h2>河岸回声</h2><p>为弦汐而作 <span>·</span> 原创器乐 <span>·</span> 2′48″</p></div><button id="score-play" class="score-play" aria-label="播放河岸回声" aria-pressed="false"><svg class="icon"><use href="#i-play"/></svg></button></div>
+    <div class="score-timeline"><div class="score-topline"><span id="section-name">雾起</span><p id="section-description">从一颗低音开始，听见河谷苏醒。</p><span class="score-clock"><span id="score-time">0:00</span> / 2:48</span></div><div class="waveform-track"><svg id="score-waveform" preserveAspectRatio="none" viewBox="0 0 800 42" aria-hidden="true"></svg><div class="score-progress" id="score-progress"></div><input type="range" id="score-seek" min="0" max="168" step="0.1" value="0" aria-label="乐曲播放位置" aria-valuetext="0 分 0 秒"></div><div class="score-sections"><button data-section="0" class="active">雾起 <small>0:00</small></button><button data-section="1">逐水 <small>0:36</small></button><button data-section="2">潮生 <small>1:24</small></button><button data-section="3">归岸 <small>2:12</small></button></div></div>
+    <div class="composition-actions"><a class="download-link" href="audio/river-echoes.mp3" download="河岸回声-弦汐.mp3"><svg class="icon"><use href="#i-download"/></svg>下载作品</a><button id="score-notes" class="quiet-button">阅读创作手记</button><span id="performance-note">播放时，也可以加入你的演奏</span></div>
+  </section>
+  <aside class="notes-panel" id="notes-panel" aria-label="演奏与创作手记" hidden><div class="notes-header"><span>弦汐手记</span><button id="close-notes" class="icon-button" aria-label="关闭手记"><svg class="icon"><use href="#i-close"/></svg></button></div><div class="notes-content"><h2>让一个动作，<br>成为一段声音。</h2><p>弦汐是一件在浏览器里发声的原创数字乐器。八根弧弦共享一个共鸣空间：每次拨弦，基音先出现，细小的泛音随后展开，像水面上彼此接近的涟漪。</p><h3>从哪里开始</h3><p>点击「唤醒弦汐」，然后划过弦面。动作越快，拨弦越有力度；越靠近弦端，声音越明亮。屏幕下方的八个按键也可以直接点击。</p><dl class="shortcut-list"><div><dt>A S D F G H J K</dt><dd>八根弦</dd></div><div><dt>Z / X</dt><dd>降低 / 升高八度</dd></div><div><dt>Shift</dt><dd>按住延音</dd></div><div><dt>空格</dt><dd>播放 / 暂停作品</dd></div><div><dt>Esc</dt><dd>停止所有声音</dd></div></dl><h3>三种声质</h3><p><strong>柔弦</strong>温润、带有轻微拍频；<strong>晶体</strong>有更清晰的非整数泛音；<strong>木语</strong>短促而有颗粒感。潮位改变余音长度，光泽改变泛音分布，空间控制回响，漂移带来缓慢的音高呼吸。</p><h3>《河岸回声》</h3><p>这首 2 分 48 秒的作品从栖川清晨得到灵感。一个简短动机经历四次变化：雾起时稀疏地出现，逐水时开始行走，潮生时被和声与对位托起，最后在归岸中慢慢收束。</p><div class="act-note"><span>雾起 · 0:00</span><p>空白、低音与第一道泛音。</p></div><div class="act-note"><span>逐水 · 0:36</span><p>重复的动机开始变形，水流有了方向。</p></div><div class="act-note"><span>潮生 · 1:24</span><p>更宽的音域与更密的交织。</p></div><div class="act-note"><span>归岸 · 2:12</span><p>把热闹还给安静，让余音自己离开。</p></div><p>播放按钮会让弦汐实时演奏这份乐谱，屏幕上的弦会随之振动。你可以加入自己的音符，也可以录下整段合奏。</p><h3>把声音留下</h3><p>「录下此刻」只录制乐器自身的输出，不打开麦克风。结束录制后会下载音频。浏览器支持的格式可能不同；完成的原创作品另有 MP3 和无损 FLAC 可供下载。</p><div class="notes-downloads"><a href="audio/river-echoes.mp3" download="河岸回声-弦汐.mp3">下载 MP3 </a><a href="audio/river-echoes.flac" download="河岸回声-弦汐.flac">下载无损 FLAC</a></div><p class="notes-colophon">设计、合成器与乐谱均为本项目原创。所有声音本地合成，无外部采样、无账户、无云端依赖。建议使用耳机，听见左右声场里的细小变化。</p></div></aside>
+  <noscript>请启用 JavaScript，让弦汐发声。也可以直接打开 audio/river-echoes.mp3 收听作品。</noscript>
+</body>
+</html>
