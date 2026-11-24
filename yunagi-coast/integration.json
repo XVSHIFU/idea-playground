@@ -1,0 +1,22 @@
+{
+  "id": "yunagi-coast",
+  "name": "夕凪海岸 · 归途",
+  "category": "场景与漫游",
+  "description": "旋转黄昏海岸的微缩电车，透过剖面观察乘客，再从车窗看渔船、街巷与站台。",
+  "hint": "拖动旋转，滚轮拉近；按 1–4 切换车窗，按 0 回到全景。",
+  "label": "微缩铁路 · 黄昏海岸",
+  "color": "#eed7b8",
+  "directory": "../yunagi-coast",
+  "port": 4365,
+  "entry": "index.html",
+  "required": [
+    "index.html"
+  ],
+  "files": [
+    "index.html",
+    "THREE-LICENSE.txt"
+  ],
+  "publicDirectories": [],
+  "identity": "夕凪海岸 · 归途",
+  "enabled": true
+}

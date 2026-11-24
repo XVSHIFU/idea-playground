@@ -508,5 +508,11 @@
     "origin": "http://127.0.0.1:43617/idea-playground/projects/xinghuo-map/index.html",
     "captured": "2026-11-23T14:19:51.088Z",
     "description": "Actual project screenshot in an isolated browser context; no user profile or existing save data."
+  },
+  {
+    "file": "yunagi-coast.png",
+    "origin": "file:///mnt/data/Yunagi-Coast.html",
+    "captured": "2026-11-24T10:12:31.251Z",
+    "description": "Actual opening view captured in an isolated Chromium session."
   }
 ]
