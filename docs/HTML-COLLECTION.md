@@ -1,6 +1,6 @@
 # HTML 作品目录
 
-65 个新增入口，连同原有 20 个作品，共 85 张作品卡片。新增部分包含 101 个 HTML 页面，计入版本选择页和操作手册。
+52 个新增入口，连同原有 20 个作品，共 72 张作品卡片。新增部分包含 64 个 HTML 页面，计入版本选择页和操作手册。
 
 在仓库根目录运行 `npm start` 或双击 `启动.cmd`，即可从首页按类别、标题或关键词查找作品。以下链接打开对应的源码目录。
 
@@ -76,29 +76,6 @@
 | [贴贴 · Pure CSS Art](../chibi-css-art) | 用 HTML 与 CSS 拼出两位相依的动漫角色，可近看线条与色块。 |
 | [鹈鹕骑自行车](../pelican-bicycle) | 用矢量动画表现鹈鹕的踩踏与车轮转动。 |
 
-## 工具与原型（9）
-
-| 作品 | 打开后可以做什么 |
-| --- | --- |
-| [食光管家与食刻 Life](../foodlife-demo) | 体验家庭饮食项目的两版前端，从菜单、库存到审批与统计。 |
-| [文字编辑的三种新交互](../writing-experiments) | 用文字显微镜切换叙述层级，并排比较草稿，或追踪修改影响到的段落。 |
-| [可视化 HTML 创作工具](../html-creator) | 在画布与组件面板中编辑文章页面，再预览或导出 HTML。 |
-| [页间 Folio · 数字写作室](../folio-editor) | 在数字写作室里切换文稿、主题与阅读预览。 |
-| [栖点 · Agent 工作台](../perch-studio) | 在桌面样机里体验 Agent 启动器、工作区与多种布局。 |
-| [myEnv · 环境工作台](../myenv) | 在图形与终端界面中模拟版本选择、诊断和同步流程。 |
-| [LLM Price Radar · 价格工作台](../llm-price-radar) | 用内置历史价格比较模型与订阅，按用量试算调用成本。 |
-| [AI 革新雷达 · 离线样机](../ai-radar) | 用样例资讯体验筛选动态、核对来源与整理研究线索的流程。 |
-| [中国开源项目雷达](../opensource-radar) | 按公司和层级筛选项目，回看 2026 年 10 月的开源生态快照。 |
-
-## 学习页面（4）
-
-| 作品 | 打开后可以做什么 |
-| --- | --- |
-| [矩阵置零 · 算法可视化](../matrix-zeroes) | 逐步运行原地标记法，查看第一行、第一列与当前单元如何变化。 |
-| [Python 爬虫并发 · 引导式课程](../concurrency-lab) | 用队列、线程池和异步任务的可视化实验理解取走与完成的区别。 |
-| [操作系统 · 交互学习与复习](../os-workshop) | 从系统基础讲解切换到章节题目，在同一处学习和自测。 |
-| [Linux 系统管理 · 交互手册](../linux-field-guide) | 按章节浏览系统管理主题，在学习目录中记录自己的进度。 |
-
 ## 多版本与子页面
 
 各版本可从所属作品的入口进入。
@@ -108,14 +85,6 @@
 | 山海来信 | [三重山海](../shanhai-letters/three-worlds.html) · [手机预览](../shanhai-letters/phone.html) · [三种抵达远方的方式](../shanhai-letters/arrivals.html) · [三种进入山海的方式](../shanhai-letters/spatial.html) · [地图空间探索](../shanhai-letters/map-studies.html) · [三种远方](../shanhai-letters/letters.html) · [漫游 · 旅行地图](../shanhai-letters/slow-travel.html) |
 | 微光实验室 · 栖川与弦汐 | [栖川小城](../glimmer-worlds/town/index.html) · [栖川操作手册](../glimmer-worlds/town/guide.html) · [弦汐乐器](../glimmer-worlds/instrument/index.html) |
 | 恩尼格玛 · 密码机械实验室 | [密码机械实验室](../enigma-lab/mechanical.html) · [ENIGMA 三维实验室](../enigma-lab/atelier.html) |
-| 食光管家与食刻 Life | [食光管家](../foodlife-demo/shiguang.html) · [食刻 Life](../foodlife-demo/foodlife.html) |
-| 文字编辑的三种新交互 | [文字显微镜](../writing-experiments/01-semantic-zoom.html) · [平行草稿](../writing-experiments/02-parallel-drafts.html) · [修改涟漪](../writing-experiments/03-ripple-edit.html) |
-| 可视化 HTML 创作工具 | [创作工作室](../html-creator/studio.html) · [网页即画布](../html-creator/canvas.html) · [网页画布](../html-creator/web-canvas.html) |
-| 页间 Folio · 数字写作室 | [页间 Folio](../folio-editor/folio.html) · [栖页](../folio-editor/perch-page.html) · [墨纪](../folio-editor/inkstone.html) · [砚台](../folio-editor/yantai.html) · [Atelier](../folio-editor/atelier.html) |
-| 栖点 · Agent 工作台 | [栖点 Studio](../perch-studio/desktop.html) · [栖点工作台](../perch-studio/workbench.html) · [Launchpad](../perch-studio/launchpad.html) · [Studio](../perch-studio/studio.html) · [Forge](../perch-studio/forge.html) |
-| myEnv · 环境工作台 | [图形工作台](../myenv/gui.html) · [终端工作台](../myenv/tui.html) |
-| LLM Price Radar · 价格工作台 | [价格工作台](../llm-price-radar/workbench.html) · [价格目录](../llm-price-radar/catalog.html) |
-| 操作系统 · 交互学习与复习 | [从零理解](../os-workshop/primer.html) · [OS Desk 复习工作台](../os-workshop/desk.html) |
 
 ## 整理前已有的 20 个作品
 
@@ -136,5 +105,4 @@
 
 - 《风渡花原》、轨道站及多款三维作品使用 WebGL。《Softie》使用 WebGPU，本机可通过 localhost 打开，线上通过 HTTPS 运行。
 - 浏览器保存各作品的进度。游戏自带导入与导出功能时，可在原作的存档菜单中使用。
-- LLM 价格和开源项目雷达展示历史快照。饮食、开发环境与写作工作台中的模拟流程沿用原型数据。
 - 互动叙事作品保留原作标记的同人、改编说明及随包提供的字体许可。
