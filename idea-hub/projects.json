@@ -1125,6 +1125,27 @@
     "enabled": true
   },
   {
+    "id": "shiokaze-line",
+    "name": "汐风线 · 海边电车",
+    "category": "场景与漫游",
+    "description": "乘上沿海行驶的日式电车，在墨绿长椅、车门和贯通门之间走动，看港口、稻田和铁桥掠过。",
+    "hint": "按 1 坐到海侧窗边，拖动环顾。用 WASD 起身行走，按 V 轮换视角。",
+    "label": "第一人称 · 海岸电车",
+    "color": "#cfe5df",
+    "directory": "../shiokaze-line",
+    "port": 4366,
+    "entry": "index.html",
+    "required": [
+      "index.html"
+    ],
+    "files": [
+      "index.html"
+    ],
+    "identity": "汐风线 · 海边电车",
+    "enabled": true,
+    "publicDirectories": []
+  },
+  {
     "id": "eizan-summer",
     "name": "叡山电车 · 夏日车窗",
     "category": "场景与漫游",

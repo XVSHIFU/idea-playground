@@ -514,5 +514,11 @@
     "origin": "file:///mnt/data/Yunagi-Coast.html",
     "captured": "2026-11-24T10:12:31.251Z",
     "description": "Actual opening view captured in an isolated Chromium session."
+  },
+  {
+    "file": "shiokaze-line.png",
+    "origin": "http://127.0.0.1:4173/idea-playground/projects/shiokaze-line/index.html",
+    "captured": "2026-11-24T10:15:08.483Z",
+    "description": "Actual screenshot of the built project in Chromium, scaled and cropped to the project-card size."
   }
 ]
